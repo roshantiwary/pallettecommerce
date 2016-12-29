@@ -1,1 +1,1 @@
-#pallete-commer
+#pallete-commerce
