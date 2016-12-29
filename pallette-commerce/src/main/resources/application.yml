@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      host: ${systemEnvironment[OPENSHIFT_MONGODB_DB_HOST]}
+      port: ${systemEnvironment[OPENSHIFT_MONGODB_DB_PORT]}
+      database: shop
+      username: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
+      password: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
