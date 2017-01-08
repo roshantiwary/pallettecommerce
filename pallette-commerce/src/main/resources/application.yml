@@ -6,3 +6,10 @@ spring:
       database: shop
       username: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
       password: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
+mvc:
+  view:
+    suffix: .jsp
+    prefix: /views/
+error:
+  whitelabel:
+    enabled: true
