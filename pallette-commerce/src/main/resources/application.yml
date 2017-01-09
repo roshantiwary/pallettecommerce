@@ -1,4 +1,6 @@
 spring:
+  application:
+     name: shop
   data:
     mongodb:
       host: ${systemEnvironment[OPENSHIFT_MONGODB_DB_HOST]}
