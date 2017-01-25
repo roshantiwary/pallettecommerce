@@ -3,11 +3,11 @@ spring:
      name: shop
   data:
     mongodb:
-      host: ${systemEnvironment[OPENSHIFT_MONGODB_DB_HOST]}
-      port: ${systemEnvironment[OPENSHIFT_MONGODB_DB_PORT]}
+      host: ${systemEnvironment[MONGODB_DB_HOST]}
+      port: ${systemEnvironment[MONGODB_DB_PORT]}
       database: shop
-      username: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
-      password: ${systemEnvironment[OPENSHIFT_MONGODB_DB_USERNAME]}
+      username: ${systemEnvironment[MONGODB_DB_USERNAME]}
+      password: ${systemEnvironment[MONGODB_DB_PASSWORD]}
 mvc:
   view:
     suffix: .jsp
