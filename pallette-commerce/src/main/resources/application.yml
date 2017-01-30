@@ -3,11 +3,9 @@ spring:
      name: shop
   data:
     mongodb:
-      host: ${systemEnvironment[MONGODB_DB_HOST]}
-      port: ${systemEnvironment[MONGODB_DB_PORT]}
-      database: shop
-      username: ${systemEnvironment[MONGODB_DB_USERNAME]}
-      password: ${systemEnvironment[MONGODB_DB_PASSWORD]}
+      host: localhost
+      port: 27017
+      database: shop     
 mvc:
   view:
     suffix: .jsp

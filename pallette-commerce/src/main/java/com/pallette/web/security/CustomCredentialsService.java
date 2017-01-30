@@ -11,10 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import com.pallette.domain.Account;
 import com.pallette.service.UserService;
 
+@Component
 public class CustomCredentialsService implements UserDetailsService{
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomCredentialsService.class);
