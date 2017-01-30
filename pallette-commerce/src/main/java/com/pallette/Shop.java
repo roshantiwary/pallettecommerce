@@ -12,10 +12,12 @@ public class Shop extends SpringBootServletInitializer{
 	
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		setRegisterErrorPageFilter(false);
         return application.sources(Shop.class);
     }
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Shop.class, args);	
 	}
+	
 }
