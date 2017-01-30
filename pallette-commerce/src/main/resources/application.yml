@@ -6,8 +6,7 @@ spring:
       host: localhost
       port: 27017
       database: shop
-      username: admin
-      password: admin
+      
 mvc:
   view:
     suffix: .jsp

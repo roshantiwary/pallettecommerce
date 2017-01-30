@@ -14,9 +14,11 @@ import com.pallette.service.UserService;
 
 import com.pallette.domain.AuthenticationRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
