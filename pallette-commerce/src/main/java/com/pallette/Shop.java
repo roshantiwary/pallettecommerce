@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class Shop extends SpringBootServletInitializer{
-	
+	    
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		setRegisterErrorPageFilter(false);
