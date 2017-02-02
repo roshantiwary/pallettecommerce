@@ -1,12 +1,32 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Pallette Commerce</title>
-</head>
-<body>
-	<h1> Home Page Body </h1>
-</body>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Pallette Commerce Home Page</title>
+	</head>
+	
+	<body>
+		Welcome to Pallette Commerce 
+		<%--The below piece of code checks if the user is anonymous/logged In. --%>
+		
+		<sec:authorize access="authenticated">
+			, ${account.firstName}&nbsp;${account.lastName} !!
+			<div class="container">
+				 <ul>
+					
+			         	<li>
+			         		<form:form id="logoutfm" method="post" action="logout"	modelAttribute="logoutForm" class="form-horizontal-logout" role="form">
+								<h2 class="form-heading">Logout from Pallette Commerce.</h2>
+								<button type="submit" class="btn btn-default">Logout</button>
+							</form:form>
+			         	</li>
+			       
+				</ul>
+			</div>
+		</sec:authorize>
+	</body>
 </html>

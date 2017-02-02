@@ -50,7 +50,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	//@RequestMapping(value = "/login")
-	public String login(Model model, @ModelAttribute(value="login") AuthenticationRequest login) {
+	public String login(Model model, @ModelAttribute(value="loginForm")AuthenticationRequest login) {
 		logger.info("Logging in, user: " + login.getUsername());
 		//need to add account object to session?
 		//CustomDetails userDetails = (CustomDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,9 +63,9 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String getLogin(Model model, @ModelAttribute(value="login") AuthenticationRequest login) {
+	public String getLogin(Model model, @ModelAttribute(value="loginForm") AuthenticationRequest login) {
 		logger.info("Logging in GET, user: " + login.getUsername());
-		return "index";
+		return "login";
 	}
 	
 	@RequestMapping(value="/logout", method = RequestMethod.POST)

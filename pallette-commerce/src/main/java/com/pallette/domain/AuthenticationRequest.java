@@ -2,10 +2,22 @@ package com.pallette.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.validator.constraints.NotEmpty;
 
-@XmlRootElement(name="authenticationRequest")
+/**
+ * Class for Login Form Elements validation.
+ * 
+ * @author Pallette Commerce
+ *
+ */
+
+@XmlRootElement(name = "authenticationRequest")
 public class AuthenticationRequest {
+
+	@NotEmpty(message = "{username.required}")
 	private String username;
+
+	@NotEmpty(message = "{password.required}")
 	private String password;
 
 	public String getUsername() {
