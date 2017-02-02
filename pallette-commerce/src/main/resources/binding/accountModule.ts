@@ -10,16 +10,17 @@ import { RegistrationComponent } from "./RegistrationComponent";
 import { ApplicationRoutes } from "./AccountRoutingComponent"; 
 import { AccountSpaComponent } from "./AccountSpaComponent"; 
 import { NavComponent } from "./NavComponent"; 
+import { HomeComponent } from "./HomeComponent"; 
 
-
+import { HttpModule } from '@angular/http';
 
 
 
 
 
 @NgModule({
-  imports:      [ BrowserModule , FormsModule,  RouterModule.forRoot(ApplicationRoutes)],
-  declarations: [LoginComponent, RegistrationComponent, AccountSpaComponent, NavComponent],
+  imports:      [ BrowserModule , FormsModule,  RouterModule.forRoot(ApplicationRoutes), HttpModule],
+  declarations: [LoginComponent, RegistrationComponent, AccountSpaComponent, NavComponent, HomeComponent],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}] ,
   bootstrap:    [AccountSpaComponent, NavComponent]
 })

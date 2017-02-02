@@ -15,6 +15,8 @@ var RegistrationComponent_1 = require("./RegistrationComponent");
 var AccountRoutingComponent_1 = require("./AccountRoutingComponent");
 var AccountSpaComponent_1 = require("./AccountSpaComponent");
 var NavComponent_1 = require("./NavComponent");
+var HomeComponent_1 = require("./HomeComponent");
+var http_1 = require("@angular/http");
 var AccountModule = (function () {
     function AccountModule() {
     }
@@ -22,8 +24,8 @@ var AccountModule = (function () {
 }());
 AccountModule = __decorate([
     core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(AccountRoutingComponent_1.ApplicationRoutes)],
-        declarations: [LoginComponent_1.LoginComponent, RegistrationComponent_1.RegistrationComponent, AccountSpaComponent_1.AccountSpaComponent, NavComponent_1.NavComponent],
+        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, router_1.RouterModule.forRoot(AccountRoutingComponent_1.ApplicationRoutes), http_1.HttpModule],
+        declarations: [LoginComponent_1.LoginComponent, RegistrationComponent_1.RegistrationComponent, AccountSpaComponent_1.AccountSpaComponent, NavComponent_1.NavComponent, HomeComponent_1.HomeComponent],
         providers: [{ provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }],
         bootstrap: [AccountSpaComponent_1.AccountSpaComponent, NavComponent_1.NavComponent]
     })
