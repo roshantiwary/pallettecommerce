@@ -13,7 +13,7 @@ var RegistrationComponent = (function () {
 }());
 RegistrationComponent = __decorate([
     core_1.Component({
-        templateUrl: "/resources/ui/Registration.html"
+        templateUrl: "/resources/ui/Registration.jsp"
     })
 ], RegistrationComponent);
 exports.RegistrationComponent = RegistrationComponent;

@@ -13,7 +13,7 @@ var LoginComponent = (function () {
 }());
 LoginComponent = __decorate([
     core_1.Component({
-        templateUrl: "/resources/ui/Login.html"
+        templateUrl: "/resources/ui/login.jsp"
     })
 ], LoginComponent);
 exports.LoginComponent = LoginComponent;
