@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
@@ -104,7 +105,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private OAuth2ProtectedResourceDetails resource() {
-        AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
+    	ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
         resource.setClientId(clientID);
         resource.setClientSecret(clientSecret);
         resource.setAccessTokenUri(accessTokenUri);
