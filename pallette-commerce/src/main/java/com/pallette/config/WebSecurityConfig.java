@@ -1,5 +1,8 @@
 package com.pallette.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +19,7 @@ import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 import com.pallette.web.security.CustomAuthenticationProvider;
@@ -53,18 +56,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
-    
-    @Value("${security.oauth2.client.user-authorization-uri}")
-    private String userAuthURI;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
-//		http
-//        .authorizeRequests()
-//            .antMatchers("/", "/registration").permitAll()
-//            .anyRequest().authenticated()
-//            .and()
         http    
         .authorizeRequests()
             .antMatchers("/", "/registration","/rest/**").permitAll()
@@ -105,12 +100,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private OAuth2ProtectedResourceDetails resource() {
+    	List<String> scope = new ArrayList<String>();
     	ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
         resource.setClientId(clientID);
         resource.setClientSecret(clientSecret);
         resource.setAccessTokenUri(accessTokenUri);
         resource.setGrantType(grantType);
-//        resource.setUserAuthorizationUri(userAuthURI);
+        resource.setScope(scope);
+        resource.setAuthenticationScheme(AuthenticationScheme.query);
+        resource.setTokenName("access_token");
         return resource;
     }
 
