@@ -22,4 +22,9 @@ security:
       client-secret: MUOXudbPCfm6NsWamj5AEHnlwseDHu6rQMxo2V8Ap9
       grant-type: client_credentials
       access-token-uri: https://api.molt.in/oauth/access_token
-      client-authentication-scheme: header
+      user-authorization-uri: https://api.molt.in/oauth/authorize
+      
+logging.level:
+  org.springframework.web: DEBUG
+  org.hibernate: ERROR
+  org.springframework.security: INFO

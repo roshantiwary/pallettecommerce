@@ -53,10 +53,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
     
+    @Value("${security.oauth2.client.user-authorization-uri}")
+    private String userAuthURI;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
-		http
+//		http
+//        .authorizeRequests()
+//            .antMatchers("/", "/registration").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
+        http    
         .authorizeRequests()
             .antMatchers("/", "/registration","/rest/**").permitAll()
             .anyRequest().authenticated()
@@ -101,7 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         resource.setClientSecret(clientSecret);
         resource.setAccessTokenUri(accessTokenUri);
         resource.setGrantType(grantType);
-
+//        resource.setUserAuthorizationUri(userAuthURI);
         return resource;
     }
 
