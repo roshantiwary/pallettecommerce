@@ -14,12 +14,8 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.AccessTokenProvider;
-import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
 @SpringBootApplication
@@ -55,13 +51,7 @@ public class Shop extends SpringBootServletInitializer{
      * @return
      */
     @Bean
-    public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {    	
-//    	ClientCredentialsAccessTokenProvider provider = new ClientCredentialsAccessTokenProvider();     
-//        OAuth2AccessToken accessToken = provider.obtainAccessToken(resource(), new DefaultAccessTokenRequest());
-//        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resource(), oauth2ClientContext);
-//        restTemplate.setAccessTokenProvider((AccessTokenProvider) accessToken);
-//        return restTemplate;
-
+    public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
     	return new OAuth2RestTemplate(resource(), oauth2ClientContext);
     }
 
@@ -77,7 +67,6 @@ public class Shop extends SpringBootServletInitializer{
         resource.setGrantType(grantType);
         resource.setClientAuthenticationScheme(AuthenticationScheme.header);
         resource.setTokenName("access_token");
-        resource.setAuthenticationScheme(AuthenticationScheme.header);
         resource.setScope(scopes);
         resource.setClientAuthenticationScheme(AuthenticationScheme.form);
         return resource;
