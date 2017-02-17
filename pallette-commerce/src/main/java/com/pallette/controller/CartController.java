@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +25,7 @@ public class CartController {
 	private String cartURI;
 	
 	@RequestMapping(value="/cart/add", method=RequestMethod.POST)
-    public JsonNode getProduct(@RequestBody CartItem item)
+    public JsonNode addItemToCart(@RequestBody CartItem item)
     {
 		String cartId = item.getCartId();
 		if(cartId.isEmpty()) {
@@ -38,6 +39,14 @@ public class CartController {
 		map.add("quantity", item.getQuantity());
 		
     	JsonNode node = restTemplate.postForObject(addItemURI, map, JsonNode.class);
+    	return node;
+    }
+	
+	@RequestMapping(value="/cart/{cartId}", method=RequestMethod.GET, produces="application/json")
+    public JsonNode getCart(@PathVariable("cartId") String cartId)
+    {
+		String getCartURI = cartURI + "/" + cartId;
+    	JsonNode node = restTemplate.getForObject(getCartURI, JsonNode.class);
     	return node;
     }
 }
