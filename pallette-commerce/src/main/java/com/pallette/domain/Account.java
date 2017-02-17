@@ -33,6 +33,8 @@ public class Account {
 	private Date creationdate;
 	
     private String authtoken;
+    
+    private String phoneNumber;
 	
 	public String getId() {
 		return id;
@@ -89,7 +91,15 @@ public class Account {
 	public void setAuthtoken(String authtoken) {
 		this.authtoken = authtoken;
 	}
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
 	@Override
 	public String toString() {
 		return "Account{" +
@@ -97,7 +107,9 @@ public class Account {
                 ", username=" + username + '\'' +
                 ", password=" + password + '\'' +
                 ", firstName=" + firstName + '\'' +
-                ", lastName=" + lastName +
+                ", lastName=" + lastName + '\'' +
+                ", phoneNumber=" + phoneNumber +
                 '}';
 	}
+
 }

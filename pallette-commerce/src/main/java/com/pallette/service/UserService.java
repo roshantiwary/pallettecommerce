@@ -5,9 +5,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.pallette.domain.AuthenticationRequest;
 
+import com.pallette.domain.AuthenticationRequest;
 import com.pallette.domain.Account;
 
 @Service
@@ -18,9 +19,12 @@ public class UserService {
 	@Autowired
 	private AccountService accountService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	public void createAccount(Account account) {
 		logger.debug("Saving account with userId: " + account.getUsername());
-
+		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		accountService.saveAccount(account);
 		// String status = restTemplate.postForObject("http://" +
 		// accountsService + "/account/", account, String.class);

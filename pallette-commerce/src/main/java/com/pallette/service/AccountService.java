@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pallette.domain.Account;
@@ -25,6 +26,9 @@ public class AccountService {
 	 */
 	@Autowired
 	AccountRepository accounts;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * Retrieve an account with given id. The id here is the unique user id
@@ -106,8 +110,13 @@ public class AccountService {
 	public Map<String, Object> login(String username, String password) {
 		logger.debug("login in user: " + username);
 		Map<String, Object> loginResponse = null;
-		Account account = accounts.findByUsernameAndPassword(username, password);
+		Account account = accounts.findByUsername(username);
 		if (account != null) {
+			
+			if(!passwordEncoder.matches(password, account.getPassword())){
+				logger.debug("Incorrect Password for user : " + username);
+				return loginResponse;
+			}
 			logger.debug("Found Account for user: " + username);
 			account.setAuthtoken(UUID.randomUUID().toString());
 			account = accounts.save(account); // persist new auth token and last
