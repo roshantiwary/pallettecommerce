@@ -3,9 +3,9 @@ spring:
      name: shop
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: shop     
+      host: ${MONGODB_HOST}
+      port: ${MONGODB_PORT}
+      database: ${MONGODB_DATABASE}     
   mvc:
     view:
       suffix: .jsp
@@ -18,12 +18,20 @@ server:
 security:
   oauth2:
     client:
-      client-id: gOJlLIuZRtFXDo360ex7qTEY1xEi7A149aDieG6VoH
-      client-secret: MUOXudbPCfm6NsWamj5AEHnlwseDHu6rQMxo2V8Ap9
-      grant-type: client_credentials
-      access-token-uri: https://api.molt.in/oauth/access_token
+      client-id: ${SECURITY_OAUTH2_CLIENT_ID}
+      client-secret: ${SECURITY_OAUTH2_CLIENT_SECRET}
+      grant-type: ${SECURITY_OAUTH2_CLIENT_GRANT_TYPE}
+      access-token-uri: ${SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI}
       
 logging.level:
   org.springframework.web: DEBUG
   org.hibernate: ERROR
   org.springframework.security: INFO
+  
+url:
+  moltin:
+    api:
+      products: ${URL_MOLTIN_API_PRODUCTS}
+      categories: ${URL_MOLTIN_API_CATEGORIES}
+      products-search: ${URL_MOLTIN_API_PRODUCT_SEARCH}
+      cart: ${URL_MOLTIN_API_CART}

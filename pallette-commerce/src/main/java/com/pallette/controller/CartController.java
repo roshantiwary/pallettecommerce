@@ -21,7 +21,7 @@ public class CartController {
 	@Autowired
     private OAuth2RestOperations restTemplate;
 	
-	@Value("https://api.molt.in/v1/carts")
+	@Value("${url.moltin.api.cart}")
 	private String cartURI;
 	
 	@RequestMapping(value="/cart/add", method=RequestMethod.POST)
