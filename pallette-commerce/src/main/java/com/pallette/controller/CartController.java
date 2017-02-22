@@ -22,7 +22,7 @@ public class CartController {
 	@Autowired
     private OAuth2RestOperations restTemplate;
 	
-	@Value("https://api.molt.in/v1/carts")
+	@Value("${url.moltin.api.cart}")
 	private String cartURI;
 
 	@PreAuthorize("#oauth2.hasScope('write')")

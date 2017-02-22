@@ -17,13 +17,13 @@ public class ShopController {
 	@Autowired
     private OAuth2RestOperations restTemplate;
 
-    @Value("https://api.molt.in/v1/products/")
+    @Value("${url.moltin.api.products}")
     private String productsURI;
 
-    @Value("https://api.molt.in/v1/categories")
+    @Value("${url.moltin.api.categories}")
     private String categoriesURI;
     
-    @Value("https://api.molt.in/v1/products/search/?")
+    @Value("${url.moltin.api.products-search}")
     private String searchProductbyField;
 
     @RequestMapping("/products")
