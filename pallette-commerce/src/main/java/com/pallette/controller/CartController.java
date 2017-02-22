@@ -2,6 +2,7 @@ package com.pallette.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -23,7 +24,8 @@ public class CartController {
 	
 	@Value("https://api.molt.in/v1/carts")
 	private String cartURI;
-	
+
+	@PreAuthorize("#oauth2.hasScope('write')")
 	@RequestMapping(value="/cart/add", method=RequestMethod.POST)
     public JsonNode addItemToCart(@RequestBody CartItem item)
     {
