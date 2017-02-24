@@ -3,11 +3,11 @@ spring:
      name: shop
   data:
     mongodb:
-      host: ${MONGODB_HOST}
-      port: ${MONGODB_PORT}
+      host: ${OPENSHIFT_MONGODB_DB_HOST}
+      port: ${OPENSHIFT_MONGODB_DB_PORT}
       database: ${MONGODB_DATABASE}  
-      username: ${MONGODB_USER}
-      password: ${MONGODB_PWD}
+      username: ${OPENSHIFT_MONGODB_DB_USERNAME}
+      password: ${OPENSHIFT_MONGODB_DB_PASSWORD}
   mvc:
     view:
       suffix: .jsp
