@@ -23,4 +23,32 @@ JBoss Server start-up in debug mode
 <EAP-7.0.0 installation>\bin>standalone.bat --debug
 
 Mongo DB start-up
-<Mongo Server installation>\Server\3.4\bin>mongod.exe --dbpath "C:\Program Files\MongoDB\data"
+
+Starting Mongo using user access:
+1. Start Mongo
+	>mongod.exe -dbpath "C:\Program Files\MongoDB\data"
+2. Connect to mongo: 
+	>mongo --port 27017
+3. User Administration:
+	$ use admin
+	$ db.createUser(
+	  {
+		user: "superAdmin",
+		pwd: "admin123",
+		roles: [ { role: "root", db: "admin" } ]
+	  })
+4. Re-start the MongoDB instance with access control
+	> mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
+5. Connect to database instance with superAdmin access
+	> mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
+6. Create user access (readWrite) for shop
+	>mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
+	$use shop
+	$db.createUser(
+	  {
+	   user: "shopUser",
+	   pwd: "shop123",
+	   roles: [ "readWrite"]
+	})
+7. Staring Monog
+	<Mongo Server installation>\Server\3.4\bin>mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"

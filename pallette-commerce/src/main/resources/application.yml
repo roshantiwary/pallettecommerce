@@ -5,7 +5,9 @@ spring:
     mongodb:
       host: ${MONGODB_HOST}
       port: ${MONGODB_PORT}
-      database: ${MONGODB_DATABASE}     
+      database: ${MONGODB_DATABASE}  
+      username: ${MONGODB_USER}
+      password: ${MONGODB_PWD}
   mvc:
     view:
       suffix: .jsp
