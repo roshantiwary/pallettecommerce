@@ -116,7 +116,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2</version>
+                    <version>3.0.0</version>
                     <configuration>
                         <outputDirectory>webapps</outputDirectory>
                         <warName>ROOT</warName>
