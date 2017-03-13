@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  */
 
-@Document(collection = "images")
+@Document(collection = "image")
 public class ImagesDocument {
 
 	@Id

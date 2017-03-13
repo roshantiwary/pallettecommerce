@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author amall3
  *
  */
-@Document(collection = "products")
+@Document(collection = "product")
 public class ProductDocument {
 
 	@Id

@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 
-@Document(collection = "categories")
+@Document(collection = "category")
 public class CategoryDocument {
 
 	@Id
