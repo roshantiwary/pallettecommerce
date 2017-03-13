@@ -35,6 +35,15 @@ public class CategoryDocument {
 	@DBRef
 	private CategoryDocument parentCategoryDocument;
 
+	
+	public CategoryDocument() {
+		super();
+	}
+	
+	public CategoryDocument(String id) {
+		this.id = id;
+	}
+	
 	/**
 	 * @return the id
 	 */

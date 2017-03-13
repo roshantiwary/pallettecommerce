@@ -23,6 +23,14 @@ public class PriceDocument {
 	@Field(value = "sale_price")
 	private double salePrice;
 
+	public PriceDocument() {
+		super();
+	}
+	
+	public PriceDocument(String id) {
+		this.id = id;
+	}
+	
 	/**
 	 * @return the id
 	 */

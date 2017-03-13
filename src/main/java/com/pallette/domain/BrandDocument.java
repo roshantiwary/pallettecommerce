@@ -32,6 +32,14 @@ public class BrandDocument {
 	private String countryCode;
 
 	private String phone;
+	
+	public BrandDocument() {
+		super();
+	}
+	
+	public BrandDocument(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the id
@@ -167,5 +175,4 @@ public class BrandDocument {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 }

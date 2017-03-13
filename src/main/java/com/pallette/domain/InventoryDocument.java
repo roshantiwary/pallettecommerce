@@ -27,6 +27,14 @@ public class InventoryDocument {
 	@Field(value = "stock_status")
 	private String stockStatus;
 
+	public InventoryDocument() {
+		super();
+	}
+	
+	public InventoryDocument(String id) {
+		this.id = id;
+	}
+	
 	/**
 	 * @return the id
 	 */

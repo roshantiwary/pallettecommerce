@@ -29,6 +29,14 @@ public class ImagesDocument {
 
 	@Field(value = "image_availablity")
 	private boolean imageAvailablity;
+	
+	public ImagesDocument() {
+		super();
+	}
+	
+	public ImagesDocument(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the id
