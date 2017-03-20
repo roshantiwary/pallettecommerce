@@ -45,7 +45,7 @@ public class AccountService {
 		Account account = accounts.findByUsername(username);
 		if (account == null) {
 			logger.warn("AccountService.findAccount: could not find account with id: " + username);
-			throw new NoRecordsFoundException();
+			//throw new NoRecordsFoundException();
 		}
 
 		logger.info(String.format("AccountService.findAccount - retrieved account with id: %s. Payload is: %s", username,

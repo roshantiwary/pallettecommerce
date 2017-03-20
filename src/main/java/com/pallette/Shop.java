@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
+import com.pallette.config.CascadingMongoEventListener;
+
 @SpringBootApplication
 @EnableScheduling
 @EnableOAuth2Client
@@ -53,6 +55,11 @@ public class Shop extends SpringBootServletInitializer{
     @Bean
     public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
     	return new OAuth2RestTemplate(resource(), oauth2ClientContext);
+    }
+    
+    @Bean
+    public CascadingMongoEventListener cascadingMongoEventListener() {
+        return new CascadingMongoEventListener();
     }
 
     @Bean

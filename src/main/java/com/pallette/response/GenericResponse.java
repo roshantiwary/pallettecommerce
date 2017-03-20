@@ -4,10 +4,9 @@
 package com.pallette.response;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -18,6 +17,8 @@ import org.springframework.http.HttpStatus;
  * @author amall3
  *
  */
+
+@Component
 public class GenericResponse {
 
 	/**
@@ -31,9 +32,9 @@ public class GenericResponse {
 	private Map<Object, Collection> mapData;
 
 	/**
-	 * A String containing error code. Set to 1 if there is an error
+	 * A HttpStatus containing error code.
 	 */
-	private HttpStatus statusCode;
+	private int statusCode;
 
 	/**
 	 * A String containing error message.
@@ -84,7 +85,7 @@ public class GenericResponse {
 	 * 
 	 * @return the errorCode
 	 */
-	public HttpStatus getStatusCode() {
+	public int getStatusCode() {
 		return statusCode;
 	}
 
@@ -94,7 +95,7 @@ public class GenericResponse {
 	 * @param status
 	 *            the errorCode to set
 	 */
-	public void setStatusCode(HttpStatus status) {
+	public void setStatusCode(int status) {
 		this.statusCode = status;
 	}
 

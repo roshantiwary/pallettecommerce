@@ -4,17 +4,36 @@ public class CartItem {
 
 	private String cartId;
 	private String productId;
-	private String quantity;
-	
-	public String getQuantity() {
+	private long quantity;
+	private String profileId;
+
+	/**
+	 * @return the profileId
+	 */
+	public String getProfileId() {
+		return profileId;
+	}
+
+	/**
+	 * @param profileId
+	 *            the profileId to set
+	 */
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
+
+	public long getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(String quantity) {
+
+	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
+
 	public String getCartId() {
 		return cartId;
 	}
+
 	public void setCartId(String cartId) {
 		this.cartId = cartId;
 	}
@@ -22,8 +41,9 @@ public class CartItem {
 	public String getProductId() {
 		return productId;
 	}
+
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
-	
+
 }

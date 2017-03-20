@@ -1,54 +1,78 @@
 package com.pallette.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.pallette.domain.CartItem;
+import com.pallette.domain.Order;
+import com.pallette.exception.NoRecordsFoundException;
+import com.pallette.response.GenericResponse;
+import com.pallette.service.OrderService;
 
 @RestController
 @RequestMapping("/rest/api/v1")
 public class CartController {
 
 	@Autowired
-    private OAuth2RestOperations restTemplate;
+	private OrderService orderService;
 	
-	@Value("${url.moltin.api.cart}")
-	private String cartURI;
+	private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
-	@PreAuthorize("#oauth2.hasScope('write')")
-	@RequestMapping(value="/cart/add", method=RequestMethod.POST)
-    public JsonNode addItemToCart(@RequestBody CartItem item)
-    {
+	@RequestMapping(value = "/cart/add", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse> addItemToCart(@RequestBody CartItem item) throws NoRecordsFoundException {
+		
 		String cartId = item.getCartId();
-		if(cartId.isEmpty()) {
-			cartId= "234556";
+		GenericResponse genericResponse = new GenericResponse();
+		if (cartId.isEmpty()) {
+
+			genericResponse.setStatusCode(HttpStatus.OK.value());
+			Order order = orderService.createOrder(item.getProductId(), item.getQuantity(), item.getProfileId());
+			List<Order> orders = new ArrayList<Order>();
+			orders.add(order);
+			genericResponse.setItems(orders);
+			genericResponse.setItemCount(orders.size());
+			genericResponse.setMessage("Product Items were Returned Successfully.");
+			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+
+		} else {
+			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
 		}
-		
-    	String addItemURI = cartURI + "/" + cartId;
-    	
-    	MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("id", item.getProductId());
-		map.add("quantity", item.getQuantity());
-		
-    	JsonNode node = restTemplate.postForObject(addItemURI, map, JsonNode.class);
-    	return node;
-    }
+	}
 	
-	@RequestMapping(value="/cart/{cartId}", method=RequestMethod.GET, produces="application/json")
-    public JsonNode getCart(@PathVariable("cartId") String cartId)
-    {
-		String getCartURI = cartURI + "/" + cartId;
-    	JsonNode node = restTemplate.getForObject(getCartURI, JsonNode.class);
-    	return node;
-    }
+	
+	@RequestMapping(value = "/cart/update", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse> updateItem(@RequestBody CartItem item) throws NoRecordsFoundException , IllegalArgumentException {
+		
+		logger.debug("Inside CartController.updateItem()");
+		GenericResponse genericResponse = new GenericResponse();
+		
+		if(null == item)
+			throw new IllegalArgumentException("No Input parameters were Passed");
+			
+		if (StringUtils.isEmpty(item.getCartId()) || StringUtils.isEmpty(item.getProductId()) || StringUtils.isEmpty(item.getQuantity()))
+			throw new IllegalArgumentException("Input parameters missing.");
+		
+		logger.debug("The Passed In Order id : " + item.getCartId() + " Product Id :" + item.getProductId() + "Quantity :" + item.getQuantity());
+		Order order = orderService.updateItemQuantity(item.getCartId() , item.getProductId() , item.getQuantity());
+		
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(order);
+		genericResponse.setItems(orders);
+		genericResponse.setItemCount(orders.size());
+		genericResponse.setMessage("Order was successfully updated.");
+		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+	}
+
 }
