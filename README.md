@@ -22,7 +22,7 @@
 JBoss Server start-up in debug mode
 <EAP-7.0.0 installation>\bin>standalone.bat --debug
 
-###Mongo DB start-up
+### Mongo DB start-up
 
 Starting Mongo using user access:
 - [Start Mongo]
@@ -53,13 +53,13 @@ Starting Mongo using user access:
 - [Staring Mongo]
 	<Mongo Server installation>\Server\3.4\bin>mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
 
-###Application URL
+### Application URL
 - Login: http://www.palletteapart.com/boot/login
 - Registration: http://www.palletteapart.com/boot/registration
 - Access Token: http://www.palletteapart.com/boot/oauth/token (Body: grant_type:password, client_id:acme, client_secret:acmesecret, username:XXXX ,password:XXXXXX) (Authorization: user: XXXX password XXXXX)
 - Get Product: http://www.palletteapart.com/boot/rest/api/v1/products (Header: Authorization:Bearer 04da0457-375a-4f62-bcd0-97ad7456c8ed)
 
-###Role Based Access
+### Role Based Access
 - Following Roles have been created ADMIN (Update/Modify Order), ADMINISTRATOR(Provide users with access rights), STORE_USER(Store user can login and update order information), USER(Logged-In Customer)
 - Default password for the roles are read from environment variable DEFAULT_PASSWORD
 - Please update ResourceServerConfiguration.java with URL and Grant Authority based on Role
@@ -70,13 +70,13 @@ There are 2 types of Grant Types
 	- client_credentials - Browse/Checkout Services do not require password
 	- password - MyAccount services require users to be logged-in
 
-###Client Credentials Grant
+### Client Credentials Grant
 	- x-www-form-urlencoded body should contain following attributes
 		- granty_type - client_credentials
 		- client-id - acme
 		- client_secret - acmesecret
 
-###Password	Grant
+### Password	Grant
 	- x-www-form-urlencoded body should contain following attributes
 		- granty_type - client_credentials
 		- client-id - acme
