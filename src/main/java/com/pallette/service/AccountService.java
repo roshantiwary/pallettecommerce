@@ -125,6 +125,7 @@ public class AccountService {
 
 			loginResponse.put("authToken", account.getAuthtoken());
 			loginResponse.put("accountid", account.getId());
+			loginResponse.put("role", account.getRoles());
 			// loginResponse.put("password", account.getPasswd());
 
 			logger.info("AccountService.login success for " + username + " username::token="

@@ -1,9 +1,13 @@
 package com.pallette.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,6 +31,9 @@ public class Account {
 	
 	private String lastName;
 
+	@DBRef
+	private List<Role> roles = new ArrayList<Role>();
+	
 	@DateTimeFormat(style = "LL")
 	@JsonProperty("creationdate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -99,6 +106,35 @@ public class Account {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void addRole(List<Role> roles) {
+		this.roles.addAll(roles);
+	}
+	
+	public void removeRole(Role role) {
+		//use iterator to avoid java.util.ConcurrentModificationException with foreach
+		for (Iterator<Role> iter = this.roles.iterator(); iter.hasNext(); )
+		{
+		   if (iter.next().equals(role))
+		      iter.remove();
+		}
+	}
+	
+	public String getRolesCSV() {
+		StringBuilder sb = new StringBuilder();
+		for (Iterator<Role> iter = this.roles.iterator(); iter.hasNext(); )
+		{
+		   sb.append(iter.next().getId());
+		   if (iter.hasNext()) {
+			   sb.append(',');
+		   }
+		}
+		return sb.toString();
+	}	
 	
 	@Override
 	public String toString() {

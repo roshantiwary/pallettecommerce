@@ -1,5 +1,7 @@
 package com.pallette.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pallette.domain.AuthenticationRequest;
+import com.pallette.domain.Role;
+import com.pallette.repository.RoleRepository;
 import com.pallette.domain.Account;
 
 @Service
@@ -22,14 +26,21 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	RoleRepository roleRepository;
+	
+	
 	public void createAccount(Account account) {
 		logger.debug("Saving account with userId: " + account.getUsername());
+		
+		// Create User Role
+		Role userRole = roleRepository.findByName("USER");
+		List<Role> roles = new ArrayList<Role>();
+		roles.add(userRole);
+		account.addRole(roles);
+				
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		accountService.saveAccount(account);
-		// String status = restTemplate.postForObject("http://" +
-		// accountsService + "/account/", account, String.class);
-		// logger.info("Status from registering account for "+
-		// account.getUserid()+ " is " + status);
 	}
 
 	public Map<String, Object> login(AuthenticationRequest request) {

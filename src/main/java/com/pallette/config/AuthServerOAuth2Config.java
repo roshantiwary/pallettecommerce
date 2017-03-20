@@ -22,7 +22,8 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 		// TODO Auto-generated method stub
 		security
         .tokenKeyAccess("permitAll()")
-        .checkTokenAccess("isAuthenticated()");
+        .checkTokenAccess("isAuthenticated()")
+        .allowFormAuthenticationForClients();
 	}
 	
 	@Override
@@ -32,7 +33,6 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 		clients.inMemory()
         .withClient("acme")
         .secret("acmesecret")
-        .authorities("USER")
         .authorizedGrantTypes("authorization_code", "refresh_token",
             "password", "client_credentials").scopes("read","write")
         .accessTokenValiditySeconds(500);

@@ -43,7 +43,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/registration").permitAll()
-                .antMatchers("/rest/**").authenticated();
+                .antMatchers("/rest/**").authenticated()
+                .antMatchers("/private/rest/api/v1/userprofile/admin").hasAnyAuthority("ADMIN")
+                .antMatchers("/private/rest/api/v1/userprofile/user").hasAnyAuthority("USER")
+                .antMatchers("/private/rest/api/v1/userprofile/administrator").hasAnyAuthority("ADMINISTRATOR");
 
     }
 

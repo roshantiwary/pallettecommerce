@@ -37,3 +37,6 @@ url:
       categories: ${URL_MOLTIN_API_CATEGORIES}
       products-search: ${URL_MOLTIN_API_PRODUCT_SEARCH}
       cart: ${URL_MOLTIN_API_CART}
+      
+pallette:
+  default-password: ${DEFAULT_PASSWORD}
