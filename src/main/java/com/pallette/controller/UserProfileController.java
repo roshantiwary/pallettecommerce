@@ -30,7 +30,7 @@ public class UserProfileController {
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();
-		genericResponse.setStatusCode(HttpStatus.FOUND);
+		genericResponse.setStatusCode(HttpStatus.FOUND.value());
 		genericResponse.setMessage("User Logged In");
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
@@ -47,7 +47,7 @@ public class UserProfileController {
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();
-		genericResponse.setStatusCode(HttpStatus.FOUND);
+		genericResponse.setStatusCode(HttpStatus.FOUND.value());
 		genericResponse.setMessage("Admin Logged In");
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
@@ -64,7 +64,7 @@ public class UserProfileController {
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();
-		genericResponse.setStatusCode(HttpStatus.FOUND);
+		genericResponse.setStatusCode(HttpStatus.FOUND.value());
 		genericResponse.setMessage("Administrator Logged In");
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
