@@ -27,6 +27,7 @@ import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
 import com.pallette.repository.ProductRepository;
+import com.pallette.repository.SequenceDao;
 
 /**
  * <p>
@@ -60,6 +61,8 @@ public class OrderService {
 	private static final String DEFAULT_COMMERCE_ITEM = "defaultCommerceItem";
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+	
+	private static final String HOSTING_SEQ_KEY = "hosting";
 
 	/**
 	 * The Order repository.
@@ -78,6 +81,10 @@ public class OrderService {
 	 */
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private SequenceDao sequenceDao;
+
 	
 	/**
 	 * 
@@ -150,6 +157,7 @@ public class OrderService {
 		
 		//Create new Order Object an set the default values.
 		Order order = new Order();
+		order.setId(sequenceDao.getNextSequenceId(HOSTING_SEQ_KEY));
 		order.setCreatedDate(new Date());
 		order.setState(INITIAL);
 		order.setOrderType(DEFAULT_ORDER_TYPE);

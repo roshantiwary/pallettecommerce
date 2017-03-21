@@ -2,7 +2,7 @@ package com.pallette.domain;
 
 public class CartItem {
 
-	private String cartId;
+	private String orderId;
 	private String productId;
 	private long quantity;
 	private String profileId;
@@ -30,20 +30,27 @@ public class CartItem {
 		this.quantity = quantity;
 	}
 
-	public String getCartId() {
-		return cartId;
-	}
-
-	public void setCartId(String cartId) {
-		this.cartId = cartId;
-	}
-
 	public String getProductId() {
 		return productId;
 	}
 
 	public void setProductId(String productId) {
 		this.productId = productId;
+	}
+
+	/**
+	 * @return the orderId
+	 */
+	public String getOrderId() {
+		return orderId;
+	}
+
+	/**
+	 * @param orderId
+	 *            the orderId to set
+	 */
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }

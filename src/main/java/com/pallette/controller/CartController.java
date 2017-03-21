@@ -33,7 +33,7 @@ public class CartController {
 	@RequestMapping(value = "/cart/add", method = RequestMethod.POST)
 	public ResponseEntity<GenericResponse> addItemToCart(@RequestBody CartItem item) throws NoRecordsFoundException {
 		
-		String cartId = item.getCartId();
+		String cartId = item.getOrderId();
 		GenericResponse genericResponse = new GenericResponse();
 		if (cartId.isEmpty()) {
 
@@ -61,11 +61,11 @@ public class CartController {
 		if(null == item)
 			throw new IllegalArgumentException("No Input parameters were Passed");
 			
-		if (StringUtils.isEmpty(item.getCartId()) || StringUtils.isEmpty(item.getProductId()) || StringUtils.isEmpty(item.getQuantity()))
+		if (StringUtils.isEmpty(item.getOrderId()) || StringUtils.isEmpty(item.getProductId()) || StringUtils.isEmpty(item.getQuantity()))
 			throw new IllegalArgumentException("Input parameters missing.");
 		
-		logger.debug("The Passed In Order id : " + item.getCartId() + " Product Id :" + item.getProductId() + "Quantity :" + item.getQuantity());
-		Order order = orderService.updateItemQuantity(item.getCartId() , item.getProductId() , item.getQuantity());
+		logger.debug("The Passed In Order id : " + item.getOrderId() + " Product Id :" + item.getProductId() + "Quantity :" + item.getQuantity());
+		Order order = orderService.updateItemQuantity(item.getOrderId() , item.getProductId() , item.getQuantity());
 		
 		List<Order> orders = new ArrayList<Order>();
 		orders.add(order);
