@@ -12,17 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.CommerceItem;
-import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
-import com.pallette.domain.OrderPriceInfo;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
 import com.pallette.domain.ProductDocument;
 import com.pallette.domain.ShippingGroup;
-import com.pallette.domain.ShippingPriceInfo;
 import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
@@ -51,8 +49,6 @@ public class OrderService {
 	private static final String WEB = "web";
 
 	private static final String DEFAULT_ORDER_TYPE = "defaultOrderType";
-
-	private static final String INR = "INR";
 
 	private static final String DEFAULT_CATALOG = "defaultCatalog";
 
@@ -84,6 +80,9 @@ public class OrderService {
 	
 	@Autowired
 	private SequenceDao sequenceDao;
+	
+	@Autowired
+	OrderRepriceChain orderRepriceChain;
 
 	
 	/**
@@ -112,17 +111,8 @@ public class OrderService {
 			throw new NoRecordsFoundException("No Commerce Item Found to Update.");
 		
 		itemToUpdate.setQuantity(newQuantity);
-		ItemPriceInfo itemPriceInfo = itemToUpdate.getItemPriceInfo();
-		double amount = prodItem.getPriceDocument().getSalePrice() * newQuantity;
-		itemPriceInfo.setAmount(amount);
 		
-		double orderTotal = 0.0;
-		for (CommerceItem item : order.getCommerceItems()) {
-			orderTotal = orderTotal + item.getItemPriceInfo().getAmount();
-		}
-		OrderPriceInfo orderPriceInfo = order.getOrderPriceInfo();
-		orderPriceInfo.setAmount(orderTotal);
-		orderPriceInfo.setRawSubTotal(orderTotal);
+		orderRepriceChain.reprice(order);
 		
 		return orderRepository.save(order);
 	}
@@ -156,42 +146,13 @@ public class OrderService {
 			throw new NoRecordsFoundException("No Product Found while creating order.");
 		
 		//Create new Order Object an set the default values.
-		Order order = new Order();
-		order.setId(sequenceDao.getNextSequenceId(HOSTING_SEQ_KEY));
-		order.setCreatedDate(new Date());
-		order.setState(INITIAL);
-		order.setOrderType(DEFAULT_ORDER_TYPE);
-		order.setOriginOfOrder(WEB);
-		order.setSiteId(PALLETTE);
+		Order order = initializeOrder();
 		
 		//Create new ShippingGroup Object an set the default values.
-		ShippingGroup shipGrp = new ShippingGroup();
-		shipGrp.setShippingGroupType(HARD_GOOD_SHIPPING_GROUP);
-		shipGrp.setState(INITIAL);
-		
-		ShippingPriceInfo shipPriceInfo = new ShippingPriceInfo();
-		shipPriceInfo.setAmount(0.0);
-		shipPriceInfo.setRawShipping(0.0);
-		shipPriceInfo.setCurrencyCode(INR);
-		shipGrp.setShippingPriceInfo(shipPriceInfo);
-		
-		Address address = new Address();
-		shipGrp.setAddress(address);
-		
-		order.addShippingGroup(shipGrp);
+		initializeShippingGroup(order);
 		
 		//Create new PaymentGroup Object an set the default values.
-		PaymentGroup payGrp = new PaymentGroup();
-		payGrp.setState(INITIAL);
-		payGrp.setPaymentGroupType(CREDIT_CARD);
-		payGrp.setPaymentMethod(CREDIT_CARD);
-		
-		PaymentStatus paymentStatus = new PaymentStatus();
-		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-		payGrp.setDebitStatus(paymentStatusList);
-		payGrp.setCreditStatus(paymentStatusList);
-		payGrp.setAuthorizationStatus(paymentStatusList);
-		order.addPaymentGroup(payGrp);
+		initializePaymentGroup(order);
 		
 		//Create new CommerceItem Object an set the default values.
 		CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem);
@@ -206,32 +167,46 @@ public class OrderService {
 			order.setTransient(Boolean.FALSE);
 		}
 		
-		OrderPriceInfo orderPriceInfo = createAndPopulateOrderPriceInfo(order);
-		order.setOrderPriceInfo(orderPriceInfo);
+		orderRepriceChain.reprice(order);
 		
 		return orderRepository.save(order);
 
 	}
 
-	/**
-	 * @param order
-	 * @return
-	 */
-	private OrderPriceInfo createAndPopulateOrderPriceInfo(Order order) {
-		OrderPriceInfo orderPriceInfo = new OrderPriceInfo();
-		orderPriceInfo.setCurrencyCode(INR);
-		orderPriceInfo.setDiscounted(Boolean.FALSE);
+	private Order initializeOrder() {
+		Order order = new Order();
+		order.setId(sequenceDao.getNextSequenceId(HOSTING_SEQ_KEY));
+		order.setCreatedDate(new Date());
+		order.setState(INITIAL);
+		order.setOrderType(DEFAULT_ORDER_TYPE);
+		order.setOriginOfOrder(WEB);
+		order.setSiteId(PALLETTE);
+		return order;
+	}
+
+	private void initializeShippingGroup(Order order) {
+		ShippingGroup shipGrp = new ShippingGroup();
+		shipGrp.setShippingGroupType(HARD_GOOD_SHIPPING_GROUP);
+		shipGrp.setState(INITIAL);
 		
-		double orderTotal = 0.0;
-		for (CommerceItem item : order.getCommerceItems()) {
-			orderTotal = orderTotal + item.getItemPriceInfo().getAmount();
-		}
-	
-		orderPriceInfo.setAmount(orderTotal);
-		orderPriceInfo.setRawSubTotal(orderTotal);
-		orderPriceInfo.setShipping(0.0);
-		orderPriceInfo.setTax(0.0);
-		return orderPriceInfo;
+		Address address = new Address();
+		shipGrp.setAddress(address);
+		
+		order.addShippingGroup(shipGrp);
+	}
+
+	private void initializePaymentGroup(Order order) {
+		PaymentGroup payGrp = new PaymentGroup();
+		payGrp.setState(INITIAL);
+		payGrp.setPaymentGroupType(CREDIT_CARD);
+		payGrp.setPaymentMethod(CREDIT_CARD);
+		
+		PaymentStatus paymentStatus = new PaymentStatus();
+		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
+		payGrp.setDebitStatus(paymentStatusList);
+		payGrp.setCreditStatus(paymentStatusList);
+		payGrp.setAuthorizationStatus(paymentStatusList);
+		order.addPaymentGroup(payGrp);
 	}
 
 	/**
@@ -249,20 +224,6 @@ public class OrderService {
 		commerceItem.setQuantity(quantity);
 		commerceItem.setState(INITIAL);
 		commerceItem.setDescription(prodDoc.getProductDescription());
-		
-		ItemPriceInfo itemPriceInfo = new ItemPriceInfo();
-		itemPriceInfo.setOnSale(Boolean.FALSE);
-		itemPriceInfo.setDiscounted(Boolean.FALSE);
-		itemPriceInfo.setCurrencyCode(INR);
-		
-		itemPriceInfo.setListPrice(prodDoc.getPriceDocument().getListPrice());
-		itemPriceInfo.setSalePrice(prodDoc.getPriceDocument().getSalePrice());
-		
-		double amount = prodDoc.getPriceDocument().getSalePrice() * quantity;
-		itemPriceInfo.setAmount(amount);
-		itemPriceInfo.setRawTotalPrice(amount);
-		
-		commerceItem.setItemPriceInfo(itemPriceInfo);
 		
 		return commerceItem;
 	}
