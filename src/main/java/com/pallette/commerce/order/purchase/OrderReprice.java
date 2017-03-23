@@ -1,10 +1,13 @@
 package com.pallette.commerce.order.purchase;
 
+import org.springframework.stereotype.Component;
+
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
 
+@Component
 public class OrderReprice implements RepriceChain{
 	
 	private RepriceChain repriceChain;

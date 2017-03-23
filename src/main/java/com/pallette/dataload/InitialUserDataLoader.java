@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pallette.domain.Account;
 import com.pallette.domain.Role;
+import com.pallette.domain.SequenceId;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.RoleRepository;
 
@@ -34,6 +36,9 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
 	@Value("${pallette.default-password}")
 	private String defaultPassword;
 	
+	@Autowired
+	private MongoOperations mongoOperation;
+	
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -53,6 +58,9 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
 		createAdministor(administrator);
 		// Create user
 		createUser(user);
+		
+		//Create Sequence if not found
+		createSequenceIfNotFound();
 		
 		alreadySetup = true;
 	}
@@ -116,6 +124,21 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
             acctRepository.save(account);
         } 
         return account;
+    }
+	
+	@Transactional
+    private List<SequenceId> createSequenceIfNotFound() {
+  
+		List<SequenceId> sequences = mongoOperation.findAll(SequenceId.class);
+		
+		if(sequences.isEmpty()) {
+			SequenceId sequence = new SequenceId();
+			sequence.setId("hosting");
+			sequence.setSeq(0);
+			mongoOperation.save(sequence);
+		}
+		
+        return sequences;
     }
 
 }
