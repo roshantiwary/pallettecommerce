@@ -38,6 +38,6 @@ public class OrderReprice implements RepriceChain{
 		order.setOrderPriceInfo(orderPriceInfo);
 		
 		//invoke next chain
-		this.repriceChain.reprice(order);
+//		this.repriceChain.reprice(order);
 	}
 }

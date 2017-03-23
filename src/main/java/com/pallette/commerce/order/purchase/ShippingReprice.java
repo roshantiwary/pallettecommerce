@@ -34,6 +34,6 @@ public class ShippingReprice implements RepriceChain{
 		}
 		
 		//invoke next chain
-		this.repriceChain.reprice(order);
+		//this.repriceChain.reprice(order);
 	}
 }

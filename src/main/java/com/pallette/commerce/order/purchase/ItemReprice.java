@@ -54,7 +54,7 @@ public class ItemReprice implements RepriceChain{
 		}
 		
 		//invoke next chain
-		this.repriceChain.reprice(order);
+		//this.repriceChain.reprice(order);
 	}
 
 	
