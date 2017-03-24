@@ -90,5 +90,9 @@ public class CustomCredentialsService implements UserDetailsService{
 			return account.getAuthtoken();
 		}
 		
+		public String getProfileId() {
+			return account.getId();
+		}
+		
 	}
 }

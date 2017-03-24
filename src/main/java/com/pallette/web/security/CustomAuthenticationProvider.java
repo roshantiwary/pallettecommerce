@@ -47,8 +47,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				}
 				
 				// Add Logic to populate Order-id
+				String profileId = (String) params.get("accountid");
+				ApplicationUser appUser = new ApplicationUser(name, password, true, true, true, true, grantedAuths, profileId);
+				
 				Authentication auth = new UsernamePasswordAuthenticationToken(
-						name, password, grantedAuths);
+						appUser, password, grantedAuths);
 				return auth;
 			} else {
 				throw new BadCredentialsException("Username not found");
