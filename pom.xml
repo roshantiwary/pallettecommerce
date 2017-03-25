@@ -49,6 +49,13 @@
             </exclusions>
 		</dependency>
 		
+				<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
+		    <version>1.8.3</version>
+		</dependency>
+		
 		<!-- We need to include the javax.servlet API specs, the implementation will be provided by Wildfly / JBoss-->
 	    <dependency>
 	      <groupId>javax.servlet</groupId>
