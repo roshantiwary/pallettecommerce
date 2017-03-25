@@ -15,9 +15,9 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.pallette.response.GenericResponse;
 import com.pallette.web.security.ApplicationUser;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 @RestController
 @RequestMapping("/private/rest/api/v1/userprofile")
 public class UserProfileController {

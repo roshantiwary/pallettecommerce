@@ -5,6 +5,7 @@ package com.pallette.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * <p>
@@ -20,7 +21,11 @@ public class SequenceId {
 	@Id
 	private String id;
 
-	private long seq;
+	@Field(value = "order_seq")
+	private long orderSeq;
+
+	@Field(value = "profile_seq")
+	private long profileSeq;
 
 	/**
 	 * @return the id
@@ -38,18 +43,33 @@ public class SequenceId {
 	}
 
 	/**
-	 * @return the seq
+	 * @return the orderSeq
 	 */
-	public long getSeq() {
-		return seq;
+	public long getOrderSeq() {
+		return orderSeq;
 	}
 
 	/**
-	 * @param seq
-	 *            the seq to set
+	 * @param orderSeq
+	 *            the orderSeq to set
 	 */
-	public void setSeq(long seq) {
-		this.seq = seq;
+	public void setOrderSeq(long orderSeq) {
+		this.orderSeq = orderSeq;
+	}
+
+	/**
+	 * @return the profileSeq
+	 */
+	public long getProfileSeq() {
+		return profileSeq;
+	}
+
+	/**
+	 * @param profileSeq
+	 *            the profileSeq to set
+	 */
+	public void setProfileSeq(long profileSeq) {
+		this.profileSeq = profileSeq;
 	}
 
 }

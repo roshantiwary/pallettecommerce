@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.CommerceItem;
@@ -58,8 +59,6 @@ public class OrderService {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 	
-	private static final String HOSTING_SEQ_KEY = "hosting";
-
 	/**
 	 * The Order repository.
 	 */
@@ -175,7 +174,7 @@ public class OrderService {
 
 	private Order initializeOrder() {
 		Order order = new Order();
-		order.setId(sequenceDao.getNextSequenceId(HOSTING_SEQ_KEY));
+		order.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		order.setCreatedDate(new Date());
 		order.setState(INITIAL);
 		order.setOrderType(DEFAULT_ORDER_TYPE);

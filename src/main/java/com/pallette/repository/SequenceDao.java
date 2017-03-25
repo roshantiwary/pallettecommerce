@@ -10,7 +10,21 @@ import com.pallette.exception.SequenceException;
  *
  */
 public interface SequenceDao {
-	
-	String getNextSequenceId(String key) throws SequenceException;
+
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 * @throws SequenceException
+	 */
+	public String getNextOrderSequenceId(String key) throws SequenceException;
+
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 * @throws SequenceException
+	 */
+	public String getNextProfileSequenceId(String key) throws SequenceException;
 
 }

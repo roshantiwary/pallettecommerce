@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Role;
 import com.pallette.domain.SequenceId;
@@ -133,8 +134,9 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
 		
 		if(sequences.isEmpty()) {
 			SequenceId sequence = new SequenceId();
-			sequence.setId("hosting");
-			sequence.setSeq(0);
+			sequence.setId(SequenceConstants.SEQ_KEY);
+			sequence.setOrderSeq(0);
+			sequence.setProfileSeq(0);
 			mongoOperation.save(sequence);
 		}
 		
