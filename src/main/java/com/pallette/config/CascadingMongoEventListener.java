@@ -44,6 +44,9 @@ public class CascadingMongoEventListener extends AbstractMongoEventListener {
 	}
 	
 	private void checkNSave(Object fieldValue) {
+		
+		if (null == fieldValue)
+			return;
 
 		DbRefFieldCallback callback = new DbRefFieldCallback();
 		ReflectionUtils.doWithFields(fieldValue.getClass(), callback);
