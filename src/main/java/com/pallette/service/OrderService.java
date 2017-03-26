@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
@@ -41,23 +42,7 @@ import com.pallette.repository.SequenceDao;
 @Service
 public class OrderService {
 
-	private static final String CREDIT_CARD = "creditCard";
-
-	private static final String HARD_GOOD_SHIPPING_GROUP = "HardGoodShippingGroup";
-
-	private static final String PALLETTE = "Pallette";
-
-	private static final String WEB = "web";
-
-	private static final String DEFAULT_ORDER_TYPE = "defaultOrderType";
-
-	private static final String DEFAULT_CATALOG = "defaultCatalog";
-
-	private static final String INITIAL = "initial";
-
-	private static final String DEFAULT_COMMERCE_ITEM = "defaultCommerceItem";
-
-	private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 	
 	/**
 	 * The Order repository.
@@ -66,13 +51,13 @@ public class OrderService {
 	private OrderRepository orderRepository;
 	
 	/**
-	 * The Product repository.
+	 * The Product Repository.
 	 */
 	@Autowired
 	private ProductRepository productRepository;
 	
 	/**
-	 * The Product repository.
+	 * The Account Repository.
 	 */
 	@Autowired
 	private AccountRepository accountRepository;
@@ -94,8 +79,8 @@ public class OrderService {
 	 */
 	public Order updateItemQuantity(String orderId, String productId, long newQuantity) throws NoRecordsFoundException {
 		
-		logger.debug("Inside OrderService.updateItemQuantity()");
-		logger.debug("The Passed In Order id : " + orderId + " Product Id :" + productId + "Quantity :" + productId);
+		log.debug("Inside OrderService.updateItemQuantity()");
+		log.debug("The Passed In Order id : " + orderId + " Product Id :" + productId + "Quantity :" + productId);
 		
 		Order order = orderRepository.findOne(orderId);
 		if(null == order)
@@ -131,6 +116,40 @@ public class OrderService {
 		return null;
 	}
 	
+
+	/**
+	 * Method for creating order with default values.
+	 * 
+	 * @param profileId
+	 * @return
+	 */
+	public Order createDefaultOrder(String profileId) {
+
+		log.debug("Inside OrderServices.createDefaultOrder()");
+		log.debug("The profile passed is " + profileId);
+
+		// Create new Order Object an set the default values.
+		Order order = initializeOrder();
+
+		// Create new ShippingGroup Object an set the default values.
+		initializeShippingGroup(order);
+
+		// Create new PaymentGroup Object an set the default values.
+		initializePaymentGroup(order);
+
+		Account profile = accountRepository.findOne(profileId);
+		order.setProfileId(profileId);
+		if (null == profile) {
+			order.setTransient(Boolean.TRUE);
+		} else {
+			order.setTransient(Boolean.FALSE);
+		}
+
+		orderRepriceChain.reprice(order);
+		return orderRepository.save(order);
+	}
+	
+	
 	/**
 	 * 
 	 * @return 
@@ -139,7 +158,7 @@ public class OrderService {
 	 */
 	public Order createOrder(String productId , long quantity , String profileId) throws NoRecordsFoundException {
 		
-		logger.debug("Inside OrderServices.");
+		log.debug("Inside OrderServices.");
 		ProductDocument prodItem = productRepository.findOne(productId);
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found while creating order.");
@@ -176,17 +195,17 @@ public class OrderService {
 		Order order = new Order();
 		order.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		order.setCreatedDate(new Date());
-		order.setState(INITIAL);
-		order.setOrderType(DEFAULT_ORDER_TYPE);
-		order.setOriginOfOrder(WEB);
-		order.setSiteId(PALLETTE);
+		order.setState(CommerceContants.INITIAL);
+		order.setOrderType(CommerceContants.DEFAULT_ORDER_TYPE);
+		order.setOriginOfOrder(CommerceContants.WEB);
+		order.setSiteId(CommerceContants.PALLETTE);
 		return order;
 	}
 
 	private void initializeShippingGroup(Order order) {
 		ShippingGroup shipGrp = new ShippingGroup();
-		shipGrp.setShippingGroupType(HARD_GOOD_SHIPPING_GROUP);
-		shipGrp.setState(INITIAL);
+		shipGrp.setShippingGroupType(CommerceContants.HARD_GOOD_SHIPPING_GROUP);
+		shipGrp.setState(CommerceContants.INITIAL);
 		
 		Address address = new Address();
 		shipGrp.setAddress(address);
@@ -196,9 +215,9 @@ public class OrderService {
 
 	private void initializePaymentGroup(Order order) {
 		PaymentGroup payGrp = new PaymentGroup();
-		payGrp.setState(INITIAL);
-		payGrp.setPaymentGroupType(CREDIT_CARD);
-		payGrp.setPaymentMethod(CREDIT_CARD);
+		payGrp.setState(CommerceContants.INITIAL);
+		payGrp.setPaymentGroupType(CommerceContants.CREDIT_CARD);
+		payGrp.setPaymentMethod(CommerceContants.CREDIT_CARD);
 		
 		PaymentStatus paymentStatus = new PaymentStatus();
 		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
@@ -217,11 +236,11 @@ public class OrderService {
 	private CommerceItem createAndPopulateCommerceItem(long quantity, ProductDocument prodDoc) {
 		
 		CommerceItem commerceItem = new CommerceItem();
-		commerceItem.setCatalogId(DEFAULT_CATALOG);
+		commerceItem.setCatalogId(CommerceContants.DEFAULT_CATALOG);
 		commerceItem.setCatalogRefId(prodDoc.getId());
-		commerceItem.setCommerceItemType(DEFAULT_COMMERCE_ITEM);
+		commerceItem.setCommerceItemType(CommerceContants.DEFAULT_COMMERCE_ITEM);
 		commerceItem.setQuantity(quantity);
-		commerceItem.setState(INITIAL);
+		commerceItem.setState(CommerceContants.INITIAL);
 		commerceItem.setDescription(prodDoc.getProductDescription());
 		
 		return commerceItem;

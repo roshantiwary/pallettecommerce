@@ -10,19 +10,29 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
 import com.pallette.constants.SequenceConstants;
+import com.pallette.domain.Order;
 import com.pallette.repository.SequenceDao;
+import com.pallette.service.OrderService;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
 
 	@Autowired
 	private SequenceDao sequenceDao;
 
+	@Autowired
+	private OrderService orderService;
+
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-		 Map<String, Object> additionalInfo = new HashMap<>();
-	        additionalInfo.put("orderId", sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
-	        additionalInfo.put("profileId", sequenceDao.getNextProfileSequenceId(SequenceConstants.SEQ_KEY));
-	        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-	        return accessToken;
+		
+		Map<String, Object> additionalInfo = new HashMap<>();
+
+		String profileId = sequenceDao.getNextProfileSequenceId(SequenceConstants.SEQ_KEY);
+		additionalInfo.put("profileId", profileId);
+		Order order = orderService.createDefaultOrder(profileId);
+		additionalInfo.put("orderId", order.getId());
+
+		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+		return accessToken;
 	}
 }

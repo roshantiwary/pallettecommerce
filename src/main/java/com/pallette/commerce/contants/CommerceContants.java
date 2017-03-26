@@ -15,7 +15,21 @@ public class CommerceContants {
 	public static final String ORDER_ID = "orderId";
 
 	public static final String PROFILE_ID = "profileId";
-	
+
 	public static final String ORDER = "order";
+
+	public static final String CREDIT_CARD = "creditCard";
+
+	public static final String PALLETTE = "Pallette";
+
+	public static final String WEB = "web";
+
+	public static final String DEFAULT_ORDER_TYPE = "defaultOrderType";
+
+	public static final String DEFAULT_CATALOG = "defaultCatalog";
+
+	public static final String INITIAL = "initial";
+
+	public static final String DEFAULT_COMMERCE_ITEM = "defaultCommerceItem";
 
 }

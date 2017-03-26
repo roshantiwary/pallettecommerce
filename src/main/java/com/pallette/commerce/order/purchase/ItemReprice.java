@@ -33,6 +33,9 @@ public class ItemReprice implements RepriceChain{
 		//calculate item price
 		
 		List<CommerceItem> items = order.getCommerceItems();
+		if (null == items)
+			return;
+		
 		for (CommerceItem commerceItem : items) {
 			ItemPriceInfo itemPriceInfo = new ItemPriceInfo();
 			itemPriceInfo.setOnSale(Boolean.FALSE);
