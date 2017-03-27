@@ -30,5 +30,12 @@ public interface ProductRepository extends 	MongoRepository<ProductDocument, Str
 	 * passed in product Title.
 	 */
 	public List<ProductDocument> findByProductTitle(String productTitle);
-
+	
+	
+	/**
+	 * Method that queries the Mongo DB to get all the products that matches
+	 * passed in brand id.
+	 */
+	public List<ProductDocument> findByProductBrandId(String id);
+	
 }

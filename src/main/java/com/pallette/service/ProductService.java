@@ -96,5 +96,25 @@ public class ProductService {
 		}
 		return products;
 	}
+
+	/**
+	 * Method responsible for invoking the product repository to fetch products
+	 * matching the Brand Id.
+	 * 
+	 * @return List<ProductDocument>
+	 */
+	public List<ProductDocument> getProductByBrand(String brandId) {
+
+		logger.debug("ProductService.getProductByBrand() , parameter passed is: " + brandId);
+		List<ProductDocument> products = new ArrayList<ProductDocument>();
+
+		products = productRepository.findByProductBrandId(brandId);
+		if (null != products && !products.isEmpty()) {
+			logger.info(String.format("ProductService.getProductByBrand - retrieved product list is: %s" , products.toString()));
+		} else {
+			logger.warn("ProductService.getProductByBrand(): could not find any Products from Repository.");
+		}
+		return products;
+	}
 	
 }

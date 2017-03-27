@@ -113,6 +113,29 @@ public class BrowseController {
 		} else
 			throw new NoRecordsFoundException("No Products Found");
 	}
+
+	@RequestMapping(value = "/products/brand/{brandId}", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<GenericResponse> getProductsByBrand(@PathVariable("brandId") String brandId) throws NoRecordsFoundException , IllegalArgumentException {
+		
+		logger.debug("BrowseController.getProductsByBrand()");
+		GenericResponse genericResponse = new GenericResponse();
+		if (StringUtils.isEmpty(brandId)) { 
+			throw new IllegalArgumentException("Brand Id not Passed");
+		}
+		
+		logger.debug("Brand Id passed is : ", brandId);
+		List<ProductDocument> products = productService.getProductByBrand(brandId);
+		
+		if (null != products && !products.isEmpty()) {
+			genericResponse.setStatusCode(HttpStatus.OK.value());
+			genericResponse.setItems(products);
+			genericResponse.setItemCount(products.size());
+			genericResponse.setMessage("Product Items were Returned Successfully.");
+			
+			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+		} else
+			throw new NoRecordsFoundException("No Products Found");
+	}
 	
 	@RequestMapping("/categories")
 	public ResponseEntity<GenericResponse> getAllCategories() throws NoRecordsFoundException {
