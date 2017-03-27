@@ -25,11 +25,11 @@ JBoss Server start-up in debug mode
 ### Mongo DB start-up
 
 Starting Mongo using user access:
-- [Start Mongo]
-	>mongod.exe -dbpath "C:\Program Files\MongoDB\data"
-- [Connect to mongo] 
-	>mongo --port 27017
-- [User Administration]
+- Start Mongo
+	- mongod.exe -dbpath "C:\Program Files\MongoDB\data"
+- Connect to mongo 
+	-mongo --port 27017
+- User Administration
 	$ use admin
 	$ db.createUser(
 	  {
@@ -37,12 +37,12 @@ Starting Mongo using user access:
 		pwd: "admin123",
 		roles: [ { role: "root", db: "admin" } ]
 	  })
-- [Re-start the MongoDB instance with access control]
-	> mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
-- [Connect to database instance with superAdmin access]
-	> mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
-- [Create user access (readWrite) for shop]
-	>mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
+- Re-start the MongoDB instance with access control
+	- mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
+- Connect to database instance with superAdmin access
+	- mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
+- Create user access (readWrite) for shop
+	- mongo --port 27017 -u "superAdmin" -p "admin123" --authenticationDatabase "admin"
 	$use shop
 	$db.createUser(
 	  {
@@ -50,8 +50,8 @@ Starting Mongo using user access:
 	   pwd: "shop123",
 	   roles: [ "readWrite"]
 	})
-- [Staring Mongo]
-	<Mongo Server installation>\Server\3.4\bin>mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
+- Staring Mongo
+	- <Mongo Server installation>\Server\3.4\bin>mongod.exe -auth -dbpath "C:\Program Files\MongoDB\data"
 
 ### Application URL
 - Login: http://www.palletteapart.com/boot/login
@@ -76,7 +76,7 @@ There are 2 types of Grant Types
 		- client-id - acme
 		- client_secret - acmesecret
 
-### Password	Grant
+### Password Grant
 	- x-www-form-urlencoded body should contain following attributes
 		- granty_type - client_credentials
 		- client-id - acme
