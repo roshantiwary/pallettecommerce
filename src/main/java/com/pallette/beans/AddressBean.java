@@ -9,6 +9,12 @@ package com.pallette.beans;
  */
 
 public class AddressBean {
+	
+	private String orderId;
+	
+	private String profileId;
+	
+	private String addressId;
 
 	private String firstName;
 
@@ -178,6 +184,48 @@ public class AddressBean {
 	 */
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	/**
+	 * @return the orderId
+	 */
+	public String getOrderId() {
+		return orderId;
+	}
+
+	/**
+	 * @param orderId the orderId to set
+	 */
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	/**
+	 * @return the profileId
+	 */
+	public String getProfileId() {
+		return profileId;
+	}
+
+	/**
+	 * @param profileId the profileId to set
+	 */
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
+
+	/**
+	 * @return the addressId
+	 */
+	public String getAddressId() {
+		return addressId;
+	}
+
+	/**
+	 * @param addressId the addressId to set
+	 */
+	public void setAddressId(String addressId) {
+		this.addressId = addressId;
 	}
 
 }

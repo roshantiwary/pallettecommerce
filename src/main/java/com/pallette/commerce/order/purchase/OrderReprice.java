@@ -2,8 +2,6 @@ package com.pallette.commerce.order.purchase;
 
 import java.util.List;
 
-import javax.swing.text.StyledEditorKit.ItalicAction;
-
 import org.springframework.stereotype.Component;
 
 import com.pallette.commerce.contants.CommerceContants;
@@ -36,6 +34,8 @@ public class OrderReprice implements RepriceChain{
 			for (CommerceItem item : order.getCommerceItems()) {
 				orderTotal = orderTotal + item.getItemPriceInfo().getAmount();
 			}
+		} else {
+			orderTotal = 0.0;
 		}
 	
 		orderPriceInfo.setAmount(orderTotal);

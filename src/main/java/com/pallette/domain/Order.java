@@ -276,6 +276,15 @@ public class Order implements Serializable {
 	public void setOrderPriceInfo(OrderPriceInfo orderPriceInfo) {
 		this.orderPriceInfo = orderPriceInfo;
 	}
+	
+	/*
+	 * Remove Commerce Item.
+	 */
+	public void removeCommerceItem(CommerceItem commerceItem) {
+		if (null != this.commerceItems && !this.commerceItems.isEmpty()) {
+			commerceItems.remove(commerceItem);
+		}
+	}
 
 	/*
 	 * Add Commerce Item.

@@ -31,5 +31,7 @@ public class CommerceContants {
 	public static final String INITIAL = "initial";
 
 	public static final String DEFAULT_COMMERCE_ITEM = "defaultCommerceItem";
+	
+	public static final String _ID = "_id";
 
 }
