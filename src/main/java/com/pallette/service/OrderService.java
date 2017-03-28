@@ -18,6 +18,7 @@ import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.CommerceItem;
+import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
@@ -28,6 +29,10 @@ import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
 import com.pallette.repository.ProductRepository;
 import com.pallette.repository.SequenceDao;
+
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 /**
  * <p>
@@ -67,6 +72,83 @@ public class OrderService {
 	
 	@Autowired
 	OrderRepriceChain orderRepriceChain;
+	
+	@Autowired
+	private MongoOperations mongoOperation;
+	
+	/**
+	 * 
+	 * @param productId
+	 * @param quantity
+	 * @param profileId
+	 * @param orderId 
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	public Order addItemToOrder(String productId, long quantity, String profileId, String orderId) throws NoRecordsFoundException {
+		log.debug("Inside OrderService.addItemToOrder()");
+		
+		Order order = orderRepository.findOne(orderId);
+		if(null == order)
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		ProductDocument prodItem = productRepository.findOne(productId);
+		if(null == prodItem)
+			throw new NoRecordsFoundException("No Product Found to Update.");
+		
+		CommerceItem item = getItemFromOrder(productId, order);
+		if (null == item) {
+
+			// Create new CommerceItem Object an set the default values.
+			CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem);
+			order.addCommerceItem(commerceItem);
+
+		}
+		
+		orderRepriceChain.reprice(order);
+		return orderRepository.save(order);
+	}
+	
+	/**
+	 * 
+	 * @param orderId
+	 * @param productId
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	public CommerceItem removeItemFromOrder(String orderId, String productId) throws NoRecordsFoundException {
+		log.debug("Inside OrderService.removeItemFromOrder()");
+		
+		Order order = orderRepository.findOne(orderId);
+		if(null == order)
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		ProductDocument prodItem = productRepository.findOne(productId);
+		if(null == prodItem)
+			throw new NoRecordsFoundException("No Product Found to Update.");
+		
+		CommerceItem itemToRemove = getItemFromOrder(productId, order);
+		if (null == itemToRemove)
+			throw new NoRecordsFoundException("No Commerce Item Found to Update.");
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(itemToRemove.getId()));
+
+		ItemPriceInfo childItemPriceInfo = itemToRemove.getItemPriceInfo();
+		if (null != childItemPriceInfo) {
+			Query itemPriceRemovalQuery = new Query();
+			itemPriceRemovalQuery.addCriteria(Criteria.where("_id").is(childItemPriceInfo.getId()));
+			ItemPriceInfo itemPrice = mongoOperation.findAndRemove(itemPriceRemovalQuery , ItemPriceInfo.class);
+			log.debug("Item Price Info Removed Successfully :" , itemPrice.getId());
+		}
+		
+		CommerceItem commerceItem = mongoOperation.findAndRemove(query, CommerceItem.class);
+		log.debug("Item Removed Successfully :" , commerceItem.getId());
+		orderRepriceChain.reprice(order);
+		order.removeCommerceItem(itemToRemove);
+		orderRepository.save(order);
+		return commerceItem;
+	}
 
 	
 	/**
@@ -259,5 +341,8 @@ public class OrderService {
 	public void setProductRepository(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
+
+
+	
 
 }

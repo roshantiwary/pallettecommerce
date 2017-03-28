@@ -29,7 +29,7 @@ public class GenericResponse {
 	/**
 	 * An Map that contains the actual objects
 	 */
-	private Map<Object, Collection> mapData;
+	private Map<String, Object> mapData;
 
 	/**
 	 * A HttpStatus containing error code.
@@ -119,22 +119,18 @@ public class GenericResponse {
 	}
 
 	/**
-	 * An Map that contains the actual objects
-	 * 
 	 * @return the mapData
 	 */
-	public Map<Object, Collection> getMapData() {
+	public Map<String, Object> getMapData() {
 		return mapData;
 	}
 
 	/**
-	 * An Map that contains the actual objects
-	 * 
-	 * @param mapData
-	 *            the mapData to set
+	 * @param mapData the mapData to set
 	 */
-	public void setMapData(Map<Object, Collection> mapData) {
+	public void setMapData(Map<String, Object> mapData) {
 		this.mapData = mapData;
 	}
+
 
 }
