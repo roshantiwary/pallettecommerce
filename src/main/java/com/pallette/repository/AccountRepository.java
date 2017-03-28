@@ -9,6 +9,5 @@ public interface AccountRepository extends PagingAndSortingRepository<Account, S
 	public Account findByUsernameAndPassword(String username, String password);
 	public Account findByUsername(String userId);
 	public Account findByAuthtoken(String authtoken);
-		
 }
 

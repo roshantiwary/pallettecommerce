@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pallette.config.CascadeSave;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document
@@ -42,6 +43,10 @@ public class Account {
     private String authtoken;
     
     private String phoneNumber;
+    
+    @DBRef
+    @CascadeSave
+    private List<Address> addresses;
 	
 	public String getId() {
 		return id;
@@ -139,7 +144,7 @@ public class Account {
 	@Override
 	public String toString() {
 		return "Account{" +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", username=" + username + '\'' +
                 ", password=" + password + '\'' +
                 ", firstName=" + firstName + '\'' +
@@ -148,4 +153,20 @@ public class Account {
                 '}';
 	}
 
+	public List<Address> getAddresses() {
+		if(null == addresses)
+			addresses = new ArrayList<Address>();
+		return addresses;
+	}
+
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
+	}
+
+	
+	public void removeAddress(Address address) {
+		if (null != this.addresses && !this.addresses.isEmpty()) {
+			addresses.remove(address);
+		}
+	} 
 }

@@ -45,6 +45,11 @@ public class GenericResponse {
 	 * A integer containing error message.
 	 */
 	private int itemCount;
+	
+	/**
+	 * An Map that contains the Objects with one to many Mapping Data
+	 */
+	private Map<Object, Collection> itemMapData;
 
 
 	/**
@@ -130,6 +135,20 @@ public class GenericResponse {
 	 */
 	public void setMapData(Map<String, Object> mapData) {
 		this.mapData = mapData;
+	}
+
+	/**
+	 * @return the itemMapData
+	 */
+	public Map<Object, Collection> getItemMapData() {
+		return itemMapData;
+	}
+
+	/**
+	 * @param mapData the itemMapData to set
+	 */
+	public void setItemMapData(Map<Object, Collection> itemMapData) {
+		this.itemMapData = itemMapData;
 	}
 
 

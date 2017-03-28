@@ -1,6 +1,6 @@
 package com.pallette.controller;
 
-import java.util.Date;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,23 +8,31 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.pallette.domain.Account;
+import com.pallette.beans.AccountBean;
 import com.pallette.domain.AuthenticationRequest;
+import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.exception.SymbolNotFoundException;
+import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 
-@Controller
+@RestController
+@RequestMapping("/rest/api/v1")
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
@@ -74,28 +82,34 @@ public class LoginController {
 		logger.info(model.asMap().toString());
 		return "index";
 	}
-	
-	@RequestMapping(value = "/registration", method = RequestMethod.GET)
-	public String registration(Model model) {
-		Account account = new Account();
-		model.addAttribute("account", account);
-		return "registration";
-	}
 
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String register(Model model, @ModelAttribute(value="account") Account account) {
+	/**
+	 * This Method creates the user profile and saves 
+	 * the profile in repository
+	 * 
+	 * @param account
+	 * @return
+	 * @throws NoRecordsFoundException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/account/create", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> register(@RequestBody AccountBean account) throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		logger.info("register: user:" + account.getUsername());
+		GenericResponse genericResponse = null;
 		
-		//need to set some stuff on account...
+		genericResponse = accountService.createAccount(account);
 		
-		account.setCreationdate(new Date());
+		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
+		}else{
+			throw new NoRecordsFoundException("Exception While Creating Profile");
+		}
 		
-		AuthenticationRequest login = new AuthenticationRequest();
-		login.setUsername(account.getUsername());
-		model.addAttribute("login", login);
-		accountService.createAccount(account);
-		return "index";
 	}
+	
+	
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView error(HttpServletRequest req, Exception exception) {
 		logger.debug("Handling error: " + exception);

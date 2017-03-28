@@ -51,6 +51,8 @@ public class Address implements Serializable {
 	private String country;
 
 	private String ownerId;
+	
+	private String phoneNumber;
 
 	public Address() {
 		super();
@@ -422,6 +424,21 @@ public class Address implements Serializable {
 	 */
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	/**
+	 * @return the phoneNumber
+	 */
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	/**
+	 * @param phoneNumber
+	 *            the phoneNumber to set
+	 */
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

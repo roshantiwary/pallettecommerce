@@ -35,6 +35,10 @@ public class AddressBean {
 	private String postalCode;
 
 	private String country;
+	
+	private String phoneNumber;
+	
+	private String ownerId;
 
 	/**
 	 * @return the firstName
@@ -226,6 +230,34 @@ public class AddressBean {
 	 */
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
+	}
+
+	/**
+	 * @return the phoneNumber
+	 */
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	/**
+	 * @param profileId the phoneNumber to set
+	 */
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	/**
+	 * @return the ownerId
+	 */
+	public String getOwnerId() {
+		return ownerId;
+	}
+
+	/**
+	 * @param profileId the ownerId to set
+	 */
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 
 }
