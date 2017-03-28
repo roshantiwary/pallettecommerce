@@ -9,11 +9,9 @@ package com.pallette.beans;
  */
 
 public class AddressBean {
-	
+
 	private String orderId;
-	
-	private String profileId;
-	
+
 	private String addressId;
 
 	private String firstName;
@@ -35,9 +33,9 @@ public class AddressBean {
 	private String postalCode;
 
 	private String country;
-	
+
 	private String phoneNumber;
-	
+
 	private String ownerId;
 
 	/**
@@ -198,24 +196,11 @@ public class AddressBean {
 	}
 
 	/**
-	 * @param orderId the orderId to set
+	 * @param orderId
+	 *            the orderId to set
 	 */
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}
-
-	/**
-	 * @return the profileId
-	 */
-	public String getProfileId() {
-		return profileId;
-	}
-
-	/**
-	 * @param profileId the profileId to set
-	 */
-	public void setProfileId(String profileId) {
-		this.profileId = profileId;
 	}
 
 	/**
@@ -226,7 +211,8 @@ public class AddressBean {
 	}
 
 	/**
-	 * @param addressId the addressId to set
+	 * @param addressId
+	 *            the addressId to set
 	 */
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
@@ -240,7 +226,8 @@ public class AddressBean {
 	}
 
 	/**
-	 * @param profileId the phoneNumber to set
+	 * @param profileId
+	 *            the phoneNumber to set
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
@@ -254,7 +241,8 @@ public class AddressBean {
 	}
 
 	/**
-	 * @param profileId the ownerId to set
+	 * @param profileId
+	 *            the ownerId to set
 	 */
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
