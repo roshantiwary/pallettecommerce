@@ -33,5 +33,9 @@ public class CommerceContants {
 	public static final String DEFAULT_COMMERCE_ITEM = "defaultCommerceItem";
 	
 	public static final String _ID = "_id";
+	
+	public static final String SHIPMENT_ADDRESS = "shipmentAddress";
+	
+	public static final String SAVED_ADDRESS = "savedAddress";
 
 }
