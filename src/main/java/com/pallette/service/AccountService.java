@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.PasswordBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
@@ -119,26 +120,18 @@ public class AccountService {
 	 * @throws IllegalAccessException 
 	 * @throws Exception 
 	 */
-	public GenericResponse saveAccount(AccountBean accountBean) throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
+	public GenericResponse saveAccount(AccountBean accountBean) throws IllegalAccessException, InvocationTargetException {
 
 		logger.debug("AccountService.saveAccount:" + accountBean.toString());
-		
-		if(StringUtils.isEmpty(accountBean.getPassword()) && StringUtils.isEmpty(accountBean.getConfirmPassword())){
-			logger.error("Please provide passowrd and confirm password");
-			throw new NoRecordsFoundException("Please provide passowrd and confirm password");
-		}
-		
-		if(!accountBean.getPassword().equalsIgnoreCase(accountBean.getConfirmPassword())){
-			logger.error("Password and Confirm Password does not match");
-			throw new NoRecordsFoundException("Password and Confirm Password does not match");
-		}
+		GenericResponse accountResponse = new GenericResponse();
+		validateCreateAccountDetails(accountBean);
 		
 		Account accountItem = new Account();
 		Account account = null;
 		BeanUtils.copyProperties(accountItem, accountBean);
 		
 		
-		GenericResponse accountResponse = new GenericResponse();
+		
 		List<Account> accountsList = new ArrayList<Account>();
 		
 		if(null != accounts.findByUsername(accountItem.getUsername())){
@@ -171,13 +164,36 @@ public class AccountService {
 			accountResponse.setMessage("Account has been created");
 		}else{
 			logger.info("Account has not been created for ID " + accountItem.getId());
-			accountsList.add(account);
-			accountResponse.setItems(accountsList);
-			accountResponse.setItemCount(accountsList.size());
-			accountResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			accountResponse.setMessage("Account has been not been created due to some internal server error");
+			throw new IllegalArgumentException("Account has been not been created due to some internal server error");
 		}
 		return accountResponse;
+	}
+
+	private void validateCreateAccountDetails(AccountBean accountBean) {
+		/*if(StringUtils.isEmpty(accountBean.getPassword()) && StringUtils.isEmpty(accountBean.getConfirmPassword())){
+			logger.error("Please provide passowrd and confirm password");
+			throw new IllegalArgumentException("Please provide passowrd and confirm password");
+		}*/
+		
+		if(!accountBean.getPassword().equalsIgnoreCase(accountBean.getConfirmPassword())){
+			logger.error("Password and Confirm Password does not match");
+			throw new IllegalArgumentException("Password and Confirm Password does not match");
+		}
+		
+		/*if(StringUtils.isEmpty(accountBean.getUsername())){
+			logger.error("Please provide Username");
+			throw new IllegalArgumentException("Please provide Username");
+		}
+		
+		if(StringUtils.isEmpty(accountBean.getFirstName())){
+			logger.error("Please provide First Name");
+			throw new IllegalArgumentException("Please provide First Name");
+		}
+		
+		if(StringUtils.isEmpty(accountBean.getLastName())){
+			logger.error("Please provide Last Name");
+			throw new IllegalArgumentException("Please provide Last Name");
+		}*/
 	}
 
 	/**
@@ -248,12 +264,13 @@ public class AccountService {
 	 * 
 	 * @param account
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
+	 * @throws Exception 
 	 */
-	public GenericResponse updateProfile(AccountBean accountBean) throws IllegalAccessException, InvocationTargetException {
+	public GenericResponse updateProfile(AccountBean accountBean) throws Exception {
 		logger.debug("AccountService.updateProfile: updating profile with id : " + accountBean.getId());
 		GenericResponse genericResponse = new GenericResponse();
+		if(StringUtils.isEmpty(accountBean.getId()))
+			throw new IllegalArgumentException("Please provide Profile Id for update");
 		Account accountItem = new Account();
 		BeanUtils.copyProperties(accountItem, accountBean);
 		Account accountForUpdate = accounts.findOne(accountItem.getId());
@@ -270,12 +287,10 @@ public class AccountService {
 			genericResponse.setItemCount(accountList.size());
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("User Profile has been updated for id : "+accountForUpdate.getId());
-			return genericResponse;
 		} else {
-			genericResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
-			genericResponse.setMessage("User Not Found For User Id");
-			return genericResponse;
+			throw new Exception("User Not Found for Id"+accountItem.getId());
 		}
+		return genericResponse;
 	}
 	
 	/**
@@ -283,11 +298,10 @@ public class AccountService {
 	 * 
 	 * @param addressBean
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception 
 	 */
-	@SuppressWarnings({ "rawtypes" })
-	public GenericResponse addNewAddress(AddressBean addressBean) throws IllegalAccessException, InvocationTargetException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public GenericResponse addNewAddress(AddressBean addressBean) throws Exception {
 		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		
 		GenericResponse genericResponse = new GenericResponse();
@@ -308,9 +322,8 @@ public class AccountService {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Added Successfulley");
 		}else{
-			logger.debug("AccountService.addNewAddress: There is Some Error While Adding New Address To The Profile ");
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			genericResponse.setMessage("Address not added in the profile");
+			logger.error("AccountService.addNewAddress: There is Some Error While Adding New Address To The Profile ");
+			throw new Exception("There is Some Error While Adding New Address To The Profile");
 		}
 		return genericResponse;
 	}
@@ -321,11 +334,10 @@ public class AccountService {
 	 * @param addressKey
 	 * @param addressBean
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception 
 	 */
 	@SuppressWarnings("rawtypes")
-	public GenericResponse editAddress(String addressKey, AddressBean addressBean) throws IllegalAccessException, InvocationTargetException {
+	public GenericResponse editAddress(String addressKey, AddressBean addressBean) throws Exception {
 		logger.debug("AccountService.editAddress: Editing Address");
 		
 		GenericResponse genericResponse = new GenericResponse();
@@ -343,9 +355,8 @@ public class AccountService {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Updated Successfulley");
 		}else{
-			logger.debug("AccountService.editAddress: There is Some Error While Editing Address");
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			genericResponse.setMessage("Address not updated");
+			logger.error("AccountService.editAddress: There is Some Error While Editing Address");
+			throw new Exception("There is Some Error While Updating Address");
 		}
 		return genericResponse;
 	}
@@ -356,12 +367,16 @@ public class AccountService {
 	 * 
 	 * @param addressKey
 	 * @return
+	 * @throws Exception 
 	 */
 	@SuppressWarnings("rawtypes")
-	public GenericResponse removeAddress(String addressKey) {
+	public GenericResponse removeAddress(String addressKey) throws Exception {
 		logger.debug("AccountService.removeAddress: Removing Address : "+addressKey);
 		
 		GenericResponse genericResponse = new GenericResponse();
+		if(StringUtils.isEmpty(addressKey))
+			throw new IllegalArgumentException("Please provide address key");
+		
 		Address addressItem = addresses.findOne(addressKey);
 		Account account = accounts.findOne(addressItem.getOwnerId());
 		Query addressRemovalQuery = new Query();
@@ -379,9 +394,44 @@ public class AccountService {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Removed Succesfully");
 		}else{
-			logger.debug("AccountService.removeAddress: There is Some Error While removing Address");
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			genericResponse.setMessage("Some Error Occured While Removing Address");
+			logger.error("AccountService.removeAddress: There is Some Error While removing Address");
+			throw new Exception("Some Error Occured While Removing Address");
+		}
+		return genericResponse;
+	}
+
+	/**
+	 * This method updates the password
+	 * 
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public GenericResponse changePassword(PasswordBean password) throws Exception {
+		Account account = accounts.findOne(password.getId());
+		GenericResponse genericResponse = new GenericResponse();
+		if(!passwordEncoder.matches(password.getOldPassword(), account.getPassword())){
+			logger.error("Incorrect Old Password for user : " + account.getUsername());
+			throw new IllegalArgumentException("Incorrect Old password supplied");
+		}
+		
+		if(!password.getNewPassword().equals(password.getConfirmPassword())){
+			logger.error("Password and Confirm Password Not Match for user : " + account.getUsername());
+			throw new IllegalArgumentException("Password and Confirm Password Does not match");
+		}
+		
+		account.setPassword(passwordEncoder.encode(password.getNewPassword()));
+		account = accounts.save(account);
+		List<Account> accountList = new ArrayList<Account>();
+		if(null != account){
+			accountList.add(account);
+			genericResponse.setItems(accountList);
+			genericResponse.setItemCount(accountList.size());
+			genericResponse.setStatusCode(HttpStatus.OK.value());
+			genericResponse.setMessage("Password has been changed successfully for profile id : "+account.getId());
+			
+		}else{
+			throw new Exception("There is some error while updating password");
 		}
 		return genericResponse;
 	}

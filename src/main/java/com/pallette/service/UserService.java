@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.PasswordBean;
 import com.pallette.domain.Account;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.exception.NoRecordsFoundException;
@@ -31,7 +32,7 @@ public class UserService {
 	@Autowired
 	RoleRepository roleRepository;
 	
-	public GenericResponse createAccount(AccountBean account) throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
+	public GenericResponse createAccount(AccountBean account) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Saving account with userId: " + account.getUsername());
 		GenericResponse genericResponse = null;
 		genericResponse = accountService.saveAccount(account);
@@ -44,10 +45,9 @@ public class UserService {
 	 * details
 	 * @param account
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
+	 * @throws Exception 
 	 */
-	public GenericResponse updateProfile(AccountBean account) throws IllegalAccessException, InvocationTargetException {
+	public GenericResponse updateProfile(AccountBean account) throws Exception {
 		GenericResponse genericResponse = null;
 		genericResponse = accountService.updateProfile(account);
 		return genericResponse;
@@ -81,10 +81,9 @@ public class UserService {
 	 * 
 	 * @param address
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception 
 	 */
-	public GenericResponse addNewAddress(AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public GenericResponse addNewAddress(AddressBean address) throws Exception {
 		GenericResponse genericResponse = null;
 		genericResponse = accountService.addNewAddress(address);
 		return genericResponse;
@@ -97,10 +96,9 @@ public class UserService {
 	 * @param addressKey
 	 * @param address
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception 
 	 */
-	public GenericResponse editAddress(String addressKey,AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public GenericResponse editAddress(String addressKey,AddressBean address) throws Exception {
 		GenericResponse genericResponse = null;
 		genericResponse = accountService.editAddress(addressKey,address);
 		return genericResponse;
@@ -112,10 +110,24 @@ public class UserService {
 	 * 
 	 * @param addressKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public GenericResponse removeAddress(String addressKey) {
+	public GenericResponse removeAddress(String addressKey) throws Exception {
 		GenericResponse genericResponse = null;
 		genericResponse = accountService.removeAddress(addressKey);
+		return genericResponse;
+	}
+
+	/**
+	 * This method updates the password
+	 * 
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public GenericResponse changePassword(PasswordBean password) throws Exception {
+		GenericResponse genericResponse = null;
+		genericResponse = accountService.changePassword(password);
 		return genericResponse;
 	}
 }

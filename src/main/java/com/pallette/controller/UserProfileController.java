@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.PasswordBean;
 import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 import com.pallette.web.security.ApplicationUser;
@@ -131,15 +132,17 @@ public class UserProfileController {
 	@RequestMapping(value = "/account/addresses", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> addNewAddress(@RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Adding New Address in Profile : " + address.toString());
-		GenericResponse genericResponse = null;
+		GenericResponse genericResponse = new GenericResponse();
 		
-		genericResponse = accountService.addNewAddress(address);
-		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
-		}else{
+		try {
+			genericResponse = accountService.addNewAddress(address);
+			
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
@@ -156,15 +159,17 @@ public class UserProfileController {
 	@RequestMapping(value = "/account/editAddress/{id}", method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> editAddress(@PathVariable("id") String addressKey,@RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Editing Existing Address for Address Key : " + addressKey);
-		GenericResponse genericResponse = null;
+		GenericResponse genericResponse = new GenericResponse();
 		
-		genericResponse = accountService.editAddress(addressKey,address);
-		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
-		}else{
+		try {
+			genericResponse = accountService.editAddress(addressKey,address);
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
@@ -180,15 +185,16 @@ public class UserProfileController {
 	@RequestMapping(value = "/account/removeAddress/{id}", method = RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> removeAddress(@PathVariable("id") String addressKey) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Editing Existing Address for Address Key : " + addressKey);
-		GenericResponse genericResponse = null;
+		GenericResponse genericResponse = new GenericResponse();
 		
-		genericResponse = accountService.removeAddress(addressKey);
-		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
-		}else{
+		try {
+			genericResponse = accountService.removeAddress(addressKey);
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
@@ -204,18 +210,35 @@ public class UserProfileController {
 	public ResponseEntity<GenericResponse> updateProfile(@RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Profile update for id : " + account.getId());
 		GenericResponse genericResponse = new GenericResponse();
-		if(StringUtils.isEmpty(account.getUsername())){
-			genericResponse.setMessage("Request is null");
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-		genericResponse = accountService.updateProfile(account);
-		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
-		}else if(null != genericResponse && HttpStatus.ALREADY_REPORTED.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.ALREADY_REPORTED);
-		}else{
+		
+		try {
+			genericResponse = accountService.updateProfile(account);
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.NOT_FOUND);
 		}
 		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * This method updates the password
+	 * @param password
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/account/changePassword", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> changePassword(@RequestBody PasswordBean password){
+		logger.info("Password update for id : " + password.getId());
+		GenericResponse genericResponse = new GenericResponse();
+		try {
+			genericResponse = accountService.changePassword(password);
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 }
