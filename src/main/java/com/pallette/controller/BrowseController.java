@@ -1,13 +1,16 @@
 package com.pallette.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pallette.beans.BrandBean;
+import com.pallette.beans.CategoryBean;
+import com.pallette.beans.ProductBean;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
 import com.pallette.domain.ProductDocument;
@@ -48,17 +54,24 @@ public class BrowseController {
 	@Autowired
 	private BrandService brandService;
 	
-	@RequestMapping("/products")
-	public ResponseEntity<GenericResponse> getAllProducts() throws NoRecordsFoundException {
+	@RequestMapping(value = "/products", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getAllProducts() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getAllProduct()");
 		GenericResponse genericResponse = new GenericResponse();
 		List<ProductDocument> products = productService.getAllProduct();
+		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+
+		for (ProductDocument product: products ) {
+	    	ProductBean productBean= new ProductBean();
+	        BeanUtils.copyProperties(productBean , product);
+	        productBeanList.add(productBean);
+		}
 		
-		if (null != products && !products.isEmpty()) {
+		if (null != productBeanList && !productBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(products);
-			genericResponse.setItemCount(products.size());
+			genericResponse.setItems(productBeanList);
+			genericResponse.setItemCount(productBeanList.size());
 			genericResponse.setMessage("Product Items were Returned Successfully.");
 			
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -66,8 +79,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/{productId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getProduct(@PathVariable("productId") String productId) throws NoRecordsFoundException , IllegalArgumentException{
+	@RequestMapping(value = "/products/{productId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getProduct(@PathVariable("productId") String productId) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		
 		logger.debug("BrowseController.getProduct()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -77,10 +91,11 @@ public class BrowseController {
 		
 		logger.debug("Product Id passed is : " + productId);
 		ProductDocument product = productService.getProductById(productId);
-		
-		if (null != product) {
-			List<ProductDocument> products = new ArrayList<ProductDocument>();
-			products.add(product);
+		ProductBean productBean = new ProductBean();
+		BeanUtils.copyProperties(productBean, product);
+		if (null != productBean) {
+			List<ProductBean> products = new ArrayList<ProductBean>();
+			products.add(productBean);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setItems(products);
 			genericResponse.setItemCount(products.size());
@@ -91,8 +106,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/title/{productTitle}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getProductsByTitle(@PathVariable("productTitle") String productTitle) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/products/title/{productTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getProductsByTitle(@PathVariable("productTitle") String productTitle) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getProductByTitle()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -103,10 +119,18 @@ public class BrowseController {
 		logger.debug("Product Title passed is : ", productTitle);
 		List<ProductDocument> products = productService.getProductByTitle(productTitle);
 		
-		if (null != products && !products.isEmpty()) {
+		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+
+		for (ProductDocument product: products ) {
+	    	ProductBean productBean= new ProductBean();
+	        BeanUtils.copyProperties(productBean , product);
+	        productBeanList.add(productBean);
+		}
+		
+		if (null != productBeanList && !productBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(products);
-			genericResponse.setItemCount(products.size());
+			genericResponse.setItems(productBeanList);
+			genericResponse.setItemCount(productBeanList.size());
 			genericResponse.setMessage("Product Items were Returned Successfully.");
 			
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -114,8 +138,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/brand/{brandId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getProductsByBrand(@PathVariable("brandId") String brandId) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/products/brand/{brandId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getProductsByBrand(@PathVariable("brandId") String brandId) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getProductsByBrand()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -125,11 +150,18 @@ public class BrowseController {
 		
 		logger.debug("Brand Id passed is : ", brandId);
 		List<ProductDocument> products = productService.getProductByBrand(brandId);
+		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+
+		for (ProductDocument product: products ) {
+	    	ProductBean productBean= new ProductBean();
+	        BeanUtils.copyProperties(productBean , product);
+	        productBeanList.add(productBean);
+		}
 		
-		if (null != products && !products.isEmpty()) {
+		if (null != productBeanList && !productBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(products);
-			genericResponse.setItemCount(products.size());
+			genericResponse.setItems(productBeanList);
+			genericResponse.setItemCount(productBeanList.size());
 			genericResponse.setMessage("Product Items were Returned Successfully.");
 			
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -137,17 +169,24 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 	
-	@RequestMapping("/categories")
-	public ResponseEntity<GenericResponse> getAllCategories() throws NoRecordsFoundException {
+	@RequestMapping(value="/categories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getAllCategories() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getAllCategories()");
 		GenericResponse genericResponse = new GenericResponse();
 		List<CategoryDocument> categories = categoryService.getAllCategories();
+		List<CategoryBean> categoryBeanList= new ArrayList<CategoryBean>(); 
 
-		if (null != categories && !categories.isEmpty()) {
+		for (CategoryDocument category: categories ) {
+	    	CategoryBean categoryBean= new CategoryBean();
+	        BeanUtils.copyProperties(categoryBean , category);
+	        categoryBeanList.add(categoryBean);
+		}
+		
+		if (null != categoryBeanList && !categoryBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(categories);
-			genericResponse.setItemCount(categories.size());
+			genericResponse.setItems(categoryBeanList);
+			genericResponse.setItemCount(categoryBeanList.size());
 			genericResponse.setMessage("Category Items were Returned Successfully.");
 
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -155,8 +194,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Categories Found");
 	}
     	
-	@RequestMapping(value = "/categories/{categoryId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getCategory(@PathVariable("categoryId") String categoryId) throws NoRecordsFoundException , IllegalArgumentException{
+	@RequestMapping(value = "/categories/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getCategory(@PathVariable("categoryId") String categoryId) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 
 		logger.debug("BrowseController.getCategory()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -166,10 +206,11 @@ public class BrowseController {
 
 		logger.debug("Category Id passed is : " + categoryId);
 		CategoryDocument category = categoryService.getCategoryById(categoryId);
-
-		if (null != category) {
-			List<CategoryDocument> categories = new ArrayList<CategoryDocument>();
-			categories.add(category);
+		CategoryBean categoryBean = new CategoryBean();
+		BeanUtils.copyProperties(categoryBean, category);
+		if (null != categoryBean) {
+			List<CategoryBean> categories = new ArrayList<CategoryBean>();
+			categories.add(categoryBean);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setItems(categories);
 			genericResponse.setItemCount(categories.size());
@@ -180,8 +221,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Categories Found");
 	}
 	
-	@RequestMapping(value = "/categories/title/{categoryTitle}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getCategoriesByTitle(@PathVariable("categoryTitle") String categoryTitle) throws IllegalArgumentException , NoRecordsFoundException{
+	@RequestMapping(value = "/categories/title/{categoryTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getCategoriesByTitle(@PathVariable("categoryTitle") String categoryTitle) 
+			throws IllegalArgumentException , NoRecordsFoundException, IllegalAccessException, InvocationTargetException{
 		
 		logger.debug("BrowseController.getCategoriesByTitle()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -191,11 +233,18 @@ public class BrowseController {
 		
 		logger.debug("Category Title passed is : ", categoryTitle);
 		List<CategoryDocument> categories = categoryService.getCategoryByTitle(categoryTitle);
+		List<CategoryBean> categoryBeanList= new ArrayList<CategoryBean>(); 
+
+		for (CategoryDocument category: categories ) {
+	    	CategoryBean categoryBean= new CategoryBean();
+	        BeanUtils.copyProperties(categoryBean , category);
+	        categoryBeanList.add(categoryBean);
+		}
 		
-		if (null != categories && !categories.isEmpty()) {
+		if (null != categoryBeanList && !categoryBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(categories);
-			genericResponse.setItemCount(categories.size());
+			genericResponse.setItems(categoryBeanList);
+			genericResponse.setItemCount(categoryBeanList.size());
 			genericResponse.setMessage("Category Items were Returned Successfully.");
 			
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -204,17 +253,24 @@ public class BrowseController {
 	}
 	
 	
-	@RequestMapping("/brands")
-	public ResponseEntity<GenericResponse> getAllBrands() throws NoRecordsFoundException {
+	@RequestMapping(value="/brands", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getAllBrands() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getAllBrands()");
 		GenericResponse genericResponse = new GenericResponse();
 		List<BrandDocument> brands = brandService.getAllBrands();
+		List<BrandBean> brandBeanList= new ArrayList<BrandBean>(); 
 
-		if (null != brands && !brands.isEmpty()) {
+		for (BrandDocument brand: brands ) {
+	    	BrandBean brandBean= new BrandBean();
+	        BeanUtils.copyProperties(brandBean , brand);
+	        brandBeanList.add(brandBean);
+		}
+		
+		if (null != brandBeanList && !brandBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(brands);
-			genericResponse.setItemCount(brands.size());
+			genericResponse.setItems(brandBeanList);
+			genericResponse.setItemCount(brandBeanList.size());
 			genericResponse.setMessage("Brand Items were Returned Successfully.");
 
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -222,8 +278,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
     	
-	@RequestMapping(value = "/brands/{brandId}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getBrand(@PathVariable("brandId") String brandId) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/brands/{brandId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getBrand(@PathVariable("brandId") String brandId) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getBrand()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -233,10 +290,11 @@ public class BrowseController {
 
 		logger.debug("Brand Id passed is : " + brandId);
 		BrandDocument brand = brandService.getBrandById(brandId);
-
-		if (null != brand) {
-			List<BrandDocument> brands = new ArrayList<BrandDocument>();
-			brands.add(brand);
+		BrandBean brandBean = new BrandBean();
+		BeanUtils.copyProperties(brandBean, brand);
+		if (null != brandBean) {
+			List<BrandBean> brands = new ArrayList<BrandBean>();
+			brands.add(brandBean);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setItems(brands);
 			genericResponse.setItemCount(brands.size());
@@ -248,8 +306,9 @@ public class BrowseController {
 	}
 	
 	
-	@RequestMapping(value = "/brands/city/{city}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getBrandByCity(@PathVariable("city") String city) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/brands/city/{city}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getBrandByCity(@PathVariable("city") String city) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getBrandByCity()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -259,11 +318,18 @@ public class BrowseController {
 
 		logger.debug("Brand City passed is : " + city);
 		List<BrandDocument> brands = brandService.getBrandByCity(city);
+		List<BrandBean> brandBeanList= new ArrayList<BrandBean>(); 
 
-		if (null != brands && !brands.isEmpty()) {
+		for (BrandDocument brand: brands ) {
+	    	BrandBean brandBean= new BrandBean();
+	        BeanUtils.copyProperties(brandBean , brand);
+	        brandBeanList.add(brandBean);
+		}
+		
+		if (null != brandBeanList && !brandBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(brands);
-			genericResponse.setItemCount(brands.size());
+			genericResponse.setItems(brandBeanList);
+			genericResponse.setItemCount(brandBeanList.size());
 			genericResponse.setMessage("Brand Items were Returned Successfully.");
 
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -271,8 +337,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
 	
-	@RequestMapping(value = "/brands/state/{state}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getBrandByState(@PathVariable("state") String state) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/brands/state/{state}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getBrandByState(@PathVariable("state") String state) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getBrandByState()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -282,11 +349,18 @@ public class BrowseController {
 
 		logger.debug("Brand state passed is : " + state);
 		List<BrandDocument> brands = brandService.getBrandByState(state);
+		List<BrandBean> brandBeanList= new ArrayList<BrandBean>(); 
 
-		if (null != brands && !brands.isEmpty()) {
+		for (BrandDocument brand: brands ) {
+	    	BrandBean brandBean= new BrandBean();
+	        BeanUtils.copyProperties(brandBean , brand);
+	        brandBeanList.add(brandBean);
+		}
+		
+		if (null != brandBeanList && !brandBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(brands);
-			genericResponse.setItemCount(brands.size());
+			genericResponse.setItems(brandBeanList);
+			genericResponse.setItemCount(brandBeanList.size());
 			genericResponse.setMessage("Brand Items were Returned Successfully.");
 
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
@@ -294,8 +368,9 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
 	
-	@RequestMapping(value = "/brands/postalCode/{postalCode}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<GenericResponse> getBrandByPostalCode(@PathVariable("postalCode") String postalCode) throws NoRecordsFoundException , IllegalArgumentException {
+	@RequestMapping(value = "/brands/postalCode/{postalCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> getBrandByPostalCode(@PathVariable("postalCode") String postalCode) 
+			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getBrandByPostalCode()");
 		GenericResponse genericResponse = new GenericResponse();
@@ -305,11 +380,18 @@ public class BrowseController {
 
 		logger.debug("Brand postalCode passed is : " + postalCode);
 		List<BrandDocument> brands = brandService.getBrandByPostalCode(postalCode);
+		List<BrandBean> brandBeanList= new ArrayList<BrandBean>(); 
 
-		if (null != brands && !brands.isEmpty()) {
+		for (BrandDocument brand: brands ) {
+	    	BrandBean brandBean= new BrandBean();
+	        BeanUtils.copyProperties(brandBean , brand);
+	        brandBeanList.add(brandBean);
+		}
+		
+		if (null != brandBeanList && !brandBeanList.isEmpty()) {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(brands);
-			genericResponse.setItemCount(brands.size());
+			genericResponse.setItems(brandBeanList);
+			genericResponse.setItemCount(brandBeanList.size());
 			genericResponse.setMessage("Brand Items were Returned Successfully.");
 
 			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
