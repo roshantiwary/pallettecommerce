@@ -23,6 +23,7 @@ import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;
+import com.pallette.response.AddressResponse;
 
 /**
  * <p>
@@ -75,7 +76,17 @@ public class CheckoutServices {
 			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
 			for (ShippingGroup shipGrp : shippingGroups) {
 				if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
-					shipGrp.setAddress(addressItem);
+					Address address = shipGrp.getAddress();
+					if (null == address) {
+						shipGrp.setAddress(addressItem);
+					} else {
+						//If Address exists , remove the address first and then set the new address.
+						Query addressRemovalQuery = new Query();
+						addressRemovalQuery.addCriteria(Criteria.where(CommerceContants._ID).is(address.getId()));
+						Address oldAddress = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
+						log.debug("Address Document Removed Successfully :" , oldAddress.getId());
+						shipGrp.setAddress(addressItem);
+					}
 				}
 			}
 
@@ -83,7 +94,6 @@ public class CheckoutServices {
 			mongoOperation.save(orderItem, CommerceContants.ORDER);
 			isSuccess = Boolean.TRUE;
 		}
-
 		return isSuccess;
 	}
 
@@ -127,7 +137,6 @@ public class CheckoutServices {
 			mongoOperation.save(orderItem, CommerceContants.ORDER);
 			isSuccess = Boolean.TRUE;
 		}
-
 		return isSuccess;
 	}
 	
@@ -141,7 +150,7 @@ public class CheckoutServices {
 	 * @param address
 	 * @return
 	 */
-	public boolean removeAddress(AddressBean addressBean, String orderId) {
+	public boolean removeAddress(String orderId) {
 
 		log.debug("Inside OrderService.editAddress()");
 		log.debug("Order for which address to be edited is :" , orderId);
@@ -181,13 +190,15 @@ public class CheckoutServices {
 
 
 	/**
+	 * Method responsible for returning the Address saved in the order's
+	 * shipping group.
 	 * 
 	 * @param orderId
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
 	 */
-	public AddressBean getShipmentAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
+	public AddressResponse getShipmentAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside OrderService.getShipmentAddressFromOrder()");
 		log.debug("Order for which address to be fetched is :", orderId);
@@ -195,7 +206,7 @@ public class CheckoutServices {
 		if (StringUtils.isEmpty(orderId))
 			return null;
 
-		AddressBean addressBean = new AddressBean();
+		AddressResponse addressResponse = new AddressResponse();
 		Query query = new Query(Criteria.where(CommerceContants._ID).is(orderId));
 		log.debug("Query to be executed is :", query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
@@ -210,8 +221,8 @@ public class CheckoutServices {
 	
 						if (null != addressItem) {
 							// Bean Utils copyProperties method is responsible for copying properties across two beans.
-							BeanUtils.copyProperties(addressBean, addressItem);
-							return addressBean;
+							BeanUtils.copyProperties(addressResponse, addressItem);
+							return addressResponse;
 						}
 					}
 				}
@@ -222,17 +233,18 @@ public class CheckoutServices {
 
 
 	/**
+	 * Method responsible for returning the Address saved in the user's profile.
 	 * 
 	 * @param orderId
 	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
 	 */
-	public List<AddressBean> getSavedAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
+	public List<AddressResponse> getSavedAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside OrderService.getSavedAddressFromOrder()");
 		log.debug("Order for which address to be fetched is :", orderId);
-		List<AddressBean> savedAddress = new ArrayList<AddressBean>();
+		List<AddressResponse> savedAddress = new ArrayList<AddressResponse>();
 
 		if (StringUtils.isEmpty(orderId))
 			return savedAddress;
@@ -262,7 +274,7 @@ public class CheckoutServices {
 			return savedAddress;
 		
 		for (Address address : addresses) {
-			AddressBean addressBean = new AddressBean();
+			AddressResponse addressBean = new AddressResponse();
 			// Bean Utils copyProperties method is responsible for copying properties across two beans.
 			BeanUtils.copyProperties(addressBean, address);
 			savedAddress.add(addressBean);
