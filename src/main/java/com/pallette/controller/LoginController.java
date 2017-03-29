@@ -1,6 +1,5 @@
 package com.pallette.controller;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.domain.AuthenticationRequest;
-import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.exception.SymbolNotFoundException;
 import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
@@ -89,24 +87,25 @@ public class LoginController {
 	 * 
 	 * @param account
 	 * @return
-	 * @throws NoRecordsFoundException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/account/create", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> register(@RequestBody AccountBean account) throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GenericResponse> register(@RequestBody AccountBean account) throws Exception {
 		logger.info("register: user:" + account.getUsername());
-		GenericResponse genericResponse = null;
-		
-		genericResponse = accountService.createAccount(account);
-		
-		if(null != genericResponse && HttpStatus.OK.value() == genericResponse.getStatusCode()){
-			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
-		}else{
-			throw new NoRecordsFoundException("Exception While Creating Profile");
+		GenericResponse genericResponse = new GenericResponse();
+		try{
+			genericResponse = accountService.createAccount(account);
+		}catch(Exception e){
+			logger.error("Exception Occured while creating profile");
+			genericResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			genericResponse.setMessage(e.getMessage());
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
+		if(HttpStatus.ALREADY_REPORTED.value() == genericResponse.getStatusCode())
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.ALREADY_REPORTED);
 		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	
