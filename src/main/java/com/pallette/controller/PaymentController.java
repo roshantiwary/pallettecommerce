@@ -88,7 +88,7 @@ public class PaymentController {
 	@RequestMapping(value="/success",method=RequestMethod.POST)
 	public String paymentSuccess(HttpServletRequest request,HttpServletResponse response){
 	    //do sume stuffs
-		request.getAttribute("hash");
+		request.getParameter("hash");
 		System.out.println("Payment Successfull");
 	    return "confirmation"; 
 	}
