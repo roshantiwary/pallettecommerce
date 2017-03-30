@@ -104,15 +104,15 @@ public class myServlet extends HttpServlet {
 //        processRequest(request, response);
 
         JavaIntegrationKit integrationKit = new JavaIntegrationKit();
-        request.setAttribute("key", "rjQUPktU");
-        request.setAttribute("amount", 1);
-        request.setAttribute("firstname", "Roshan");
-        request.setAttribute("email", "roshantiwary@gmail.com");
-        request.setAttribute("phone", "1234567890");
-        request.setAttribute("productinfo", "test");
-        request.setAttribute("surl", "http://localhost:8080/pallette-commerce-1.0.0/success");
-        request.setAttribute("furl", "http://localhost:8080/pallette-commerce-1.0.0/failure");
-        request.setAttribute("service_provider", "payu_paisa");
+//        request.setAttribute("key", "rjQUPktU");
+//        request.setAttribute("amount", 1);
+//        request.setAttribute("firstname", "Roshan");
+//        request.setAttribute("email", "roshantiwary@gmail.com");
+//        request.setAttribute("phone", "1234567890");
+//        request.setAttribute("productinfo", "test");
+//        request.setAttribute("surl", "http://localhost:8080/pallette-commerce-1.0.0/success");
+//        request.setAttribute("furl", "http://localhost:8080/pallette-commerce-1.0.0/failure");
+//        request.setAttribute("service_provider", "payu_paisa");
         Map<String, String> values = integrationKit.hashCalMethod(request, response);
         PrintWriter writer = response.getWriter();
 // build HTML code
