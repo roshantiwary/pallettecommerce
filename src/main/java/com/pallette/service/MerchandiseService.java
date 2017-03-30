@@ -17,6 +17,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
+import com.pallette.domain.CityDocument;
 import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
@@ -143,6 +144,21 @@ public class MerchandiseService {
 			}
 		} catch (IOException e) {
 			throw new PalletteException("Error while processing the file with Price");
+		}
+	}
+
+	public void processCity(MultipartFile uploadfile) throws PalletteException {
+		InputStream inputStream;
+		try {
+			inputStream = getInputStream(Arrays.asList(uploadfile));
+			if(null != inputStream) {
+				List<CityDocument> cityList = loadObjectList(CityDocument.class, inputStream);
+         		merchDao.bulkCityUpload(cityList);
+			} else {
+				 throw new PalletteException("File is empty !!");
+			}
+		} catch (IOException e) {
+			throw new PalletteException("Error while processing the file with City");
 		}
 	}
 }

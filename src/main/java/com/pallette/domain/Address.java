@@ -53,6 +53,8 @@ public class Address implements Serializable {
 	private String ownerId;
 	
 	private String phoneNumber;
+	
+	private String email;
 
 	public Address() {
 		super();
@@ -64,7 +66,8 @@ public class Address implements Serializable {
 
 	public String toString() {
 		StringBuilder address = new StringBuilder();
-		address.append("Address ").append("[").append("Address1=")
+		address.append("Address ").append("[").append("Email=")
+				.append(getEmail()).append(", ").append("Address1=")
 				.append(getAddress1()).append(", ").append("Address2=")
 				.append(getAddress2()).append(", ").append("Address3=")
 				.append(getAddress3()).append(", ").append("City=")
@@ -94,6 +97,9 @@ public class Address implements Serializable {
 		String aPrefix = getPrefix();
 		String bPrefix = address.getPrefix();
 
+		String aEmail = getEmail();
+		String bEmail = address.getEmail();
+		
 		String aFirstName = getFirstName();
 		String bFirstName = address.getFirstName();
 
@@ -133,6 +139,11 @@ public class Address implements Serializable {
 		if ((aPrefix == null) && (bPrefix != null)) {
 			return false;
 		}
+		
+		if ((aEmail == null) && (bEmail != null)) {
+			return false;
+		}
+		
 		if ((aFirstName == null) && (bFirstName != null)) {
 			return false;
 		}
@@ -171,7 +182,8 @@ public class Address implements Serializable {
 		}
 
 		return (((aPrefix == null) && (bPrefix == null)) || ((aPrefix
-				.equals(bPrefix)) && ((((aFirstName == null) && (bFirstName == null)) || ((aFirstName
+				.equals(bPrefix)) && (((aEmail == null) && (bEmail == null)) || ((aEmail
+				.equals(bEmail)) && ((((aFirstName == null) && (bFirstName == null)) || ((aFirstName
 				.equals(bFirstName)) && ((((aMiddleName == null) && (bMiddleName == null)) || ((aMiddleName
 				.equals(bMiddleName)) && ((((aLastName == null) && (bLastName == null)) || ((aLastName
 				.equals(bLastName)) && ((((aSuffix == null) && (bSuffix == null)) || ((aSuffix
@@ -183,7 +195,7 @@ public class Address implements Serializable {
 				.equals(bState)) && ((((aPostalCode == null) && (bPostalCode == null)) || ((aPostalCode
 				.equals(bPostalCode)) && ((((aCountry == null) && (bCountry == null)) || ((aCountry
 				.equals(bCountry)) && ((((aOwnerId == null) && (bOwnerId == null)) || ((aOwnerId != null) && (aOwnerId
-				.equals(bOwnerId))))))))))))))))))))))))))))))))))))))));
+				.equals(bOwnerId))))))))))))))))))))))))))))))))))))))))));
 	}
 
 	/**
@@ -439,6 +451,21 @@ public class Address implements Serializable {
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
