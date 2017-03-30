@@ -3,6 +3,8 @@ package com.pallette.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AddressBean;
 import com.pallette.beans.PasswordBean;
+import com.pallette.response.ExceptionResponse;
 import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 import com.pallette.web.security.ApplicationUser;
@@ -130,7 +133,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/account/addresses", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> addNewAddress(@RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GenericResponse> addNewAddress(@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Adding New Address in Profile : " + address.toString());
 		GenericResponse genericResponse = new GenericResponse();
 		
@@ -157,7 +160,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/account/editAddress/{id}", method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> editAddress(@PathVariable("id") String addressKey,@RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GenericResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Editing Existing Address for Address Key : " + addressKey);
 		GenericResponse genericResponse = new GenericResponse();
 		
@@ -207,7 +210,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/account/edit", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> updateProfile(@RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GenericResponse> updateProfile(@Valid @RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
 		logger.info("Profile update for id : " + account.getId());
 		GenericResponse genericResponse = new GenericResponse();
 		
@@ -229,7 +232,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/account/changePassword", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> changePassword(@RequestBody PasswordBean password){
+	public ResponseEntity<GenericResponse> changePassword(@Valid @RequestBody PasswordBean password){
 		logger.info("Password update for id : " + password.getId());
 		GenericResponse genericResponse = new GenericResponse();
 		try {
@@ -241,4 +244,16 @@ public class UserProfileController {
 		}
 		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
+	
+	/**
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> exceptionHandler(Exception ex){
+		ExceptionResponse error = new ExceptionResponse();
+        error.setStatusCode(HttpStatus.PRECONDITION_FAILED.value());
+        error.setMessage(ex.getMessage());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.OK);
+    }
 }

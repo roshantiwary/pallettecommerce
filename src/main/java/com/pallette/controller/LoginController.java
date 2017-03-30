@@ -2,7 +2,7 @@ package com.pallette.controller;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.exception.SymbolNotFoundException;
+import com.pallette.response.ExceptionResponse;
 import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 
@@ -91,7 +91,7 @@ public class LoginController {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/account/create", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> register(@RequestBody AccountBean account) throws Exception {
+	public ResponseEntity<GenericResponse> register(@Valid @RequestBody AccountBean account) throws Exception {
 		logger.info("register: user:" + account.getUsername());
 		GenericResponse genericResponse = new GenericResponse();
 		try{
@@ -108,15 +108,12 @@ public class LoginController {
 		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
 	
-	
-	@ExceptionHandler({ Exception.class })
-	public ModelAndView error(HttpServletRequest req, Exception exception) {
-		logger.debug("Handling error: " + exception);
-		logger.warn("Exception:", exception);
-		ModelAndView model = new ModelAndView();
-		model.addObject("errorCode", exception.getMessage());
-		model.addObject("errorMessage", exception);
-		model.setViewName("error");
-		return model;
-	}
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> exceptionHandler(Exception ex){
+		ExceptionResponse error = new ExceptionResponse();
+        error.setStatusCode(HttpStatus.PRECONDITION_FAILED.value());
+        error.setMessage(ex.getMessage());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.pallette.beans;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 
 /**
  * @author vdwiv3
@@ -7,16 +9,22 @@ package com.pallette.beans;
  */
 public class AccountBean {
 
+	@NotBlank(message="Please enter Id")
 	private String id;
 
+	@NotBlank(message="Please enter Username")
 	private String username;
 	
+	@NotBlank(message="Please enter password")
 	private String password;
 	
+	@NotBlank(message="Please enter Confirm Password")
 	private String confirmPassword;
 
+	@NotBlank(message="Please enter First Name")
 	private String firstName;
 	
+	@NotBlank(message="Please enter Last Name")
 	private String lastName;
 	
     private String authtoken;

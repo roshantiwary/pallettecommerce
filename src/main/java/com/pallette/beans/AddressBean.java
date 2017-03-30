@@ -3,6 +3,10 @@
  */
 package com.pallette.beans;
 
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @author amall3
  *
@@ -14,29 +18,42 @@ public class AddressBean {
 
 	private String addressId;
 
+	@NotBlank(message="Please enter First Name")
 	private String firstName;
 
 	private String middleName;
 
+	@NotBlank(message="Please enter Last Name")
 	private String lastName;
 
+	@NotBlank(message="Please enter Address1")
 	private String address1;
 
 	private String address2;
 
 	private String address3;
 
+	@NotBlank(message="Please enter City")
 	private String city;
 
+	@NotBlank(message="Please enter State")
 	private String state;
 
+	@NotBlank(message="Please enter Postal Code")
 	private String postalCode;
 
+	@NotBlank(message="Please enter Country")
 	private String country;
 
+	@NotBlank(message="Please enter Phone Number")
+	@Size(min=10,max=10)
 	private String phoneNumber;
 
+	@NotBlank(message="Please provide profile Id")
 	private String ownerId;
+	
+	@NotBlank(message="Please enter Email")
+	private String email;
 
 	/**
 	 * @return the firstName
@@ -246,6 +263,21 @@ public class AddressBean {
 	 */
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

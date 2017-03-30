@@ -1,17 +1,23 @@
 package com.pallette.beans;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @author vdwiv3
  *
  */
 public class PasswordBean {
 	
+	@NotBlank
 	private String id;
 	
+	@NotBlank
 	private String oldPassword;
 	
+	@NotBlank
 	private String newPassword;
 	
+	@NotBlank
 	private String confirmPassword;
 
 	public String getId() {
