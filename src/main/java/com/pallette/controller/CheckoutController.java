@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AddressBean;
 import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.constants.RestURLConstants;
 import com.pallette.response.AddEditAddressResponse;
 import com.pallette.response.AddressResponse;
 import com.pallette.response.GetAddressResponse;
@@ -30,22 +31,12 @@ import com.pallette.service.CheckoutServices;
 @RequestMapping("/rest/api/v1")
 public class CheckoutController {
 
-	private static final String GET_SAVED_ADDRESSES_URL = "/shipping/address/savedAddress/{orderId}";
-
-	private static final String GET_SHIPMENT_ADDRESS_URL = "/shipping/address/shipmentAddress/{orderId}";
-
-	private static final String REMOVE_ADDRESS_URL = "/shipping/address/remove/{orderId}";
-
-	private static final String EDIT_ADDRESS_URL = "/shipping/address/edit";
-
-	private static final String ADD_ADDRESS_URL = "/shipping/address/add";
-
 	@Autowired
 	private CheckoutServices checkoutServices;
 	
 	private static final Logger log = LoggerFactory.getLogger(CheckoutController.class);
 
-	@RequestMapping(value = ADD_ADDRESS_URL, method = RequestMethod.POST)
+	@RequestMapping(value = RestURLConstants.ADD_ADDRESS_URL, method = RequestMethod.POST)
 	public ResponseEntity<AddEditAddressResponse> handleAddAddress(@RequestBody AddressBean address) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.addAddress()");
@@ -74,7 +65,7 @@ public class CheckoutController {
 		}
 	}
 	
-	@RequestMapping(value = EDIT_ADDRESS_URL, method = RequestMethod.POST)
+	@RequestMapping(value = RestURLConstants.EDIT_ADDRESS_URL, method = RequestMethod.POST)
 	public ResponseEntity<AddEditAddressResponse> handleEditAddress(@RequestBody AddressBean address) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.editAddress()");
@@ -102,7 +93,7 @@ public class CheckoutController {
 		}
 	}
 	
-	@RequestMapping(value = REMOVE_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
+	@RequestMapping(value = RestURLConstants.REMOVE_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<AddEditAddressResponse> handleRemoveAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException {
 
 		log.debug("Inside CheckoutController.removeAddress()");
@@ -126,7 +117,7 @@ public class CheckoutController {
 		}
 	}
 
-	@RequestMapping(value = GET_SHIPMENT_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
+	@RequestMapping(value = RestURLConstants.GET_SHIPMENT_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<GetAddressResponse> handleGetShipmentAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.handleGetShipmentAddress()");
@@ -160,7 +151,7 @@ public class CheckoutController {
 	}
 
 	
-	@RequestMapping(value = GET_SAVED_ADDRESSES_URL, method = RequestMethod.GET , produces = "application/json")
+	@RequestMapping(value = RestURLConstants.GET_SAVED_ADDRESSES_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.handleGetSavedAddress()");

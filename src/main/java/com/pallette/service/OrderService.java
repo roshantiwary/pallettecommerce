@@ -10,16 +10,24 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
+import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CommerceItem;
+import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
+import com.pallette.domain.OrderPriceInfo;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
 import com.pallette.domain.ProductDocument;
@@ -29,50 +37,55 @@ import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
 import com.pallette.repository.ProductRepository;
 import com.pallette.repository.SequenceDao;
-
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import com.pallette.response.CartItemResponse;
+import com.pallette.response.CartResponse;
 
 /**
  * <p>
- * Service class for product repository operations. This class includes methods
- * that perform database operations related to product.
+ * Service class for cart and order related operations. This class includes
+ * methods that perform functionalities like add /update /remove operations on
+ * cart.
  * </p>
  * 
  * @author amall3
  *
  */
-
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class OrderService {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
-	
+
 	/**
 	 * The Order repository.
 	 */
 	@Autowired
 	private OrderRepository orderRepository;
-	
+
 	/**
 	 * The Product Repository.
 	 */
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	/**
 	 * The Account Repository.
 	 */
 	@Autowired
 	private AccountRepository accountRepository;
-	
+
+	/**
+	 * SequenceDAO for generating sequential order id.
+	 */
 	@Autowired
 	private SequenceDao sequenceDao;
-	
+
+	/**
+	 * New Pipeline Chain for Pricing.
+	 */
 	@Autowired
 	OrderRepriceChain orderRepriceChain;
-	
+
 	@Autowired
 	private MongoOperations mongoOperation;
 	
@@ -85,7 +98,8 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	public Order addItemToOrder(String productId, long quantity, String profileId, String orderId) throws NoRecordsFoundException {
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public CartResponse addItemToOrder(String productId, long quantity , String orderId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.addItemToOrder()");
 		
 		Order order = orderRepository.findOne(orderId);
@@ -102,11 +116,11 @@ public class OrderService {
 			// Create new CommerceItem Object an set the default values.
 			CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem);
 			order.addCommerceItem(commerceItem);
-
 		}
 		
 		orderRepriceChain.reprice(order);
-		return orderRepository.save(order);
+		Order orderItem =  orderRepository.save(order);
+		return constructResponse(orderItem);
 	}
 	
 	/**
@@ -116,7 +130,8 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	public CommerceItem removeItemFromOrder(String orderId, String productId) throws NoRecordsFoundException {
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public CartResponse removeItemFromOrder(String orderId, String productId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.removeItemFromOrder()");
 		
 		Order order = orderRepository.findOne(orderId);
@@ -144,10 +159,10 @@ public class OrderService {
 		
 		CommerceItem commerceItem = mongoOperation.findAndRemove(query, CommerceItem.class);
 		log.debug("Item Removed Successfully :" , commerceItem.getId());
-		orderRepriceChain.reprice(order);
 		order.removeCommerceItem(itemToRemove);
-		orderRepository.save(order);
-		return commerceItem;
+		orderRepriceChain.reprice(order);
+		Order orderItem = orderRepository.save(order);
+		return constructResponse(orderItem);
 	}
 
 	
@@ -159,7 +174,8 @@ public class OrderService {
 	 * @return 
 	 * @throws NoRecordsFoundException 
 	 */
-	public Order updateItemQuantity(String orderId, String productId, long newQuantity) throws NoRecordsFoundException {
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public CartResponse updateItemQuantity(String orderId, String productId, long newQuantity) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderService.updateItemQuantity()");
 		log.debug("The Passed In Order id : " + orderId + " Product Id :" + productId + "Quantity :" + productId);
@@ -173,14 +189,17 @@ public class OrderService {
 			throw new NoRecordsFoundException("No Product Found to Update.");
 		
 		CommerceItem itemToUpdate = getItemFromOrder(productId, order);
-		if (null == itemToUpdate)
-			throw new NoRecordsFoundException("No Commerce Item Found to Update.");
-		
-		itemToUpdate.setQuantity(newQuantity);
-		
+		if (null == itemToUpdate) {
+			// Create new CommerceItem Object an set the default values.
+			CommerceItem commerceItem = createAndPopulateCommerceItem(newQuantity, prodItem);
+			order.addCommerceItem(commerceItem);
+		} else {
+			itemToUpdate.setQuantity(newQuantity);
+		} 
+		//Reprice after updating items.
 		orderRepriceChain.reprice(order);
-		
-		return orderRepository.save(order);
+		Order orderItem = orderRepository.save(order);
+		return constructResponse(orderItem);
 	}
 
 	/**
@@ -205,6 +224,7 @@ public class OrderService {
 	 * @param profileId
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Order createDefaultOrder(String profileId) {
 
 		log.debug("Inside OrderServices.createDefaultOrder()");
@@ -238,9 +258,10 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	public Order createOrder(String productId , long quantity , String profileId) throws NoRecordsFoundException {
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public CartResponse createAndAddItemToOrder(String productId , long quantity , String profileId) throws NoRecordsFoundException {
 		
-		log.debug("Inside OrderServices.");
+		log.debug("Inside OrderServices.createAndAddItemToOrder()");
 		ProductDocument prodItem = productRepository.findOne(productId);
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found while creating order.");
@@ -269,9 +290,79 @@ public class OrderService {
 		
 		orderRepriceChain.reprice(order);
 		
-		return orderRepository.save(order);
-
+		Order orderItem= orderRepository.save(order);
+		
+		return constructResponse(orderItem);
 	}
+
+	/**
+	 * 
+	 * @param orderId
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	public CartResponse getCartDetails(String orderId) throws NoRecordsFoundException {
+		log.debug("Inside OrderService.getCartDetails()");
+		log.debug("The Passed In Order id : " + orderId);
+
+		Order order = orderRepository.findOne(orderId);
+		if (null == order)
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		return constructResponse(order);
+	}
+
+	/**
+	 * Method that is responsible for constructing response for cart operations.
+	 * 
+	 * @param order
+	 * @return
+	 */
+	private CartResponse constructResponse(Order order) {
+	
+		log.debug("Inside OrderService.constructResponse()");
+		CartResponse cartResponse = new CartResponse();
+		
+		cartResponse.setOrderId(order.getId());
+		OrderPriceInfo orderPriceInfo = order.getOrderPriceInfo();
+		cartResponse.setOrderSubTotal(orderPriceInfo.getAmount());
+		
+		List<CartItemResponse> responseItemList = new ArrayList<CartItemResponse>();
+
+		List<CommerceItem> items = order.getCommerceItems();
+		if (null != items && !items.isEmpty()) {
+			for (CommerceItem itm : items) {
+				
+				CartItemResponse cartItemResponse = new CartItemResponse();
+				cartItemResponse.setQuantity(itm.getQuantity());
+				cartItemResponse.setProductId(itm.getCatalogRefId());
+				
+				ProductDocument productItem = productRepository.findOne(itm.getCatalogRefId());
+				if (null != productItem) {
+					BrandDocument brandDocument = productItem.getProductBrand();
+					if (null != brandDocument) {
+						cartItemResponse.setProductBrand(brandDocument.getStoreName());
+					}
+					cartItemResponse.setDescription(productItem.getProductDescription());
+					cartItemResponse.setProductTitle(productItem.getProductTitle());
+					cartItemResponse.setProductSlug(productItem.getProductSlug());
+
+					ImagesDocument imageDocument = productItem.getImagesDocument();
+					cartItemResponse.setProductImage(imageDocument.getThumbnailImageUrl());
+
+					ItemPriceInfo itemPriceInfo = itm.getItemPriceInfo();
+					if (null != itemPriceInfo) {
+						cartItemResponse.setAmount(itemPriceInfo.getAmount());
+					}
+				}
+				responseItemList.add(cartItemResponse);
+			}
+		}
+		cartResponse.setCartItems(responseItemList);
+		log.debug("Response Item sent is :", cartResponse.toString());
+		return cartResponse;
+	}
+	
 
 	private Order initializeOrder() {
 		Order order = new Order();
@@ -341,8 +432,5 @@ public class OrderService {
 	public void setProductRepository(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
-
-
-	
 
 }
