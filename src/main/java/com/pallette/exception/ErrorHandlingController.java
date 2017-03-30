@@ -3,6 +3,8 @@
  */
 package com.pallette.exception;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -48,6 +50,17 @@ public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 		logger.error(e.getMessage());
 
 		return new ResponseEntity<ExceptionResponse>(response, new HttpHeaders(), HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(value = { IllegalAccessException.class , InvocationTargetException.class })
+	public ResponseEntity<ExceptionResponse> handleIllegalAccessException(IllegalAccessException e , InvocationTargetException e1) throws Exception {
+		
+		ExceptionResponse response = new ExceptionResponse();
+		response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		response.setMessage(e.getMessage());
+		logger.error(e.getMessage());
+
+		return new ResponseEntity<ExceptionResponse>(response, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

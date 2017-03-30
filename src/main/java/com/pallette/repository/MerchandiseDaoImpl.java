@@ -1,5 +1,6 @@
 package com.pallette.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
+import com.pallette.domain.CityDocument;
 import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
 import com.pallette.domain.ProductDocument;
+
 import org.springframework.data.mongodb.core.query.Criteria;
 
 @Repository
@@ -122,4 +126,23 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 		}
 	}
 
+	@Override
+	public void bulkCityUpload(List<CityDocument> cityDocumentList) {
+		for (CityDocument cityDocument : cityDocumentList) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("id").is(cityDocument.getId()));
+			
+			Update update = new Update();
+			update.set("name", cityDocument.getName());
+			update.set("imagesDocument", cityDocument.getImagesDocument());
+			List<BrandDocument> brandDocumentList = new ArrayList<BrandDocument>();
+			List<BrandDocument> brandDocuments = cityDocument.getBrandDocuments();
+			for(BrandDocument brandDocument : brandDocuments){
+				brandDocumentList.add(brandDocument);
+			}
+			update.set("brandDocument", brandDocumentList);
+			mongoTemplate.upsert(query, update, CityDocument.class);
+
+		}
+	}
 }

@@ -46,7 +46,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/rest/**").authenticated()
                 .antMatchers("/private/rest/api/v1/userprofile/admin").hasAnyAuthority("ADMIN")
                 .antMatchers("/private/rest/api/v1/userprofile/user").hasAnyAuthority("USER")
-                .antMatchers("/private/rest/api/v1/userprofile/administrator").hasAnyAuthority("ADMINISTRATOR");
+                .antMatchers("/private/rest/api/v1/userprofile/administrator").hasAnyAuthority("ADMINISTRATOR")
+                .antMatchers("/private/rest/api/v1/userprofile/account/addresses").hasAnyAuthority("USER")
+                .antMatchers("/private/rest/api/v1/userprofile/account/editAddress/{id}").hasAnyAuthority("USER")
+                .antMatchers("/private/rest/api/v1/userprofile/account/removeAddress/{id}").hasAnyAuthority("USER")
+                .antMatchers("/private/rest/api/v1/userprofile/account/edit").hasAnyAuthority("USER");
 
     }
 

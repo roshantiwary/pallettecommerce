@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
+import com.pallette.domain.CityDocument;
 import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
@@ -48,4 +49,10 @@ public interface MerchandiseDao {
 	 * 
 	 */
 	public void bulkProductUpload(List<ProductDocument> productDocumentList);
+
+	/**
+	 * bulkCityUpload method is used for initial set up of City Data.
+	 * 
+	 */
+	public void bulkCityUpload(List<CityDocument> cityDocumentList);
 }

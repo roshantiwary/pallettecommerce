@@ -3,6 +3,8 @@
  */
 package com.pallette.repository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +34,7 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 	 * database and returns the the saved Order entry.
 	 */
 	public Order save(Order order);
+	
+	public List<Order> findOrderByStateAndProfileId(String state, String profileId);
 	
 }

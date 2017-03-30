@@ -1,30 +1,36 @@
 package com.pallette.controller;
 
-import java.util.Date;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.pallette.domain.Account;
+import com.pallette.beans.AccountBean;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.exception.SymbolNotFoundException;
+import com.pallette.response.ExceptionResponse;
+import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 
-@Controller
+@RestController
+@RequestMapping("/rest/api/v1")
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
@@ -74,36 +80,40 @@ public class LoginController {
 		logger.info(model.asMap().toString());
 		return "index";
 	}
-	
-	@RequestMapping(value = "/registration", method = RequestMethod.GET)
-	public String registration(Model model) {
-		Account account = new Account();
-		model.addAttribute("account", account);
-		return "registration";
-	}
 
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String register(Model model, @ModelAttribute(value="account") Account account) {
+	/**
+	 * This Method creates the user profile and saves 
+	 * the profile in repository
+	 * 
+	 * @param account
+	 * @return
+	 * @throws Exception 
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/account/create", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> register(@Valid @RequestBody AccountBean account) throws Exception {
 		logger.info("register: user:" + account.getUsername());
+		GenericResponse genericResponse = new GenericResponse();
+		try{
+			genericResponse = accountService.createAccount(account);
+		}catch(Exception e){
+			logger.error("Exception Occured while creating profile");
+			genericResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			genericResponse.setMessage(e.getMessage());
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		if(HttpStatus.ALREADY_REPORTED.value() == genericResponse.getStatusCode())
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.ALREADY_REPORTED);
 		
-		//need to set some stuff on account...
-		
-		account.setCreationdate(new Date());
-		
-		AuthenticationRequest login = new AuthenticationRequest();
-		login.setUsername(account.getUsername());
-		model.addAttribute("login", login);
-		accountService.createAccount(account);
-		return "index";
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
 	}
-	@ExceptionHandler({ Exception.class })
-	public ModelAndView error(HttpServletRequest req, Exception exception) {
-		logger.debug("Handling error: " + exception);
-		logger.warn("Exception:", exception);
-		ModelAndView model = new ModelAndView();
-		model.addObject("errorCode", exception.getMessage());
-		model.addObject("errorMessage", exception);
-		model.setViewName("error");
-		return model;
-	}
+	
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> exceptionHandler(Exception ex){
+		ExceptionResponse error = new ExceptionResponse();
+        error.setStatusCode(HttpStatus.PRECONDITION_FAILED.value());
+        error.setMessage(ex.getMessage());
+        return new ResponseEntity<ExceptionResponse>(error, HttpStatus.OK);
+    }
+
 }

@@ -1,59 +1,35 @@
 /**
  * 
  */
-package com.pallette.beans;
-
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
+package com.pallette.response;
 
 /**
  * @author amall3
  *
  */
+public class AddressResponse {
 
-public class AddressBean {
-
-	private String orderId;
-
-	private String addressId;
-
-	@NotBlank(message="Please enter First Name")
 	private String firstName;
 
 	private String middleName;
 
-	@NotBlank(message="Please enter Last Name")
 	private String lastName;
 
-	@NotBlank(message="Please enter Address1")
 	private String address1;
 
 	private String address2;
 
 	private String address3;
 
-	@NotBlank(message="Please enter City")
 	private String city;
 
-	@NotBlank(message="Please enter State")
 	private String state;
 
-	@NotBlank(message="Please enter Postal Code")
 	private String postalCode;
 
-	@NotBlank(message="Please enter Country")
 	private String country;
 
-	@NotBlank(message="Please enter Phone Number")
-	@Size(min=10,max=10)
 	private String phoneNumber;
-
-	@NotBlank(message="Please provide profile Id")
-	private String ownerId;
-	
-	@NotBlank(message="Please enter Email")
-	private String email;
 
 	/**
 	 * @return the firstName
@@ -206,36 +182,8 @@ public class AddressBean {
 	}
 
 	/**
-	 * @return the orderId
-	 */
-	public String getOrderId() {
-		return orderId;
-	}
-
-	/**
-	 * @param orderId
-	 *            the orderId to set
-	 */
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	/**
-	 * @return the addressId
-	 */
-	public String getAddressId() {
-		return addressId;
-	}
-
-	/**
-	 * @param addressId
-	 *            the addressId to set
-	 */
-	public void setAddressId(String addressId) {
-		this.addressId = addressId;
-	}
-
-	/**
+	 * /**
+	 * 
 	 * @return the phoneNumber
 	 */
 	public String getPhoneNumber() {
@@ -248,36 +196,6 @@ public class AddressBean {
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	/**
-	 * @return the ownerId
-	 */
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	/**
-	 * @param profileId
-	 *            the ownerId to set
-	 */
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 }

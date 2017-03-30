@@ -55,7 +55,12 @@ Starting Mongo using user access:
 
 ### Application URL
 - Login: http://www.palletteapart.com/boot/login
-- Registration: http://www.palletteapart.com/boot/registration
+- Registration: http://www.palletteapart.com/boot/account/create
+- Update Personal Details: http://www.palletteapart.com/boot/account/edit
+- Add Address To Profile: http://www.palletteapart.com/boot/account/addresses
+- Edit Address: http://www.palletteapart.com/boot/account/editAddress/{id}
+- Remove Address: http://www.palletteapart.com/boot/account/removeAddress/{id}
+- Change Password: http://www.palletteapart.com/boot/account/changePassword
 - Access Token: http://www.palletteapart.com/boot/oauth/token (Body: grant_type:password, client_id:acme, client_secret:acmesecret, username:XXXX ,password:XXXXXX) (Authorization: user: XXXX password XXXXX)
 - Get Product: http://www.palletteapart.com/boot/rest/api/v1/products (Header: Authorization:Bearer 04da0457-375a-4f62-bcd0-97ad7456c8ed)
 
