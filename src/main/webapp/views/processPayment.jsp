@@ -37,11 +37,11 @@
 		<input type="hidden" name="udf4" value="${udf4}"/>
 		<input type="hidden" name="udf5" value="${udf5}"/>
 		<input type="hidden" name="pg" value="${pg}"/>
-		<input type="submit" value="submit"/>	 
+		<input type="submit" value="submit" style="display:none;"/>	 
 	 </form>
 	 
 	 <script type="text/javascript">
-	 	document.getElementById("payuform").submit(); 
+	 	document.getElementById("payuform").submit();
 	 </script>
 
 </body>

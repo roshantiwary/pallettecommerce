@@ -118,7 +118,9 @@ public class JavaIntegrationKit {
 			return null;
         
 		populateOrderDetails(order, params);
-		params.put(PaymentConstants.PRODUCTINFO, createProductInfo(order).toString());
+		String productInfo = JSONObject.quote(createProductInfo(order).toString());
+		params.put(PaymentConstants.PRODUCTINFO, "test");
+//		params.put(PaymentConstants.PRODUCTINFO, createProductInfo(order).toString());
 		
 		params.put(PaymentConstants.KEY, "rjQUPktU");
 		params.put(PaymentConstants.SURL, "http://localhost:8080/pallette-commerce-1.0.0/success");
