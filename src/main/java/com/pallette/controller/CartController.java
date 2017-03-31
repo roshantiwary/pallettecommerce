@@ -59,7 +59,7 @@ public class CartController {
 		}
             
 		String orderId = addToCartRequest.getOrderId();
-		if (orderId.isEmpty()) {
+		if (StringUtils.isEmpty(orderId)) {
 			
 			String profileId = addToCartRequest.getProfileId();
 			if(StringUtils.isEmpty(profileId))
@@ -67,7 +67,7 @@ public class CartController {
 				
 			log.debug("The Passed In Product Id :" + addToCartRequest.getProductId() + "Quantity :" + addToCartRequest.getQuantity());
 			//Creating a new Order and adding the item to the Order.
-			cartResponse = orderService.createAndAddItemToOrder(addToCartRequest.getProductId(), addToCartRequest.getQuantity(), profileId);
+			cartResponse = orderService.createAndAddItemToOrder(addToCartRequest.getSkuId(), addToCartRequest.getProductId(), addToCartRequest.getQuantity(), profileId);
 			cartResponse.setStatus(Boolean.TRUE);
 			cartResponse.setMessage("New Order created and Item successfully added to cart.");
 			cartResponse.setStatusCode(HttpStatus.OK.value());
@@ -75,9 +75,9 @@ public class CartController {
 
 		} else {
 			log.debug("Order Id Passed is :" + orderId);
-			log.debug("The Passed In Product Id :" + addToCartRequest.getProductId() + "Quantity :" + addToCartRequest.getQuantity());
+			log.debug("The Passed In Product Id :" + addToCartRequest.getProductId()+ " Sku Id : "+ addToCartRequest.getSkuId() + "Quantity :" + addToCartRequest.getQuantity());
 			//Invoking method to add item to passed in order id.
-			cartResponse = orderService.addItemToOrder(addToCartRequest.getProductId(), addToCartRequest.getQuantity(), orderId);
+			cartResponse = orderService.addItemToOrder(addToCartRequest.getSkuId(), addToCartRequest.getProductId(), addToCartRequest.getQuantity(), orderId);
 			cartResponse.setStatus(Boolean.TRUE);
 			cartResponse.setMessage("Item successfully added to cart.");
 			cartResponse.setStatusCode(HttpStatus.OK.value());
@@ -128,8 +128,8 @@ public class CartController {
 			return ResponseEntity.badRequest().body(cartResponse);
 		}
 		
-		log.debug("The Passed In Order id : " + updateItem.getOrderId() + " Product Id :" + updateItem.getProductId() + "Quantity :" + updateItem.getQuantity());
-		cartResponse = orderService.updateItemQuantity(updateItem.getOrderId() , updateItem.getProductId() , updateItem.getQuantity());
+		log.debug("The Passed In Order id : " + updateItem.getOrderId() + " Product Id :" + updateItem.getProductId() + " Sku Id :" + updateItem.getSkuId() + "Quantity :" + updateItem.getQuantity());
+		cartResponse = orderService.updateItemQuantity(updateItem.getOrderId() , updateItem.getProductId() , updateItem.getSkuId(), updateItem.getQuantity());
 		
 		cartResponse.setStatus(Boolean.TRUE);
 		cartResponse.setMessage("Item successfully updated.");
@@ -160,8 +160,8 @@ public class CartController {
 			return ResponseEntity.badRequest().body(cartResponse);
 		}
 		
-		log.debug("The Passed In Order id : " + removeItemRequest.getOrderId() + " Product Id :" + removeItemRequest.getProductId());
-		cartResponse = orderService.removeItemFromOrder(removeItemRequest.getOrderId() , removeItemRequest.getProductId());
+		log.debug("The Passed In Order id : " + removeItemRequest.getOrderId() + " Product Id :" + removeItemRequest.getProductId() + " Sku Id :" + removeItemRequest.getSkuId());
+		cartResponse = orderService.removeItemFromOrder(removeItemRequest.getOrderId() , removeItemRequest.getProductId(), removeItemRequest.getSkuId());
 		
 		cartResponse.setStatus(Boolean.TRUE);
 		cartResponse.setMessage("Item successfully Removed.");

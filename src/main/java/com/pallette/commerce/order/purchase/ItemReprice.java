@@ -4,13 +4,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
-import com.pallette.domain.ProductDocument;
+import com.pallette.domain.SkuDocument;
 import com.pallette.repository.ProductRepository;
 
 @Component
@@ -23,6 +26,9 @@ public class ItemReprice implements RepriceChain, Ordered{
 	 */
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private MongoOperations mongoOperation;
 	
 	@Override
 	public void setNextChain(RepriceChain nextChain) {
@@ -38,19 +44,19 @@ public class ItemReprice implements RepriceChain, Ordered{
 			return;
 		
 		for (CommerceItem commerceItem : items) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("_id").is(commerceItem.getCatalogRefId()));
+			SkuDocument skuItem = mongoOperation.findOne(query, SkuDocument.class);
 			ItemPriceInfo itemPriceInfo = new ItemPriceInfo();
 			itemPriceInfo.setOnSale(Boolean.FALSE);
 			itemPriceInfo.setDiscounted(Boolean.FALSE);
 			itemPriceInfo.setCurrencyCode(CommerceContants.INR);
-			String productId = commerceItem.getCatalogRefId();
 			long quantity = commerceItem.getQuantity();
 			
-			ProductDocument prodItem = productRepository.findOne(productId);
+			itemPriceInfo.setListPrice(skuItem.getPriceDocument().getListPrice());
+			itemPriceInfo.setSalePrice(skuItem.getPriceDocument().getSalePrice());
 			
-			itemPriceInfo.setListPrice(prodItem.getPriceDocument().getListPrice());
-			itemPriceInfo.setSalePrice(prodItem.getPriceDocument().getSalePrice());
-			
-			double amount = prodItem.getPriceDocument().getSalePrice() * quantity;
+			double amount = skuItem.getPriceDocument().getSalePrice() * quantity;
 			itemPriceInfo.setAmount(amount);
 			itemPriceInfo.setRawTotalPrice(amount);
 			

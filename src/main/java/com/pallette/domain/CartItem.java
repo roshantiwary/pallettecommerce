@@ -6,6 +6,7 @@ public class CartItem {
 	private String productId;
 	private long quantity;
 	private String profileId;
+	private String skuId;
 
 	/**
 	 * @return the profileId
@@ -52,5 +53,21 @@ public class CartItem {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
+
+	/**
+	 * @return the skuId
+	 */
+	public String getSkuId() {
+		return skuId;
+	}
+
+	/**
+	 * @param skuId
+	 *            the skuId to set
+	 */
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
+	}
+
 
 }

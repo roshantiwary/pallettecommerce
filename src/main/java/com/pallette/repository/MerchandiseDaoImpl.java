@@ -1,6 +1,5 @@
 package com.pallette.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,10 +116,8 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			update.set("productDescription", productDocument.getProductDescription());
 			update.set("productBrand", productDocument.getProductBrand());
 			update.set("productStatus", productDocument.getProductStatus());
-			update.set("imagesDocument", productDocument.getImagesDocument());
-			update.set("priceDocument", productDocument.getPriceDocument());
-			update.set("inventoryDocument", productDocument.getInventoryDocument());
 			update.set("categoryDocument", productDocument.getCategoryDocument());
+			update.set("skuDocument", productDocument.getSkuDocument());
 			mongoTemplate.upsert(query, update, ProductDocument.class);
 
 		}

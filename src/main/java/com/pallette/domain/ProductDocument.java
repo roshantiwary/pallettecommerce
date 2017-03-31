@@ -3,6 +3,9 @@
  */
 package com.pallette.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,24 +37,10 @@ public class ProductDocument {
 	private String productStatus;
 
 	@DBRef
-	private ImagesDocument imagesDocument;
-
-	@DBRef
-	private PriceDocument priceDocument;
-
-	@DBRef
-	private InventoryDocument inventoryDocument;
-
-	@DBRef
 	private CategoryDocument categoryDocument;
 	
-	@Override
-	public String toString() {
-		return "Product{" + "id='" + id + '\'' + ", productTitle='"
-				+ productTitle + '\'' + ", productDescription='"
-				+ productDescription + '\'' + ", productBrand=" + productBrand
-				+ ", productStatus=" + productStatus + '}';
-	}
+	@DBRef
+	private List<SkuDocument> skuDocument;
 
 	/**
 	 * @return the categoryDocument
@@ -144,51 +133,6 @@ public class ProductDocument {
 	}
 
 	/**
-	 * @return the imagesDocument
-	 */
-	public ImagesDocument getImagesDocument() {
-		return imagesDocument;
-	}
-
-	/**
-	 * @param imagesDocument
-	 *            the imagesDocument to set
-	 */
-	public void setImagesDocument(ImagesDocument imagesDocument) {
-		this.imagesDocument = imagesDocument;
-	}
-
-	/**
-	 * @return the priceDocument
-	 */
-	public PriceDocument getPriceDocument() {
-		return priceDocument;
-	}
-
-	/**
-	 * @param priceDocument
-	 *            the priceDocument to set
-	 */
-	public void setPriceDocument(PriceDocument priceDocument) {
-		this.priceDocument = priceDocument;
-	}
-
-	/**
-	 * @return the inventoryDocument
-	 */
-	public InventoryDocument getInventoryDocument() {
-		return inventoryDocument;
-	}
-
-	/**
-	 * @param inventoryDocument
-	 *            the inventoryDocument to set
-	 */
-	public void setInventoryDocument(InventoryDocument inventoryDocument) {
-		this.inventoryDocument = inventoryDocument;
-	}
-
-	/**
 	 * @return the productBrand
 	 */
 	public BrandDocument getProductBrand() {
@@ -201,6 +145,16 @@ public class ProductDocument {
 	 */
 	public void setProductBrand(BrandDocument productBrand) {
 		this.productBrand = productBrand;
+	}
+
+	public List<SkuDocument> getSkuDocument() {
+		if(null == skuDocument)
+			skuDocument = new ArrayList<SkuDocument>();
+		return skuDocument;
+	}
+
+	public void setSkuDocument(List<SkuDocument> skuDocument) {
+		this.skuDocument = skuDocument;
 	}
 
 }

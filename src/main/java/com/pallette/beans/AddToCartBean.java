@@ -20,12 +20,15 @@ public class AddToCartBean {
 	@NotBlank(message = "Product Id is mandatory.")
 	private String productId;
 
-	@NotNull(message = "Quantity Id is mandatory.")
+	@NotNull(message = "Quantity is mandatory.")
 	@Min(1)
 	@Max(100)
 	private long quantity;
 
 	private String profileId;
+	
+	@NotBlank(message = "Sku Id is mandatory.")
+	private String skuId;
 
 	/**
 	 * @return the orderId
@@ -85,6 +88,21 @@ public class AddToCartBean {
 	 */
 	public void setProfileId(String profileId) {
 		this.profileId = profileId;
+	}
+
+	/**
+	 * @return the skuId
+	 */
+	public String getSkuId() {
+		return skuId;
+	}
+
+	/**
+	 * @param skuId
+	 *            the skuId to set
+	 */
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
 	}
 
 }

@@ -32,6 +32,7 @@ import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
 import com.pallette.domain.ProductDocument;
 import com.pallette.domain.ShippingGroup;
+import com.pallette.domain.SkuDocument;
 import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
@@ -99,7 +100,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse addItemToOrder(String productId, long quantity , String orderId) throws NoRecordsFoundException {
+	public CartResponse addItemToOrder(String skuId, String productId, long quantity , String orderId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.addItemToOrder()");
 		
 		Order order = orderRepository.findOne(orderId);
@@ -110,11 +111,11 @@ public class OrderService {
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found to Update.");
 		
-		CommerceItem item = getItemFromOrder(productId, order);
+		CommerceItem item = getItemFromOrder(skuId, order);
 		if (null == item) {
 
 			// Create new CommerceItem Object an set the default values.
-			CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem);
+			CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem, skuId);
 			order.addCommerceItem(commerceItem);
 		}
 		
@@ -131,7 +132,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse removeItemFromOrder(String orderId, String productId) throws NoRecordsFoundException {
+	public CartResponse removeItemFromOrder(String orderId, String productId, String skuId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.removeItemFromOrder()");
 		
 		Order order = orderRepository.findOne(orderId);
@@ -142,7 +143,7 @@ public class OrderService {
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found to Update.");
 		
-		CommerceItem itemToRemove = getItemFromOrder(productId, order);
+		CommerceItem itemToRemove = getItemFromOrder(skuId, order);
 		if (null == itemToRemove)
 			throw new NoRecordsFoundException("No Commerce Item Found to Update.");
 		
@@ -175,7 +176,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse updateItemQuantity(String orderId, String productId, long newQuantity) throws NoRecordsFoundException {
+	public CartResponse updateItemQuantity(String orderId, String productId, String skuId, long newQuantity) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderService.updateItemQuantity()");
 		log.debug("The Passed In Order id : " + orderId + " Product Id :" + productId + "Quantity :" + productId);
@@ -188,10 +189,10 @@ public class OrderService {
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found to Update.");
 		
-		CommerceItem itemToUpdate = getItemFromOrder(productId, order);
+		CommerceItem itemToUpdate = getItemFromOrder(skuId, order);
 		if (null == itemToUpdate) {
 			// Create new CommerceItem Object an set the default values.
-			CommerceItem commerceItem = createAndPopulateCommerceItem(newQuantity, prodItem);
+			CommerceItem commerceItem = createAndPopulateCommerceItem(newQuantity, prodItem, skuId);
 			order.addCommerceItem(commerceItem);
 		} else {
 			itemToUpdate.setQuantity(newQuantity);
@@ -207,10 +208,10 @@ public class OrderService {
 	 * @param order
 	 * @return
 	 */
-	private CommerceItem getItemFromOrder(String productId, Order order) {
+	private CommerceItem getItemFromOrder(String skuId, Order order) {
 		List<CommerceItem> items = order.getCommerceItems();
 		for (CommerceItem item : items) {
-			if (productId.equalsIgnoreCase(item.getCatalogRefId())) {
+			if (skuId.equalsIgnoreCase(item.getCatalogRefId())) {
 				return item;
 			}
 		}
@@ -259,7 +260,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse createAndAddItemToOrder(String productId , long quantity , String profileId) throws NoRecordsFoundException {
+	public CartResponse createAndAddItemToOrder(String skuId, String productId , long quantity , String profileId) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderServices.createAndAddItemToOrder()");
 		ProductDocument prodItem = productRepository.findOne(productId);
@@ -276,7 +277,7 @@ public class OrderService {
 		initializePaymentGroup(order);
 		
 		//Create new CommerceItem Object an set the default values.
-		CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem);
+		CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem, skuId);
 		order.addCommerceItem(commerceItem);
 		
 		//Need to add the encrypt/decrpt logic.
@@ -335,9 +336,13 @@ public class OrderService {
 				
 				CartItemResponse cartItemResponse = new CartItemResponse();
 				cartItemResponse.setQuantity(itm.getQuantity());
-				cartItemResponse.setProductId(itm.getCatalogRefId());
+				cartItemResponse.setProductId(itm.getProductId());
+				cartItemResponse.setCatalogRefId(itm.getCatalogRefId());
 				
-				ProductDocument productItem = productRepository.findOne(itm.getCatalogRefId());
+				ProductDocument productItem = productRepository.findOne(itm.getProductId());
+				Query query = new Query();
+				query.addCriteria(Criteria.where("_id").is(itm.getCatalogRefId()));
+				SkuDocument skuItem = mongoOperation.findOne(query, SkuDocument.class);
 				if (null != productItem) {
 					BrandDocument brandDocument = productItem.getProductBrand();
 					if (null != brandDocument) {
@@ -347,7 +352,7 @@ public class OrderService {
 					cartItemResponse.setProductTitle(productItem.getProductTitle());
 					cartItemResponse.setProductSlug(productItem.getProductSlug());
 
-					ImagesDocument imageDocument = productItem.getImagesDocument();
+					ImagesDocument imageDocument = skuItem.getImagesDocument();
 					cartItemResponse.setProductImage(imageDocument.getThumbnailImageUrl());
 
 					ItemPriceInfo itemPriceInfo = itm.getItemPriceInfo();
@@ -406,11 +411,12 @@ public class OrderService {
 	 * @param prodDoc
 	 * @return
 	 */
-	private CommerceItem createAndPopulateCommerceItem(long quantity, ProductDocument prodDoc) {
+	private CommerceItem createAndPopulateCommerceItem(long quantity, ProductDocument prodDoc, String skuId) {
 		
 		CommerceItem commerceItem = new CommerceItem();
 		commerceItem.setCatalogId(CommerceContants.DEFAULT_CATALOG);
-		commerceItem.setCatalogRefId(prodDoc.getId());
+		commerceItem.setProductId(prodDoc.getId());
+		commerceItem.setCatalogRefId(skuId);
 		commerceItem.setCommerceItemType(CommerceContants.DEFAULT_COMMERCE_ITEM);
 		commerceItem.setQuantity(quantity);
 		commerceItem.setState(CommerceContants.INITIAL);

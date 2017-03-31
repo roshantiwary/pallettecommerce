@@ -38,6 +38,9 @@ public class CommerceItem implements Serializable {
 	private String description;
 
 	private String state;
+	
+	@Field(value= "product_id")
+	private String productId;
 
 	@DBRef
 	@CascadeSave
@@ -57,6 +60,7 @@ public class CommerceItem implements Serializable {
 		buf.append("catalogId:").append(getCatalogId()).append("; ");
 		buf.append("description:").append(getDescription()).append("; ");
 		buf.append("state:").append(getState()).append("; ");
+		buf.append("productId:").append(getProductId()).append(";");
 		buf.append("catalogRefId:").append(getCatalogRefId()).append("; ");
 		buf.append("quantity:").append(getQuantity()).append("; ");
 		return buf.toString();
@@ -173,5 +177,13 @@ public class CommerceItem implements Serializable {
 
 	public void setItemPriceInfo(ItemPriceInfo itemPriceInfo) {
 		this.itemPriceInfo = itemPriceInfo;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 }

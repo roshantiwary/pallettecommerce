@@ -16,6 +16,9 @@ public class RemoveItemBean {
 
 	@NotBlank(message = "Product Id is mandatory.")
 	private String productId;
+	
+	@NotBlank(message = "Sku Id is mandatory.")
+	private String skuId;
 
 	/**
 	 * @return the orderId
@@ -45,6 +48,21 @@ public class RemoveItemBean {
 	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
+	}
+
+	/**
+	 * @return the skuId
+	 */
+	public String getSkuId() {
+		return skuId;
+	}
+
+	/**
+	 * @param skuId
+	 *            the skuId to set
+	 */
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
 	}
 
 }

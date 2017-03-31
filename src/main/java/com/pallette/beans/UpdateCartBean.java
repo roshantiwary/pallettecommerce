@@ -25,6 +25,9 @@ public class UpdateCartBean {
 	@Min(1)
 	@Max(100)
 	private long quantity;
+	
+	@NotBlank(message = "Sku Id is mandatory")
+	private String skuId;
 
 	/**
 	 * @return the orderId
@@ -69,6 +72,21 @@ public class UpdateCartBean {
 	 */
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the skuId
+	 */
+	public String getSkuId() {
+		return skuId;
+	}
+
+	/**
+	 * @param skuId
+	 *            the skuId to set
+	 */
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
 	}
 
 }
