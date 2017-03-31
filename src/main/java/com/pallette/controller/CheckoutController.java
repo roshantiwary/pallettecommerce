@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AddEditAddressBean;
-import com.pallette.beans.AddressBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.response.AddEditAddressResponse;
