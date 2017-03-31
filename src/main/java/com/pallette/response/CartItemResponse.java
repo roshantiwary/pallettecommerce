@@ -21,8 +21,6 @@ public class CartItemResponse {
 
 	private String productSlug;
 
-	private String productDescription;
-
 	private String productBrand;
 
 	private String productImage;
@@ -119,20 +117,6 @@ public class CartItemResponse {
 		this.productSlug = productSlug;
 	}
 
-	/**
-	 * @return the productDescription
-	 */
-	public String getProductDescription() {
-		return productDescription;
-	}
-
-	/**
-	 * @param productDescription
-	 *            the productDescription to set
-	 */
-	public void setProductDescription(String productDescription) {
-		this.productDescription = productDescription;
-	}
 
 	/**
 	 * @return the productBrand
