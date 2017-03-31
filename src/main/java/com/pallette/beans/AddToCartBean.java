@@ -15,7 +15,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class AddToCartBean {
 
-	@NotNull(message = "Quantity Id is mandatory.")
 	private String orderId;
 
 	@NotBlank(message = "Product Id is mandatory.")
