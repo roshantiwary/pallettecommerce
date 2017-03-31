@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -16,8 +17,7 @@ import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
 import com.pallette.domain.ProductDocument;
-
-import org.springframework.data.mongodb.core.query.Criteria;
+import com.pallette.domain.SkuDocument;
 
 @Repository
 public class MerchandiseDaoImpl implements MerchandiseDao{
@@ -81,12 +81,12 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			
 			Update update = new Update();
 			update.set("categoryTitle", categoryDocument.getCategoryTitle());
-			update.set("categorySlug", categoryDocument);
-			update.set("categoryDescription", categoryDocument);
-			update.set("categoryBrand", categoryDocument);
-			update.set("categoryStatus", categoryDocument);
-			update.set("imagesDocument", categoryDocument);
-			update.set("parentCategoryDocument", categoryDocument);
+			update.set("categorySlug", categoryDocument.getCategorySlug());
+			update.set("categoryDescription", categoryDocument.getCategoryDescription());
+			update.set("categoryBrand", categoryDocument.getCategoryBrand());
+			update.set("categoryStatus", categoryDocument.getCategoryStatus());
+			update.set("imagesDocument", categoryDocument.getImagesDocument());
+			update.set("parentCategoryDocument", categoryDocument.getParentCategoryDocument());
 			mongoTemplate.upsert(query, update, CategoryDocument.class);
 		}
 	}
@@ -135,13 +135,28 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			Update update = new Update();
 			update.set("name", cityDocument.getName());
 			update.set("imagesDocument", cityDocument.getImagesDocument());
-			List<BrandDocument> brandDocumentList = new ArrayList<BrandDocument>();
-			List<BrandDocument> brandDocuments = cityDocument.getBrandDocuments();
-			for(BrandDocument brandDocument : brandDocuments){
-				brandDocumentList.add(brandDocument);
-			}
-			update.set("brandDocument", brandDocumentList);
+			update.set("brandDocument", cityDocument.getBrandDocuments());
 			mongoTemplate.upsert(query, update, CityDocument.class);
+
+		}
+	}
+	
+	@Override
+	public void bulkSkuUpload(List<SkuDocument> skuDocumentList) {
+		for (SkuDocument skuDocument : skuDocumentList) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("id").is(skuDocument.getId()));
+			
+			Update update = new Update();
+			update.set("name", skuDocument.getName());
+			update.set("defaultDisplayName", skuDocument.getDefaultDisplayName());
+			update.set("active", skuDocument.isActive());
+			update.set("unitOfMeasure", skuDocument.getUnitOfMeasure());
+			update.set("returnable", skuDocument.isReturnable());
+			update.set("imagesDocument", skuDocument.getImagesDocument());
+			update.set("priceDocument", skuDocument.getPriceDocument());
+			update.set("inventoryDocument", skuDocument.getInventoryDocument());
+			mongoTemplate.upsert(query, update, SkuDocument.class);
 
 		}
 	}

@@ -9,6 +9,7 @@ import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
 import com.pallette.domain.ProductDocument;
+import com.pallette.domain.SkuDocument;
 
 public interface MerchandiseDao {
 
@@ -55,4 +56,10 @@ public interface MerchandiseDao {
 	 * 
 	 */
 	public void bulkCityUpload(List<CityDocument> cityDocumentList);
+	
+	/**
+	 * bulkSkuUpload method is used for initial set up of Sku Data.
+	 * 
+	 */
+	public void bulkSkuUpload(List<SkuDocument> skuDocumentList);
 }

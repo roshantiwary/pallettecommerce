@@ -22,6 +22,7 @@ import com.pallette.domain.ImagesDocument;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.PriceDocument;
 import com.pallette.domain.ProductDocument;
+import com.pallette.domain.SkuDocument;
 import com.pallette.exception.PalletteException;
 import com.pallette.repository.MerchandiseDao;
 
@@ -102,6 +103,21 @@ public class MerchandiseService {
 		}
 	}
 	
+	public void processSku(MultipartFile uploadfile) throws PalletteException {
+		InputStream inputStream;
+		try {
+			inputStream = getInputStream(Arrays.asList(uploadfile));
+			if(null != inputStream) {
+				List<SkuDocument> skuList = loadObjectList(SkuDocument.class, inputStream);
+         		merchDao.bulkSkuUpload(skuList);
+			} else {
+				 throw new PalletteException("File is empty !!");
+			}
+		} catch (IOException e) {
+			throw new PalletteException("Error while processing the file with Sku");
+		}
+	}
+	
 	public void processInventory(MultipartFile uploadfile) throws PalletteException {
 		InputStream inputStream;
 		try {
@@ -161,4 +177,6 @@ public class MerchandiseService {
 			throw new PalletteException("Error while processing the file with City");
 		}
 	}
+	
+	
 }
