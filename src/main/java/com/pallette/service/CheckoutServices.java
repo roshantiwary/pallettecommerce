@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.pallette.beans.AddEditAddressBean;
 import com.pallette.beans.AddressBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.domain.Account;
@@ -54,7 +55,7 @@ public class CheckoutServices {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean saveNewAddress(AddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
+	public boolean saveNewAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside OrderService.saveNewAddress()");
 		log.debug("Order for which address to be saved is :" , orderId);
@@ -109,7 +110,7 @@ public class CheckoutServices {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean editAddress(AddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
+	public boolean editAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside OrderService.editAddress()");
 		log.debug("Order for which address to be edited is :" , orderId);

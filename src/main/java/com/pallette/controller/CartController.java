@@ -24,7 +24,6 @@ import com.pallette.beans.UpdateCartBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.exception.NoRecordsFoundException;
-import com.pallette.response.AddEditAddressResponse;
 import com.pallette.response.CartResponse;
 import com.pallette.service.OrderService;
 
