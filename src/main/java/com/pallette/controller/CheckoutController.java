@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pallette.beans.AddressBean;
+import com.pallette.beans.AddEditAddressBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.response.AddEditAddressResponse;
@@ -37,19 +41,19 @@ public class CheckoutController {
 	private static final Logger log = LoggerFactory.getLogger(CheckoutController.class);
 
 	@RequestMapping(value = RestURLConstants.ADD_ADDRESS_URL, method = RequestMethod.POST)
-	public ResponseEntity<AddEditAddressResponse> handleAddAddress(@RequestBody AddressBean address) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<AddEditAddressResponse> handleAddAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.addAddress()");
 		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
+		
+		//If error, just return a 400 bad request, along with the error message.
+		if (errors.hasErrors()) {
+			addEditAddressResponse.setMessage(getValidationErrors(errors).toString());
+			addEditAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.badRequest().body(addEditAddressResponse);
+		}
 
-		if (null == address)
-			throw new IllegalArgumentException("No Input parameters were Passed");
-		
-		
 		String orderId = address.getOrderId();
-		if (StringUtils.isEmpty(orderId))
-			throw new IllegalArgumentException("No Order Id was Passed"); 
-			
 		log.debug("Order Id from Request Body ", orderId);
 
 		if(checkoutServices.saveNewAddress(address , orderId)){
@@ -66,18 +70,19 @@ public class CheckoutController {
 	}
 	
 	@RequestMapping(value = RestURLConstants.EDIT_ADDRESS_URL, method = RequestMethod.POST)
-	public ResponseEntity<AddEditAddressResponse> handleEditAddress(@RequestBody AddressBean address) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<AddEditAddressResponse> handleEditAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.editAddress()");
 		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
 
-		if (null == address)
-			throw new IllegalArgumentException("No Input parameters were Passed");
+		//If error, just return a 400 bad request, along with the error message.
+		if (errors.hasErrors()) {
+			addEditAddressResponse.setMessage(getValidationErrors(errors).toString());
+			addEditAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.badRequest().body(addEditAddressResponse);
+		}
 		
 		String orderId = address.getOrderId();
-		if (StringUtils.isEmpty(orderId))
-			throw new IllegalArgumentException("No Order Id was Passed");
-		
 		log.debug("Order Id from Request Body ", orderId);
 
 		if(checkoutServices.editAddress(address , orderId)){
@@ -182,5 +187,25 @@ public class CheckoutController {
 		}
 	}
 
+
+	/**
+	 * Method that iterates the validation errors and returns a comma separated
+	 * error message.
+	 * 
+	 * @param errors
+	 * @return
+	 */
+	private StringBuilder getValidationErrors(Errors errors) {
+
+		log.debug("Inside CartController.getValidationErrors()");
+		StringBuilder errorMessages = new StringBuilder();
+		
+		for (ObjectError objErr : errors.getAllErrors()) {
+			if (!StringUtils.isEmpty(errorMessages))
+				log.debug("Error Message is : ", objErr.getDefaultMessage());
+			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceContants.COMMA);
+		}
+		return errorMessages;
+	}
 
 }
