@@ -2,6 +2,7 @@ package com.pallette.commerce.order.purchase;
 
 import java.util.List;
 
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import com.pallette.commerce.contants.CommerceContants;
@@ -10,7 +11,7 @@ import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
 
 @Component
-public class OrderReprice implements RepriceChain{
+public class OrderReprice implements RepriceChain, Ordered{
 	
 	private RepriceChain repriceChain;
 	
@@ -47,5 +48,11 @@ public class OrderReprice implements RepriceChain{
 		
 		//invoke next chain
 //		this.repriceChain.reprice(order);
+	}
+
+	@Override
+	public int getOrder() {
+		// TODO Auto-generated method stub
+		return Ordered.LOWEST_PRECEDENCE;
 	}
 }
