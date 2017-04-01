@@ -3,11 +3,12 @@
  */
 package com.pallette.beans;
 
-import javax.validation.constraints.Size;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.pallette.validation.Phone;
+
 
 /**
  * @author amall3
@@ -42,8 +43,7 @@ public class AddEditAddressBean {
 	@NotBlank(message = "Please enter Postal Code")
 	private String postalCode;
 
-	@NotBlank(message = "Please enter Phone Number")
-	@Size(min = 10, max = 10)
+	@Phone
 	private String phoneNumber;
 
 	@NotEmpty(message = "Please enter Email")
