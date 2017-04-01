@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pallette.beans.BrandBean;
 import com.pallette.beans.CategoryBean;
 import com.pallette.beans.ProductBean;
+import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
 import com.pallette.domain.ProductDocument;
@@ -54,7 +55,7 @@ public class BrowseController {
 	@Autowired
 	private BrandService brandService;
 	
-	@RequestMapping(value = "/products", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.ALL_PRODUCTS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getAllProducts() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getAllProduct()");
@@ -79,7 +80,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/{productId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.SELECTED_PRODUCT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getProduct(@PathVariable("productId") String productId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		
@@ -106,7 +107,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/title/{productTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_PRODUCTS_BY_TITLE_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getProductsByTitle(@PathVariable("productTitle") String productTitle) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
@@ -138,7 +139,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
-	@RequestMapping(value = "/products/brand/{brandId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_PRODUCTS_BY_BRAND_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getProductsByBrand(@PathVariable("brandId") String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
@@ -169,7 +170,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Products Found");
 	}
 	
-	@RequestMapping(value="/categories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value= RestURLConstants.ALL_CATEGORIES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getAllCategories() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getAllCategories()");
@@ -194,7 +195,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Categories Found");
 	}
     	
-	@RequestMapping(value = "/categories/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.SELECTED_CATEGORY_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getCategory(@PathVariable("categoryId") String categoryId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 
@@ -221,7 +222,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Categories Found");
 	}
 	
-	@RequestMapping(value = "/categories/title/{categoryTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_CATEGORIES_BY_TITLE_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getCategoriesByTitle(@PathVariable("categoryTitle") String categoryTitle) 
 			throws IllegalArgumentException , NoRecordsFoundException, IllegalAccessException, InvocationTargetException{
 		
@@ -253,7 +254,7 @@ public class BrowseController {
 	}
 	
 	
-	@RequestMapping(value="/brands", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value= RestURLConstants.ALL_BRANDS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getAllBrands() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrowseController.getAllBrands()");
@@ -278,7 +279,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
     	
-	@RequestMapping(value = "/brands/{brandId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.SELECTED_BRAND_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getBrand(@PathVariable("brandId") String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -306,7 +307,7 @@ public class BrowseController {
 	}
 	
 	
-	@RequestMapping(value = "/brands/city/{city}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_BRANDS_BY_CITY_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getBrandByCity(@PathVariable("city") String city) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -337,7 +338,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
 	
-	@RequestMapping(value = "/brands/state/{state}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_BRANDS_BY_STATE_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getBrandByState(@PathVariable("state") String state) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -368,7 +369,7 @@ public class BrowseController {
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
 	
-	@RequestMapping(value = "/brands/postalCode/{postalCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.GET_BRANDS_BY_POSTAL_CODE_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> getBrandByPostalCode(@PathVariable("postalCode") String postalCode) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
