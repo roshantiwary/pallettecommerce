@@ -39,5 +39,7 @@ public class CommerceContants {
 	public static final String SAVED_ADDRESS = "savedAddress";
 	
 	public static final String COMMA = ",";
+	
+	public static final String STRING_TRUE = "TRUE";
 
 }

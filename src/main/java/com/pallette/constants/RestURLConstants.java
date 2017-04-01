@@ -25,6 +25,8 @@ public class RestURLConstants {
 
 	public static final String CART_ADD = "/cart/add";
 	
-	public static final String CART_DETAILS = "/cart/{orderId}/details";
+	public static final String CART_DETAILS_URL = "/cart/{orderId}/details";
+	
+	public static final String MOVE_TO_CHECKOUT_URL = "/cart/moveToCheckout/{orderId}";
 
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
+import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
@@ -89,6 +90,30 @@ public class OrderService {
 
 	@Autowired
 	private MongoOperations mongoOperation;
+	
+	@Autowired
+	ValidateChain validateChain;
+
+	
+	/**
+	 * 
+	 * @param orderId
+	 * @return
+	 * @throws NoRecordsFoundException
+	 */
+	public boolean validateForCheckout(String orderId) throws NoRecordsFoundException {
+
+		log.debug("Inside OrderService.validateForCheckout() and Order Id passed is :" , orderId);
+		Order order = orderRepository.findOne(orderId);
+		if (null == order)
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		boolean isValidationSuccess = Boolean.TRUE;
+		
+		isValidationSuccess = validateChain.validateForCheckout(order);
+
+		return isValidationSuccess;
+	}
 	
 	/**
 	 * 

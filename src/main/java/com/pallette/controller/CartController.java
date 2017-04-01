@@ -48,7 +48,7 @@ public class CartController {
 	@RequestMapping(value = RestURLConstants.CART_ADD, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CartResponse> handleAddItemToCart(@Valid @RequestBody AddToCartBean addToCartRequest , Errors errors) throws NoRecordsFoundException {
 		
-		log.debug("Inside CartController.addItemToCart()");
+		log.debug("Inside CartController.handleAddItemToCart()");
 		CartResponse cartResponse = new CartResponse();
 		
 		//If error, just return a 400 bad request, along with the error message.
@@ -118,7 +118,7 @@ public class CartController {
 	@RequestMapping(value = RestURLConstants.CART_UPDATE, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CartResponse> handleUpdateItem(@Valid @RequestBody UpdateCartBean updateItem , Errors errors) throws NoRecordsFoundException , IllegalArgumentException {
 		
-		log.debug("Inside CartController.updateItem()");
+		log.debug("Inside CartController.handleUpdateItem()");
 		CartResponse cartResponse = new CartResponse();
 		
 		//If error, just return a 400 bad request, along with the error message.
@@ -150,7 +150,7 @@ public class CartController {
 	@RequestMapping(value = RestURLConstants.CART_REMOVE, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CartResponse> handleRemoveItem(@RequestBody RemoveItemBean removeItemRequest , Errors errors) throws NoRecordsFoundException , IllegalArgumentException {
 		
-		log.debug("Inside CartController.removeItem()");
+		log.debug("Inside CartController.handleRemoveItem()");
 		CartResponse cartResponse = new CartResponse();
 		
 		//If error, just return a 400 bad request, along with the error message.
@@ -170,10 +170,10 @@ public class CartController {
 	}
 	
 	
-	@RequestMapping(value = RestURLConstants.CART_DETAILS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.CART_DETAILS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CartResponse> handleGetCartDetails(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
 
-		log.debug("Inside CheckoutController.removeAddress()");
+		log.debug("Inside CheckoutController.handleGetCartDetails()");
 		CartResponse cartResponse = new CartResponse();
 
 		if (StringUtils.isEmpty(orderId))
@@ -185,6 +185,30 @@ public class CartController {
 		cartResponse.setMessage("Item successfully updated.");
 		cartResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.OK);
+		}
+	
+	@RequestMapping(value = RestURLConstants.MOVE_TO_CHECKOUT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CartResponse> handleMoveToCheckout(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
+
+		log.debug("Inside CheckoutController.handleMoveToCheckout()");
+		CartResponse cartResponse = new CartResponse();
+
+		if (StringUtils.isEmpty(orderId))
+			throw new IllegalArgumentException("No Order Id was Passed");
+		
+		log.debug("Order Id from Request Body ", orderId);
+		boolean status = orderService.validateForCheckout(orderId);
+		cartResponse.setStatus(status);
+		if (status) {
+			cartResponse.setMessage("Good for Chaeckout.");
+			cartResponse.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.OK);
+		} else {
+			cartResponse.setMessage("Problem with Checkout");
+			cartResponse.setStatusCode(HttpStatus.FORBIDDEN.value());
+			return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.FORBIDDEN);
+		}
+		
 		}
 
 }
