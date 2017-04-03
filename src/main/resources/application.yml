@@ -29,14 +29,14 @@ logging.level:
   org.springframework.web: DEBUG
   org.hibernate: ERROR
   org.springframework.security: INFO
-  
-url:
-  moltin:
-    api:
-      products: ${URL_MOLTIN_API_PRODUCTS}
-      categories: ${URL_MOLTIN_API_CATEGORIES}
-      products-search: ${URL_MOLTIN_API_PRODUCT_SEARCH}
-      cart: ${URL_MOLTIN_API_CART}
       
 pallette:
   default-password: ${DEFAULT_PASSWORD}
+  
+payment:
+  salt: e5iIg1jwi8
+  base-url: https://test.payu.in
+  success-url: http://localhost:8080/pallette-commerce-1.0.0/success
+  failure-url: http://localhost:8080/pallette-commerce-1.0.0/failure
+  cancel-url: http://localhost:8080/pallette-commerce-1.0.0/failure
+  service-provider: payu_paisa

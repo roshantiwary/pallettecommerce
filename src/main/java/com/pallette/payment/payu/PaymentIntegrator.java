@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,6 +45,24 @@ import com.pallette.repository.ProductRepository;
 public class PaymentIntegrator {
 	
 	private static final Logger log = LoggerFactory.getLogger(PaymentIntegrator.class);
+
+	@Value("${payment.salt}")
+	private String salt;
+	
+	@Value("${payment.base-url}")
+	private String base_url;
+	
+	@Value("${payment.success-url}")
+	private String success_url;
+	
+	@Value("${payment.failure-url}")
+	private String failure_url;
+	
+	@Value("${payment.cancel-url}")
+	private String cancel_url;
+	
+	@Value("${payment.service-provider}")
+	private String service_provider;
 	
 	/**
 	 * The Product Repository.
@@ -102,14 +121,9 @@ public class PaymentIntegrator {
 	 */
     public Map<String, String> hashCalMethod(Order order)  throws ServletException, IOException {
     	
-       // response.setContentType("text/html;charset=UTF-8");
-		String key = "rjQUPktU";
-        String salt = "e5iIg1jwi8";
         String action1 = "";
-        String base_url = "https://test.payu.in";
         error = 0;
         String hashString = "";
-       // Enumeration paramNames = request.getParameterNames();
         
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String> urlParams = new HashMap<String, String>();
@@ -123,10 +137,11 @@ public class PaymentIntegrator {
 //		params.put(PaymentConstants.PRODUCTINFO, createProductInfo(order).toString());
 		
 		params.put(PaymentConstants.KEY, "rjQUPktU");
-		params.put(PaymentConstants.SURL, "http://localhost:8080/pallette-commerce-1.0.0/success");
-		params.put(PaymentConstants.FURL, "http://localhost:8080/pallette-commerce-1.0.0/failure");
-		params.put(PaymentConstants.CURL, "http://localhost:8080/pallette-commerce-1.0.0/failure");
-		params.put(PaymentConstants.SERVICE_PROVIDER, "payu_paisa");
+		params.put(PaymentConstants.SURL, success_url);
+		params.put(PaymentConstants.FURL, failure_url);
+		params.put(PaymentConstants.CURL, cancel_url);
+		params.put(PaymentConstants.SERVICE_PROVIDER, service_provider);
+		params.put(PaymentConstants.UDF1, order.getId());
         
         String txnid = "";
         if (empty(params.get("txnid"))) {
@@ -172,7 +187,7 @@ public class PaymentIntegrator {
             hash = params.get("hash");
             action1 = base_url.concat("/_payment");
         }
-        urlParams.put("service_provider", "payu_paisa");
+        urlParams.put("service_provider", service_provider);
         urlParams.put("hash", hash);
         urlParams.put("action", action1);
         urlParams.put("hashString", hashString);

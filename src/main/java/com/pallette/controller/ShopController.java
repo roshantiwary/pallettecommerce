@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+
+//This class is not in use, This is an reference class to implement rest client template
 @RestController
 @RequestMapping("/rest/api/v1")
 public class ShopController {
@@ -17,7 +19,7 @@ public class ShopController {
 	@Autowired
     private OAuth2RestOperations restTemplate;
     
-    @Value("${url.moltin.api.products-search}")
+    @Value("some-url")
     private String searchProductbyField;
     
     @RequestMapping(value="/products/search/?category={categoryId}", method=RequestMethod.GET, produces="application/json")
