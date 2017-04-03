@@ -59,6 +59,28 @@ public class AccountService {
 	@Autowired
 	private MongoOperations mongoOperation; 
 
+	/**
+	 * Retrieve an account with Profile/Account id.
+	 * 
+	 * @param profileId
+	 *            The profile id of the account.
+	 * @return The account object if found or throws a NoRecordsFoundException.
+	 */
+	public Account findAccountById(String profileId) {
+
+		logger.debug("AccountService.findAccount: id=" + profileId);
+
+		Account account = accounts.findById(profileId);
+		if (account == null) {
+			logger.warn("AccountService.findAccount: could not find account with id: " + profileId);
+			//throw new NoRecordsFoundException();
+		}
+
+		logger.info(String.format("AccountService.findAccount - retrieved account with id: %s. Payload is: %s", profileId,
+				account));
+
+		return account;
+	}
 
 	/**
 	 * Retrieve an account with given id. The id here is the unique user id

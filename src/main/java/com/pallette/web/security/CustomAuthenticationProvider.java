@@ -50,7 +50,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				String profileId = (String) params.get("accountid");
 				ApplicationUser appUser = new ApplicationUser(name, password, true, true, true, true, grantedAuths, profileId);
 				
-				Authentication auth = new UsernamePasswordAuthenticationToken(
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 						appUser, password, grantedAuths);
 				return auth;
 			} else {

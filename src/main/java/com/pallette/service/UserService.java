@@ -68,6 +68,14 @@ public class UserService {
 		logger.debug("Got Account: " + account);
 		return account;
 	}
+	
+	public Account getAccountByProfileId(String profileId) {
+		logger.debug("Looking for account with profile id: " + profileId);
+
+		Account account = accountService.findAccountById(profileId);
+		logger.debug("Got Account: " + account);
+		return account;
+	}
 
 	public void logout(String user) {
 		logger.debug("logging out account with userId: " + user);
