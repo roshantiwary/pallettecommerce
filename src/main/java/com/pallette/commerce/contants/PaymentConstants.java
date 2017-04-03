@@ -93,4 +93,9 @@ public class PaymentConstants {
 	
 	public static final String ACTION = "action";
 	
+	public static final String ITEM_LIST = "itemList";
+	
+	public static final String MODE = "mode";
+	
+	
 }
