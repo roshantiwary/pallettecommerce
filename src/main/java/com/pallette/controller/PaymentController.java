@@ -1,6 +1,8 @@
 package com.pallette.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +89,13 @@ public class PaymentController {
 	@RequestMapping(value = "/failure", method = RequestMethod.POST)
 	public String paymentFailure(HttpServletRequest request, HttpServletResponse response) {
 		// do sume stuffs
+		Map<String, String> parameterNames = new HashMap<String, String>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while(enumeration.hasMoreElements()) {
+			String parameterName = (String) enumeration.nextElement();
+			System.out.println(parameterName + "=" + request.getParameter(parameterName));
+	        parameterNames.put(parameterName, request.getParameter(parameterName));
+		}
 		System.out.println("Payment Failure");
 		return "failed";
 	}
@@ -95,6 +104,13 @@ public class PaymentController {
 	public String paymentSuccess(HttpServletRequest request, HttpServletResponse response) {
 		// do sume stuffs
 		request.getParameter(PaymentConstants.HASH);
+		Map<String, String> parameterNames = new HashMap<String, String>();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while(enumeration.hasMoreElements()) {
+			String parameterName = (String) enumeration.nextElement();
+			System.out.println(parameterName + "=" + request.getParameter(parameterName));
+	        parameterNames.put(parameterName, request.getParameter(parameterName));
+		}
 		System.out.println("Payment Successfull");
 		return "confirmation";
 	}
