@@ -1,7 +1,0 @@
-payment:
-  salt: e5iIg1jwi8
-  base-url: https://test.payu.in
-  success-url: http://localhost:8080/pallette-commerce-1.0.0/success
-  failure-url: http://localhost:8080/pallette-commerce-1.0.0/failure
-  cancel-url: http://localhost:8080/pallette-commerce-1.0.0/failure
-  service-provider: payu_paisa
