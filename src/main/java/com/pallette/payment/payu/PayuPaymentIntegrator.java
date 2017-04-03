@@ -41,9 +41,9 @@ import com.pallette.repository.ProductRepository;
  * @author Pallette
  */
 @Component
-public class JavaIntegrationKit {
+public class PayuPaymentIntegrator {
 	
-	private static final Logger log = LoggerFactory.getLogger(JavaIntegrationKit.class);
+	private static final Logger log = LoggerFactory.getLogger(PayuPaymentIntegrator.class);
 	
 	/**
 	 * The Product Repository.

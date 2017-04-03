@@ -1,7 +1,6 @@
 package com.pallette.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
-import com.pallette.payment.payu.JavaIntegrationKit;
+import com.pallette.payment.payu.PayuPaymentIntegrator;
 import com.pallette.repository.OrderRepository;
 
 
@@ -30,7 +29,7 @@ import com.pallette.repository.OrderRepository;
 public class PaymentController {
 
 	@Autowired
-	JavaIntegrationKit paymentIntegrator;
+	PayuPaymentIntegrator paymentIntegrator;
 	
 	/**
 	 * The Order repository.
