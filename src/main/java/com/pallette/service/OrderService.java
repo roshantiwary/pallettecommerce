@@ -353,8 +353,20 @@ public class OrderService {
 		OrderPriceInfo orderPriceInfo = order.getOrderPriceInfo();
 		cartResponse.setOrderSubTotal(orderPriceInfo.getAmount());
 		
-		List<CartItemResponse> responseItemList = new ArrayList<CartItemResponse>();
+		List<CartItemResponse> responseItemList = populateItemDetails(order);
+		cartResponse.setCartItems(responseItemList);
+		log.debug("Response Item sent is :", cartResponse.toString());
+		return cartResponse;
+	}
 
+	/**
+	 * @param order
+	 * @param responseItemList
+	 */
+	public List<CartItemResponse> populateItemDetails(Order order) {
+		
+		List<CartItemResponse> responseItemList = new ArrayList<CartItemResponse>();
+		
 		List<CommerceItem> items = order.getCommerceItems();
 		if (null != items && !items.isEmpty()) {
 			for (CommerceItem itm : items) {
@@ -388,9 +400,7 @@ public class OrderService {
 				responseItemList.add(cartItemResponse);
 			}
 		}
-		cartResponse.setCartItems(responseItemList);
-		log.debug("Response Item sent is :", cartResponse.toString());
-		return cartResponse;
+		return responseItemList;
 	}
 	
 

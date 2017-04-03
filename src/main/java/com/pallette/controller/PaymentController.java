@@ -23,6 +23,7 @@ import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
 import com.pallette.payment.payu.PaymentIntegrator;
 import com.pallette.repository.OrderRepository;
+import com.pallette.service.PaymentService;
 
 
 @Controller
@@ -30,6 +31,9 @@ public class PaymentController {
 
 	@Autowired
 	PaymentIntegrator paymentIntegrator;
+	
+	@Autowired
+	private PaymentService paymentService;
 	
 	/**
 	 * The Order repository.
@@ -86,7 +90,7 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(value = "/failure", method = RequestMethod.POST)
-	public String paymentFailure(HttpServletRequest request, HttpServletResponse response) {
+	public String paymentFailure(HttpServletRequest request, HttpServletResponse response , Model model) {
 		// do sume stuffs
 		Map<String, String> parameterNames = new HashMap<String, String>();
 		Enumeration<String> enumeration = request.getParameterNames();
@@ -100,16 +104,21 @@ public class PaymentController {
 	}
 
 	@RequestMapping(value = "/success", method = RequestMethod.POST)
-	public String paymentSuccess(HttpServletRequest request, HttpServletResponse response) {
-		// do sume stuffs
+	public String paymentSuccess(HttpServletRequest request, HttpServletResponse response , Model model) {
+		 
+		log.debug("Inside PaymentController.paymentSuccess()");
 		request.getParameter(PaymentConstants.HASH);
 		Map<String, String> parameterNames = new HashMap<String, String>();
 		Enumeration<String> enumeration = request.getParameterNames();
-		while(enumeration.hasMoreElements()) {
+		
+		while (enumeration.hasMoreElements()) {
 			String parameterName = (String) enumeration.nextElement();
 			System.out.println(parameterName + "=" + request.getParameter(parameterName));
-	        parameterNames.put(parameterName, request.getParameter(parameterName));
+			parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
+		
+		paymentService.processPaymentResponse(parameterNames, model);
+		
 		System.out.println("Payment Successfull");
 		return "confirmation";
 	}
