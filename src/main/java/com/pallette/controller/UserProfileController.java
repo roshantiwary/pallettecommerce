@@ -1,6 +1,7 @@
 package com.pallette.controller;
 
 import java.lang.reflect.InvocationTargetException;
+
 import javax.validation.Valid;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,12 +24,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AccountBean;
+import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.AddressResponseBean;
+import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
+import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Account;
+import com.pallette.exception.NoRecordsFoundException;
+import com.pallette.response.AddressResponse;
+import com.pallette.response.CartResponse;
 import com.pallette.response.ExceptionResponse;
 import com.pallette.response.GenericResponse;
-import com.pallette.response.AccountResponse;
+import com.pallette.response.Response;
+import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
 import com.pallette.web.security.ApplicationUser;
 @RestController
@@ -38,6 +49,9 @@ public class UserProfileController {
 	
 	@Autowired
 	private UserService accountService;
+	
+	@Autowired
+	private OrderService orderService;
 	
 	@RequestMapping("/admin")
 	public ResponseEntity<GenericResponse> getAdmin(OAuth2Authentication oAuth2Authentication) {
@@ -132,10 +146,10 @@ public class UserProfileController {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/account/addresses", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> addNewAddress(@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
-		logger.info("Adding New Address in Profile : " + address.toString());
-		GenericResponse genericResponse = new GenericResponse();
+	@RequestMapping(value = RestURLConstants.PROFILE_ADD_ADDRESS_URL, method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+		logger.debug("Adding New Address in Profile : " + address.toString());
+		AddressResponse genericResponse = new AddressResponse();
 		
 		try {
 			genericResponse = accountService.addNewAddress(address);
@@ -159,10 +173,10 @@ public class UserProfileController {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/account/editAddress/{id}", method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
-		logger.info("Editing Existing Address for Address Key : " + addressKey);
-		GenericResponse genericResponse = new GenericResponse();
+	@RequestMapping(value = RestURLConstants.PROFILE_EDIT_ADDRESS_URL, method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AddressResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+		logger.debug("Editing Existing Address for Address Key : " + addressKey);
+		AddressResponse genericResponse = new AddressResponse();
 		
 		try {
 			genericResponse = accountService.editAddress(addressKey,address);
@@ -185,10 +199,10 @@ public class UserProfileController {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/account/removeAddress/{id}", method = RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> removeAddress(@PathVariable("id") String addressKey) throws IllegalAccessException, InvocationTargetException {
-		logger.info("Editing Existing Address for Address Key : " + addressKey);
-		GenericResponse genericResponse = new GenericResponse();
+	@RequestMapping(value = RestURLConstants.REMOVE_ADDRESS_URL, method = RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey) throws IllegalAccessException, InvocationTargetException {
+		logger.debug("Editing Existing Address for Address Key : " + addressKey);
+		Response genericResponse = new Response();
 		
 		try {
 			genericResponse = accountService.removeAddress(addressKey);
@@ -209,10 +223,10 @@ public class UserProfileController {
 	 * @throws IllegalAccessException 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/account/edit", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> updateProfile(@Valid @RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
-		logger.info("Profile update for id : " + account.getId());
-		GenericResponse genericResponse = new GenericResponse();
+	@RequestMapping(value = RestURLConstants.EDIT_PROFILE_URL, method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AccountResponse> updateProfile(@Valid @RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
+		logger.debug("Profile update for id : " + account.getId());
+		com.pallette.beans.AccountResponse genericResponse = new AccountResponse();
 		
 		try {
 			genericResponse = accountService.updateProfile(account);
@@ -231,13 +245,14 @@ public class UserProfileController {
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/account/changePassword", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> changePassword(@Valid @RequestBody PasswordBean password){
-		logger.info("Password update for id : " + password.getId());
-		GenericResponse genericResponse = new GenericResponse();
+	@RequestMapping(value = RestURLConstants.CHANGE_PASSWORD_URL, method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Response> changePassword(@Valid @RequestBody PasswordBean password){
+		logger.debug("Password update for id : " + password.getId());
+		Response genericResponse = new Response();
 		try {
 			genericResponse = accountService.changePassword(password);
 		} catch (Exception e) {
+			genericResponse.setStatus(Boolean.FALSE);
 			genericResponse.setMessage(e.getMessage());
 			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -256,4 +271,73 @@ public class UserProfileController {
         error.setMessage(ex.getMessage());
         return new ResponseEntity<ExceptionResponse>(error, HttpStatus.OK);
     }
+	
+	/**
+	 * This method fetch the order details of submitted order
+	 * 
+	 * @param password
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	@RequestMapping(value = RestURLConstants.ORDER_DETAIL_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CartResponse> getOrderDetail(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws NoRecordsFoundException{
+		
+		logger.debug("Inside UserProfileController.getOrderDetail()");
+		CartResponse cartResponse = new CartResponse();
+		if (StringUtils.isEmpty(orderId))
+			throw new IllegalArgumentException("No Order Id was Passed");
+		
+		logger.debug("Order Id from Request Body ", orderId);
+		cartResponse = orderService.getCartDetails(orderId);
+		cartResponse.setStatus(Boolean.TRUE);
+		cartResponse.setMessage("Order Detail Retrived Successfully");
+		cartResponse.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * This method fetch the order History of submitted order
+	 * 
+	 * @param password
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	@RequestMapping(value = RestURLConstants.ORDER_HISTORY_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OrderResponse> getOrderHistory(@PathVariable(CommerceContants.PROFILE_ID) String profileId) throws NoRecordsFoundException{
+		
+		logger.debug("Inside UserProfileController.getOrderDetail()");
+		OrderResponse response = new OrderResponse();
+		if (StringUtils.isEmpty(profileId))
+			throw new IllegalArgumentException("No Profile Id was Passed");
+		
+		logger.debug("Profile Id from Request Body ", profileId);
+		response = orderService.getOrderHistory(profileId);
+		response.setStatus(Boolean.TRUE);
+		response.setMessage("Order History Retrived Successfully");
+		response.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * This method fetch the order History of submitted order
+	 * 
+	 * @param password
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 */
+	@RequestMapping(value = RestURLConstants.PROFILE_ADDRESSES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AddressResponseBean> getAllProfileAddress(@PathVariable(CommerceContants.PROFILE_ID) String profileId){
+		
+		logger.debug("Inside UserProfileController.getOrderDetail()");
+		AddressResponseBean response = new AddressResponseBean();
+		if (StringUtils.isEmpty(profileId))
+			throw new IllegalArgumentException("No Profile Id was Passed");
+		
+		logger.debug("Profile Id from Request Body ", profileId);
+		response = accountService.getAllProfileAddress(profileId);
+		response.setStatus(Boolean.TRUE);
+		response.setMessage("Order History Retrived Successfully");
+		response.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+	}
 }

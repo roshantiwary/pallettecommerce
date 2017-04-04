@@ -7,7 +7,7 @@ package com.pallette.response;
  * @author amall3
  *
  */
-public class AddressResponse {
+public class AddressResponse extends Response{
 
 	private String firstName;
 
@@ -30,6 +30,8 @@ public class AddressResponse {
 	private String country;
 
 	private String phoneNumber;
+	
+	private String email;
 
 	/**
 	 * @return the firstName
@@ -182,7 +184,6 @@ public class AddressResponse {
 	}
 
 	/**
-	 * /**
 	 * 
 	 * @return the phoneNumber
 	 */
@@ -191,11 +192,27 @@ public class AddressResponse {
 	}
 
 	/**
-	 * @param profileId
+	 * @param phoneNumber
 	 *            the phoneNumber to set
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	/**
+	 * 
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

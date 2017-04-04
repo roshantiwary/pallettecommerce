@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pallette.beans.OrderHistoryResponse;
+import com.pallette.beans.OrderResponse;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
@@ -30,7 +32,6 @@ import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
 import com.pallette.domain.PaymentGroup;
-import com.pallette.domain.PaymentStatus;
 import com.pallette.domain.ProductDocument;
 import com.pallette.domain.ShippingGroup;
 import com.pallette.domain.SkuDocument;
@@ -469,4 +470,31 @@ public class OrderService {
 		this.productRepository = productRepository;
 	}
 
+	public OrderResponse getOrderHistory(String profileId) throws NoRecordsFoundException{
+		log.debug("Inside OrderService.getOrderHistory()");
+		log.debug("The Passed In Order id : " + profileId);
+
+		List<Order> orders = orderRepository.findOrderByStateAndProfileId(CommerceContants.SUBMITTED, profileId);
+		if (null == orders || orders.isEmpty())
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		return constructOrderResponse(orders);
+	}
+
+	private OrderResponse constructOrderResponse(List<Order> orders) {
+		OrderResponse orderResponse = new OrderResponse();
+		List<OrderHistoryResponse> orderHistoryList = new ArrayList<OrderHistoryResponse>();
+		
+		if(null != orders && !orders.isEmpty()){
+			for(Order order : orders){
+				OrderHistoryResponse response = new OrderHistoryResponse();
+				response.setOrderId(order.getId());
+				response.setSubmittedDate(order.getSubmittedDate());
+				response.setState(order.getState());
+				orderHistoryList.add(response);
+			}
+		}
+		orderResponse.setOrderHistory(orderHistoryList);
+		return orderResponse;
+	}
 }

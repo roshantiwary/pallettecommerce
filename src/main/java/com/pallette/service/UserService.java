@@ -10,13 +10,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pallette.beans.AccountBean;
+import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
 import com.pallette.domain.Account;
 import com.pallette.domain.AuthenticationRequest;
-import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.RoleRepository;
-import com.pallette.response.GenericResponse;
+import com.pallette.response.AddressResponse;
+import com.pallette.response.Response;
 
 @Service
 public class UserService {
@@ -32,9 +34,9 @@ public class UserService {
 	@Autowired
 	RoleRepository roleRepository;
 	
-	public GenericResponse createAccount(AccountBean account) throws IllegalAccessException, InvocationTargetException {
+	public AccountResponse createAccount(AccountBean account) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Saving account with userId: " + account.getUsername());
-		GenericResponse genericResponse = null;
+		AccountResponse genericResponse = null;
 		genericResponse = accountService.saveAccount(account);
 		
 		return genericResponse;
@@ -47,8 +49,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public GenericResponse updateProfile(AccountBean account) throws Exception {
-		GenericResponse genericResponse = null;
+	public AccountResponse updateProfile(AccountBean account) throws Exception {
+		AccountResponse genericResponse = null;
 		genericResponse = accountService.updateProfile(account);
 		return genericResponse;
 	}
@@ -91,8 +93,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public GenericResponse addNewAddress(AddressBean address) throws Exception {
-		GenericResponse genericResponse = null;
+	public AddressResponse addNewAddress(AddressBean address) throws Exception {
+		AddressResponse genericResponse = null;
 		genericResponse = accountService.addNewAddress(address);
 		return genericResponse;
 	}
@@ -106,8 +108,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public GenericResponse editAddress(String addressKey,AddressBean address) throws Exception {
-		GenericResponse genericResponse = null;
+	public AddressResponse editAddress(String addressKey,AddressBean address) throws Exception {
+		AddressResponse genericResponse = null;
 		genericResponse = accountService.editAddress(addressKey,address);
 		return genericResponse;
 	}
@@ -120,8 +122,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public GenericResponse removeAddress(String addressKey) throws Exception {
-		GenericResponse genericResponse = null;
+	public Response removeAddress(String addressKey) throws Exception {
+		Response genericResponse = null;
 		genericResponse = accountService.removeAddress(addressKey);
 		return genericResponse;
 	}
@@ -133,9 +135,15 @@ public class UserService {
 	 * @return
 	 * @throws Exception
 	 */
-	public GenericResponse changePassword(PasswordBean password) throws Exception {
-		GenericResponse genericResponse = null;
+	public Response changePassword(PasswordBean password) throws Exception {
+		Response genericResponse = null;
 		genericResponse = accountService.changePassword(password);
+		return genericResponse;
+	}
+
+	public AddressResponseBean getAllProfileAddress(String profileId) {
+		AddressResponseBean genericResponse = null;
+		genericResponse = accountService.getAllProfileAddress(profileId);
 		return genericResponse;
 	}
 }

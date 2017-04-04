@@ -2,7 +2,6 @@ package com.pallette.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,18 +22,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AccountBean;
+import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
+import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Role;
 import com.pallette.exception.AuthenticationException;
-import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.AddressRepository;
 import com.pallette.repository.RoleRepository;
-import com.pallette.response.GenericResponse;
+import com.pallette.response.AddressResponse;
+import com.pallette.response.Response;
 
 @Service
 public class AccountService {
@@ -54,7 +55,7 @@ public class AccountService {
 	RoleRepository roleRepository;
 	
 	@Autowired
-	AddressRepository addresses;
+	AddressRepository addressRepository;
 	
 	@Autowired
 	private MongoOperations mongoOperation; 
@@ -142,28 +143,31 @@ public class AccountService {
 	 * @throws IllegalAccessException 
 	 * @throws Exception 
 	 */
-	public GenericResponse saveAccount(AccountBean accountBean) throws IllegalAccessException, InvocationTargetException {
+	public AccountResponse saveAccount(AccountBean accountBean) throws IllegalAccessException, InvocationTargetException {
 
 		logger.debug("AccountService.saveAccount:" + accountBean.toString());
-		GenericResponse accountResponse = new GenericResponse();
-		validateCreateAccountDetails(accountBean);
+		AccountResponse accountResponse = new AccountResponse();
+		
+		if(!accountBean.getPassword().equalsIgnoreCase(accountBean.getConfirmPassword())){
+			logger.error("Password and Confirm Password does not match");
+			throw new IllegalArgumentException("Password and Confirm Password does not match");
+		}
 		
 		Account accountItem = new Account();
 		Account account = null;
 		BeanUtils.copyProperties(accountItem, accountBean);
 		
-		
-		
-		List<Account> accountsList = new ArrayList<Account>();
-		
 		if(null != accounts.findByUsername(accountItem.getUsername())){
 			logger.info("Account is already created for username " + accountItem.getUsername());
 			account = accounts.findByUsername(accountItem.getUsername());
-			accountsList.add(account);
-			accountResponse.setItems(accountsList);
-			accountResponse.setItemCount(accountsList.size());
+			accountResponse.setId(account.getId());
+			accountResponse.setFirstName(account.getFirstName());
+			accountResponse.setLastName(account.getLastName());
+			accountResponse.setEmail(account.getUsername());
+			accountResponse.setAddress(account.getAddresses());
 			accountResponse.setStatusCode(HttpStatus.ALREADY_REPORTED.value());
 			accountResponse.setMessage("Account has been already created for username : "+ accountItem.getUsername());
+			accountResponse.setStatus(Boolean.FALSE);
 			return accountResponse;
 		}
 		accountItem.setPassword(passwordEncoder.encode(accountItem.getPassword()));
@@ -179,43 +183,19 @@ public class AccountService {
 		
 		if(null != account){
 			logger.info("AccountService.saveAccount: account saved: " + account);
-			accountsList.add(account);
-			accountResponse.setItems(accountsList);
-			accountResponse.setItemCount(accountsList.size());
+			accountResponse.setId(account.getId());
+			accountResponse.setFirstName(account.getFirstName());
+			accountResponse.setLastName(account.getLastName());
+			accountResponse.setEmail(account.getUsername());
+			accountResponse.setAddress(account.getAddresses());
 			accountResponse.setStatusCode(HttpStatus.OK.value());
 			accountResponse.setMessage("Account has been created");
+			accountResponse.setStatus(Boolean.TRUE);
 		}else{
 			logger.info("Account has not been created for ID " + accountItem.getId());
 			throw new IllegalArgumentException("Account has been not been created due to some internal server error");
 		}
 		return accountResponse;
-	}
-
-	private void validateCreateAccountDetails(AccountBean accountBean) {
-		/*if(StringUtils.isEmpty(accountBean.getPassword()) && StringUtils.isEmpty(accountBean.getConfirmPassword())){
-			logger.error("Please provide passowrd and confirm password");
-			throw new IllegalArgumentException("Please provide passowrd and confirm password");
-		}*/
-		
-		if(!accountBean.getPassword().equalsIgnoreCase(accountBean.getConfirmPassword())){
-			logger.error("Password and Confirm Password does not match");
-			throw new IllegalArgumentException("Password and Confirm Password does not match");
-		}
-		
-		/*if(StringUtils.isEmpty(accountBean.getUsername())){
-			logger.error("Please provide Username");
-			throw new IllegalArgumentException("Please provide Username");
-		}
-		
-		if(StringUtils.isEmpty(accountBean.getFirstName())){
-			logger.error("Please provide First Name");
-			throw new IllegalArgumentException("Please provide First Name");
-		}
-		
-		if(StringUtils.isEmpty(accountBean.getLastName())){
-			logger.error("Please provide Last Name");
-			throw new IllegalArgumentException("Please provide Last Name");
-		}*/
 	}
 
 	/**
@@ -288,15 +268,13 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public GenericResponse updateProfile(AccountBean accountBean) throws Exception {
+	public AccountResponse updateProfile(AccountBean accountBean) throws Exception {
 		logger.debug("AccountService.updateProfile: updating profile with id : " + accountBean.getId());
-		GenericResponse genericResponse = new GenericResponse();
 		if(StringUtils.isEmpty(accountBean.getId()))
 			throw new IllegalArgumentException("Please provide Profile Id for update");
 		Account accountItem = new Account();
 		BeanUtils.copyProperties(accountItem, accountBean);
 		Account accountForUpdate = accounts.findOne(accountItem.getId());
-		List<Account> accountList = new ArrayList<Account>();
 		if (accountForUpdate != null) {
 			accountForUpdate.setId(accountItem.getId());
 			accountForUpdate.setFirstName(accountItem.getFirstName());
@@ -304,17 +282,27 @@ public class AccountService {
 			accountForUpdate.setPhoneNumber(accountItem.getPhoneNumber());
 			accountForUpdate.setUsername(accountItem.getUsername());
 			accountForUpdate.setAuthtoken(accountItem.getAuthtoken());
-			accountList.add(accounts.save(accountForUpdate));
-			genericResponse.setItems(accountList);
-			genericResponse.setItemCount(accountList.size());
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setMessage("User Profile has been updated for id : "+accountForUpdate.getId());
-		} else {
+			accountForUpdate = accounts.save(accountForUpdate);		} else {
 			throw new Exception("User Not Found for Id"+accountItem.getId());
 		}
-		return genericResponse;
+		return constructResponse(accountForUpdate);
 	}
 	
+	private AccountResponse constructResponse(Account account) {
+		AccountResponse response = new AccountResponse();
+		if(null != account){
+			response.setEmail(account.getUsername());
+			response.setFirstName(account.getFirstName());
+			response.setLastName(account.getLastName());
+			response.setId(account.getId());
+			response.setPhoneNumber(account.getPhoneNumber());
+			response.setStatus(Boolean.TRUE);
+			response.setMessage("Profile Details");
+			response.setStatusCode(HttpStatus.OK.value());
+		}
+		return response;
+	}
+
 	/**
 	 * This method add new address in user profile
 	 * 
@@ -322,27 +310,30 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public GenericResponse addNewAddress(AddressBean addressBean) throws Exception {
+	public AddressResponse addNewAddress(AddressBean addressBean) throws Exception {
 		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		
-		GenericResponse genericResponse = new GenericResponse();
+		AddressResponse genericResponse = new AddressResponse();
 		Address addressItem = new Address();
 		BeanUtils.copyProperties(addressItem, addressBean);
 		Account account = accounts.findOne(addressItem.getOwnerId());
-		Address address = addresses.save(addressItem);
-		List<Address> addressList = new ArrayList<Address>();
-		Map<Object, Collection> accountMap = new HashMap<Object, Collection>();
+		Address address = addressRepository.save(addressItem);
 		if(null != address && null != account){
 			logger.debug("AccountService.addNewAddress: New Address Added To The Profile :   with address ID : "+address.getId());
-			addressList.add(address);
 			account.getAddresses().add(address);
 			account = accounts.save(account);
-			accountMap.put(account, account.getAddresses());
-			genericResponse.setItemCount(addressList.size());
-			genericResponse.setItemMapData(accountMap);
+			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Added Successfulley");
+			genericResponse.setFirstName(address.getFirstName());
+			genericResponse.setLastName(address.getLastName());
+			genericResponse.setAddress1(address.getAddress1());
+			genericResponse.setAddress2(address.getAddress2());
+			genericResponse.setCity(address.getCity());
+			genericResponse.setState(address.getState());
+			genericResponse.setCountry(address.getCountry());
+			genericResponse.setEmail(address.getEmail());
+			genericResponse.setPhoneNumber(address.getPhoneNumber());
 		}else{
 			logger.error("AccountService.addNewAddress: There is Some Error While Adding New Address To The Profile ");
 			throw new Exception("There is Some Error While Adding New Address To The Profile");
@@ -358,24 +349,29 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("rawtypes")
-	public GenericResponse editAddress(String addressKey, AddressBean addressBean) throws Exception {
+	public AddressResponse editAddress(String addressKey, AddressBean addressBean) throws Exception {
 		logger.debug("AccountService.editAddress: Editing Address");
 		
-		GenericResponse genericResponse = new GenericResponse();
-		Address addressItem = addresses.findOne(addressKey);
+		AddressResponse genericResponse = new AddressResponse();
+		Address addressItem = addressRepository.findOne(addressKey);
 		BeanUtils.copyProperties(addressItem, addressBean);
 		Account account = accounts.findOne(addressItem.getOwnerId());
 		
-		Map<Object, Collection> accountMap = new HashMap<Object, Collection>();
 		if(null != addressItem && null != account){
 			logger.debug("AccountService.editAddress: Edited Address with address : "+addressItem.getId());
-			addressItem = addresses.save(addressItem);
-			accountMap.put(account, account.getAddresses());
-			genericResponse.setItemCount(account.getAddresses().size());
-			genericResponse.setItemMapData(accountMap);
+			addressItem = addressRepository.save(addressItem);
+			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Updated Successfulley");
+			genericResponse.setFirstName(addressItem.getFirstName());
+			genericResponse.setLastName(addressItem.getLastName());
+			genericResponse.setAddress1(addressItem.getAddress1());
+			genericResponse.setAddress2(addressItem.getAddress2());
+			genericResponse.setCity(addressItem.getCity());
+			genericResponse.setState(addressItem.getState());
+			genericResponse.setCountry(addressItem.getCountry());
+			genericResponse.setEmail(addressItem.getEmail());
+			genericResponse.setPhoneNumber(addressItem.getPhoneNumber());
 		}else{
 			logger.error("AccountService.editAddress: There is Some Error While Editing Address");
 			throw new Exception("There is Some Error While Updating Address");
@@ -391,15 +387,14 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("rawtypes")
-	public GenericResponse removeAddress(String addressKey) throws Exception {
+	public Response removeAddress(String addressKey) throws Exception {
 		logger.debug("AccountService.removeAddress: Removing Address : "+addressKey);
 		
-		GenericResponse genericResponse = new GenericResponse();
+		Response genericResponse = new Response();
 		if(StringUtils.isEmpty(addressKey))
 			throw new IllegalArgumentException("Please provide address key");
 		
-		Address addressItem = addresses.findOne(addressKey);
+		Address addressItem = addressRepository.findOne(addressKey);
 		Account account = accounts.findOne(addressItem.getOwnerId());
 		Query addressRemovalQuery = new Query();
 		addressRemovalQuery.addCriteria(Criteria.where(CommerceContants._ID).is(addressItem.getId()));
@@ -407,12 +402,9 @@ public class AccountService {
 		account.removeAddress(addressItem);
 		accounts.save(account);
 		logger.debug("Address Document Removed Successfully :" , address.getId());
-		Map<Object, Collection> accountMap = new HashMap<Object, Collection>();
 		if(null != addressItem && null != account){
 			logger.debug("AccountService.removeAddress: Removed Address From Profile : "+addressKey);
-			accountMap.put(account, account.getAddresses());
-			genericResponse.setItemCount(account.getAddresses().size());
-			genericResponse.setItemMapData(accountMap);
+			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Removed Succesfully");
 		}else{
@@ -429,9 +421,9 @@ public class AccountService {
 	 * @return
 	 * @throws Exception
 	 */
-	public GenericResponse changePassword(PasswordBean password) throws Exception {
+	public Response changePassword(PasswordBean password) throws Exception {
 		Account account = accounts.findOne(password.getId());
-		GenericResponse genericResponse = new GenericResponse();
+		Response genericResponse = new Response();
 		if(!passwordEncoder.matches(password.getOldPassword(), account.getPassword())){
 			logger.error("Incorrect Old Password for user : " + account.getUsername());
 			throw new IllegalArgumentException("Incorrect Old password supplied");
@@ -444,17 +436,44 @@ public class AccountService {
 		
 		account.setPassword(passwordEncoder.encode(password.getNewPassword()));
 		account = accounts.save(account);
-		List<Account> accountList = new ArrayList<Account>();
 		if(null != account){
-			accountList.add(account);
-			genericResponse.setItems(accountList);
-			genericResponse.setItemCount(accountList.size());
 			genericResponse.setStatusCode(HttpStatus.OK.value());
+			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setMessage("Password has been changed successfully for profile id : "+account.getId());
 			
 		}else{
 			throw new Exception("There is some error while updating password");
 		}
 		return genericResponse;
+	}
+
+	public AddressResponseBean getAllProfileAddress(String profileId) {
+		AddressResponseBean addressResponse = new AddressResponseBean();
+		List<Address> addressList = addressRepository.findAddressByOwnerId(profileId);
+		List<AddressResponse> addressResponseList = new ArrayList<AddressResponse>();
+		if(null != addressList && !addressList.isEmpty()){
+			for(Address address : addressList){
+				AddressResponse response = new AddressResponse();
+				response.setFirstName(address.getFirstName());
+				response.setLastName(address.getLastName());
+				response.setAddress1(address.getAddress1());
+				response.setAddress2(address.getAddress2());
+				response.setCity(address.getCity());
+				response.setState(address.getState());
+				response.setCountry(address.getCountry());
+				response.setEmail(address.getEmail());
+				response.setPhoneNumber(address.getPhoneNumber());
+				addressResponseList.add(response);
+			}
+			addressResponse.setAdressResponse(addressResponseList);
+			addressResponse.setMessage("All Profile Address Retrived Sucessfully");
+			addressResponse.setStatus(Boolean.TRUE);
+			addressResponse.setStatusCode(HttpStatus.OK.value());
+		}else{
+			addressResponse.setMessage("There is Some Issue With Address");
+			addressResponse.setStatus(Boolean.FALSE);
+			addressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		}
+		return addressResponse;
 	}
 }
