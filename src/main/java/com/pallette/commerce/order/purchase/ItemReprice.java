@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
@@ -50,7 +50,7 @@ public class ItemReprice implements RepriceChain, Ordered{
 			ItemPriceInfo itemPriceInfo = new ItemPriceInfo();
 			itemPriceInfo.setOnSale(Boolean.FALSE);
 			itemPriceInfo.setDiscounted(Boolean.FALSE);
-			itemPriceInfo.setCurrencyCode(CommerceContants.INR);
+			itemPriceInfo.setCurrencyCode(CommerceConstants.INR);
 			long quantity = commerceItem.getQuantity();
 			
 			itemPriceInfo.setListPrice(skuItem.getPriceDocument().getListPrice());

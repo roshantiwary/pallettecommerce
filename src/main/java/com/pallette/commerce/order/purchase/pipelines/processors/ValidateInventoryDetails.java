@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.Order;
@@ -55,7 +55,7 @@ public class ValidateInventoryDetails extends ValidateOrderForCheckout {
 			
 			String skuId = commerceItem.getCatalogRefId();
 			Query findSkuQuery = new Query();
-			findSkuQuery.addCriteria(Criteria.where(CommerceContants._ID).is(skuId));
+			findSkuQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(skuId));
 			log.debug("Find Sku Query : ", findSkuQuery);
 			
 			SkuDocument skuItem = mongoOperation.findOne(findSkuQuery, SkuDocument.class);
@@ -66,7 +66,7 @@ public class ValidateInventoryDetails extends ValidateOrderForCheckout {
 			if (null == inventory)
 				return isValidationSuccess;
 			
-			if(!StringUtils.isEmpty(inventory.getStockStatus()) && (inventory.getStockStatus()).equalsIgnoreCase(CommerceContants.STRING_TRUE)){
+			if(!StringUtils.isEmpty(inventory.getStockStatus()) && (inventory.getStockStatus()).equalsIgnoreCase(CommerceConstants.STRING_TRUE)){
 				
 				long availableStock = inventory.getAvailableStockLevel();
 				log.debug("Available Stock for sku :" + skuId + " is :" + availableStock );

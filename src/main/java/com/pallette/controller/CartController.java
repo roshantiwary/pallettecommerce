@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pallette.beans.AddToCartBean;
 import com.pallette.beans.RemoveItemBean;
 import com.pallette.beans.UpdateCartBean;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.response.CartResponse;
@@ -101,7 +101,7 @@ public class CartController {
 		for (ObjectError objErr : errors.getAllErrors()) {
 			if (!StringUtils.isEmpty(errorMessages))
 				log.debug("Error Message is : ", objErr.getDefaultMessage());
-			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceContants.COMMA);
+			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceConstants.COMMA);
 		}
 		return errorMessages;
 	}
@@ -171,7 +171,7 @@ public class CartController {
 	
 	
 	@RequestMapping(value = RestURLConstants.CART_DETAILS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> handleGetCartDetails(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
+	public ResponseEntity<CartResponse> handleGetCartDetails(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
 
 		log.debug("Inside CheckoutController.handleGetCartDetails()");
 		CartResponse cartResponse = new CartResponse();
@@ -188,7 +188,7 @@ public class CartController {
 		}
 	
 	@RequestMapping(value = RestURLConstants.MOVE_TO_CHECKOUT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> handleMoveToCheckout(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
+	public ResponseEntity<CartResponse> handleMoveToCheckout(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
 
 		log.debug("Inside CheckoutController.handleMoveToCheckout()");
 		CartResponse cartResponse = new CartResponse();

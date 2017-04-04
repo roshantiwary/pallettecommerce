@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
@@ -25,7 +25,7 @@ public class OrderReprice implements RepriceChain, Ordered{
 		//calculate Order price
 		
 		OrderPriceInfo orderPriceInfo = new OrderPriceInfo();
-		orderPriceInfo.setCurrencyCode(CommerceContants.INR);
+		orderPriceInfo.setCurrencyCode(CommerceConstants.INR);
 		orderPriceInfo.setDiscounted(Boolean.FALSE);
 		
 		double orderTotal = 0.0;

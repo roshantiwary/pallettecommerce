@@ -27,7 +27,7 @@ import com.pallette.beans.AddressBean;
 import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Account;
 import com.pallette.exception.NoRecordsFoundException;
@@ -157,12 +157,14 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_ADD_ADDRESS_URL, method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody AddressBean address, OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Adding New Address in Profile : " + address.toString());
 		AddressResponse genericResponse = new AddressResponse();
-		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		try {
-			genericResponse = accountService.addNewAddress(address);
+			genericResponse = accountService.addNewAddress(address,profileId);
 			
 		} catch (Exception e) {
 			genericResponse.setMessage(e.getMessage());
@@ -184,12 +186,15 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_EDIT_ADDRESS_URL, method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address) throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<AddressResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address, OAuth2Authentication oAuth2Authentication) 
+			throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		AddressResponse genericResponse = new AddressResponse();
-		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		try {
-			genericResponse = accountService.editAddress(addressKey,address);
+			genericResponse = accountService.editAddress(addressKey,address,profileId);
 		} catch (Exception e) {
 			genericResponse.setMessage(e.getMessage());
 			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -234,12 +239,16 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.EDIT_PROFILE_URL, method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AccountResponse> updateProfile(@Valid @RequestBody AccountBean account) throws IllegalAccessException, InvocationTargetException {
-		logger.debug("Profile update for id : " + account.getId());
-		com.pallette.beans.AccountResponse genericResponse = new AccountResponse();
+	public ResponseEntity<AccountResponse> updateProfile(@Valid @RequestBody AccountBean account, OAuth2Authentication oAuth2Authentication) 
+			throws IllegalAccessException, InvocationTargetException {
 		
+		AccountResponse genericResponse = new AccountResponse();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
+		logger.debug("Profile update for id : " + profileId);
 		try {
-			genericResponse = accountService.updateProfile(account);
+			genericResponse = accountService.updateProfile(account,profileId);
 		} catch (Exception e) {
 			genericResponse.setMessage(e.getMessage());
 			genericResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -256,11 +265,14 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.CHANGE_PASSWORD_URL, method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> changePassword(@Valid @RequestBody PasswordBean password){
-		logger.debug("Password update for id : " + password.getId());
+	public ResponseEntity<Response> changePassword(@Valid @RequestBody PasswordBean password, OAuth2Authentication oAuth2Authentication){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
+		logger.debug("Password update for id : " + profileId);
 		Response genericResponse = new Response();
 		try {
-			genericResponse = accountService.changePassword(password);
+			genericResponse = accountService.changePassword(password,profileId);
 		} catch (Exception e) {
 			genericResponse.setStatus(Boolean.FALSE);
 			genericResponse.setMessage(e.getMessage());
@@ -290,7 +302,7 @@ public class UserProfileController {
 	 * @throws NoRecordsFoundException 
 	 */
 	@RequestMapping(value = RestURLConstants.ORDER_DETAIL_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> getOrderDetail(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws NoRecordsFoundException{
+	public ResponseEntity<CartResponse> getOrderDetail(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws NoRecordsFoundException{
 		
 		logger.debug("Inside UserProfileController.getOrderDetail()");
 		CartResponse cartResponse = new CartResponse();
@@ -313,9 +325,12 @@ public class UserProfileController {
 	 * @throws NoRecordsFoundException 
 	 */
 	@RequestMapping(value = RestURLConstants.ORDER_HISTORY_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OrderResponse> getOrderHistory(@PathVariable(CommerceContants.PROFILE_ID) String profileId) throws NoRecordsFoundException{
+	public ResponseEntity<OrderResponse> getOrderHistory(OAuth2Authentication oAuth2Authentication) throws NoRecordsFoundException{
 		
 		logger.debug("Inside UserProfileController.getOrderDetail()");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		OrderResponse response = new OrderResponse();
 		if (StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("No Profile Id was Passed");
@@ -329,16 +344,19 @@ public class UserProfileController {
 	}
 	
 	/**
-	 * This method fetch the order History of submitted order
+	 * This method fetch the Saved Address of User Profile
 	 * 
 	 * @param password
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
 	@RequestMapping(value = RestURLConstants.PROFILE_ADDRESSES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponseBean> getAllProfileAddress(@PathVariable(CommerceContants.PROFILE_ID) String profileId){
+	public ResponseEntity<AddressResponseBean> getAllProfileAddress(OAuth2Authentication oAuth2Authentication){
 		
 		logger.debug("Inside UserProfileController.getOrderDetail()");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		AddressResponseBean response = new AddressResponseBean();
 		if (StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("No Profile Id was Passed");

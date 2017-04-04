@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pallette.beans.OrderHistoryResponse;
 import com.pallette.beans.OrderResponse;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.SequenceConstants;
@@ -409,17 +409,17 @@ public class OrderService {
 		Order order = new Order();
 		order.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		order.setCreatedDate(new Date());
-		order.setState(CommerceContants.INITIAL);
-		order.setOrderType(CommerceContants.DEFAULT_ORDER_TYPE);
-		order.setOriginOfOrder(CommerceContants.WEB);
-		order.setSiteId(CommerceContants.PALLETTE);
+		order.setState(CommerceConstants.INITIAL);
+		order.setOrderType(CommerceConstants.DEFAULT_ORDER_TYPE);
+		order.setOriginOfOrder(CommerceConstants.WEB);
+		order.setSiteId(CommerceConstants.PALLETTE);
 		return order;
 	}
 
 	private void initializeShippingGroup(Order order) {
 		ShippingGroup shipGrp = new ShippingGroup();
-		shipGrp.setShippingGroupType(CommerceContants.HARD_GOOD_SHIPPING_GROUP);
-		shipGrp.setState(CommerceContants.INITIAL);
+		shipGrp.setShippingGroupType(CommerceConstants.HARD_GOOD_SHIPPING_GROUP);
+		shipGrp.setState(CommerceConstants.INITIAL);
 		
 		Address address = new Address();
 		shipGrp.setAddress(address);
@@ -429,9 +429,9 @@ public class OrderService {
 
 	private void initializePaymentGroup(Order order) {
 		PaymentGroup payGrp = new PaymentGroup();
-		payGrp.setState(CommerceContants.INITIAL);
-		payGrp.setPaymentGroupType(CommerceContants.CREDIT_CARD);
-		payGrp.setPaymentMethod(CommerceContants.CREDIT_CARD);
+		payGrp.setState(CommerceConstants.INITIAL);
+		payGrp.setPaymentGroupType(CommerceConstants.CREDIT_CARD);
+		payGrp.setPaymentMethod(CommerceConstants.CREDIT_CARD);
 		
 		order.addPaymentGroup(payGrp);
 	}
@@ -445,12 +445,12 @@ public class OrderService {
 	private CommerceItem createAndPopulateCommerceItem(long quantity, ProductDocument prodDoc, String skuId) {
 		
 		CommerceItem commerceItem = new CommerceItem();
-		commerceItem.setCatalogId(CommerceContants.DEFAULT_CATALOG);
+		commerceItem.setCatalogId(CommerceConstants.DEFAULT_CATALOG);
 		commerceItem.setProductId(prodDoc.getId());
 		commerceItem.setCatalogRefId(skuId);
-		commerceItem.setCommerceItemType(CommerceContants.DEFAULT_COMMERCE_ITEM);
+		commerceItem.setCommerceItemType(CommerceConstants.DEFAULT_COMMERCE_ITEM);
 		commerceItem.setQuantity(quantity);
-		commerceItem.setState(CommerceContants.INITIAL);
+		commerceItem.setState(CommerceConstants.INITIAL);
 		commerceItem.setDescription(prodDoc.getProductDescription());
 		
 		return commerceItem;
@@ -474,7 +474,7 @@ public class OrderService {
 		log.debug("Inside OrderService.getOrderHistory()");
 		log.debug("The Passed In Order id : " + profileId);
 
-		List<Order> orders = orderRepository.findOrderByStateAndProfileId(CommerceContants.SUBMITTED, profileId);
+		List<Order> orders = orderRepository.findOrderByStateAndProfileId(CommerceConstants.SUBMITTED, profileId);
 		if (null == orders || orders.isEmpty())
 			throw new NoRecordsFoundException("No Order Found to Update.");
 		

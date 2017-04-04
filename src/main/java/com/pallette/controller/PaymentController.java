@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
 import com.pallette.payment.payu.PaymentIntegrator;
@@ -48,7 +48,7 @@ public class PaymentController {
 	private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
 	
 	@RequestMapping(value = "{orderId}/paynow", method = RequestMethod.POST)
-	public String makePayment(HttpServletRequest request, HttpServletResponse response, Model model , @PathVariable(CommerceContants.ORDER_ID) String orderId) throws ServletException, IOException{
+	public String makePayment(HttpServletRequest request, HttpServletResponse response, Model model , @PathVariable(CommerceConstants.ORDER_ID) String orderId) throws ServletException, IOException{
 		
 		log.debug("Inside PaymentController.makePayment()");
 		log.debug("The Passed In Order id : " + orderId);

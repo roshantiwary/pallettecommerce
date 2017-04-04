@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AddEditAddressBean;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.response.AddEditAddressResponse;
 import com.pallette.response.AddressResponse;
@@ -99,7 +99,7 @@ public class CheckoutController {
 	}
 	
 	@RequestMapping(value = RestURLConstants.REMOVE_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
-	public ResponseEntity<AddEditAddressResponse> handleRemoveAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException {
+	public ResponseEntity<AddEditAddressResponse> handleRemoveAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException {
 
 		log.debug("Inside CheckoutController.removeAddress()");
 		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
@@ -123,7 +123,7 @@ public class CheckoutController {
 	}
 
 	@RequestMapping(value = RestURLConstants.GET_SHIPMENT_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
-	public ResponseEntity<GetAddressResponse> handleGetShipmentAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GetAddressResponse> handleGetShipmentAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.handleGetShipmentAddress()");
 		GetAddressResponse getAddressResponse = new GetAddressResponse();
@@ -140,7 +140,7 @@ public class CheckoutController {
 			List<AddressResponse> addresses = new ArrayList<AddressResponse>();
 			addresses.add(addressResponse);
 			Map<String, List<AddressResponse>> addressMap = new HashMap<>();
-			addressMap.put(CommerceContants.SHIPMENT_ADDRESS, addresses);
+			addressMap.put(CommerceConstants.SHIPMENT_ADDRESS, addresses);
 			getAddressResponse.setDataMap(addressMap);
 			
 			getAddressResponse.setMessage("Shipment Address was successfully retreived.");
@@ -157,7 +157,7 @@ public class CheckoutController {
 
 	
 	@RequestMapping(value = RestURLConstants.GET_SAVED_ADDRESSES_URL, method = RequestMethod.GET , produces = "application/json")
-	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceContants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside CheckoutController.handleGetSavedAddress()");
 		GetAddressResponse getAddressResponse = new GetAddressResponse();
@@ -171,9 +171,9 @@ public class CheckoutController {
 		if (!addressList.isEmpty()) {
 			
 			Map<String, List<AddressResponse>> addressMap = new HashMap<>();
-			addressMap.put(CommerceContants.SAVED_ADDRESS, addressList);
+			addressMap.put(CommerceConstants.SAVED_ADDRESS, addressList);
 			getAddressResponse.setDataMap(addressMap);
-			addressMap.put(CommerceContants.SAVED_ADDRESS, addressList);
+			addressMap.put(CommerceConstants.SAVED_ADDRESS, addressList);
 			
 			getAddressResponse.setStatus(Boolean.TRUE);
 			getAddressResponse.setMessage("Saved Address was successfully retreived.");
@@ -203,7 +203,7 @@ public class CheckoutController {
 		for (ObjectError objErr : errors.getAllErrors()) {
 			if (!StringUtils.isEmpty(errorMessages))
 				log.debug("Error Message is : ", objErr.getDefaultMessage());
-			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceContants.COMMA);
+			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceConstants.COMMA);
 		}
 		return errorMessages;
 	}

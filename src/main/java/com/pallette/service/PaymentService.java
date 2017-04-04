@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
 import com.pallette.domain.PaymentGroup;
@@ -71,10 +71,10 @@ public class PaymentService {
 		
 		String submittedOrderId = returnedValueMap.get(PaymentConstants.UDF1);
 		if (!StringUtils.isEmpty(submittedOrderId)) {
-			 model.addAttribute(CommerceContants.ORDER_ID, returnedValueMap.get(PaymentConstants.UDF1));
+			 model.addAttribute(CommerceConstants.ORDER_ID, returnedValueMap.get(PaymentConstants.UDF1));
 			 
 			Query query = new Query();
-			query.addCriteria(Criteria.where(CommerceContants._ID).is(submittedOrderId));
+			query.addCriteria(Criteria.where(CommerceConstants._ID).is(submittedOrderId));
 			Order orderItem = mongoOperation.findOne(query, Order.class);
 			if (null != orderItem) {
 				model.addAttribute(PaymentConstants.ITEM_LIST, orderService.populateItemDetails(orderItem));

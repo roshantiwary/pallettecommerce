@@ -6,7 +6,7 @@ package com.pallette.commerce.contants;
  * @author amall3
  *
  */
-public class CommerceContants {
+public class CommerceConstants {
 
 	public static final String INR = "INR";
 

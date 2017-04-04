@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AddEditAddressBean;
 import com.pallette.beans.AddressBean;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Order;
@@ -65,7 +65,7 @@ public class CheckoutServices {
 			return isSuccess;
 			
 		Address addressItem = new Address();
-		Query query = new Query(Criteria.where(CommerceContants._ID).is(orderId));
+		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :" , query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 
@@ -76,14 +76,14 @@ public class CheckoutServices {
 			
 			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
 			for (ShippingGroup shipGrp : shippingGroups) {
-				if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
 					Address address = shipGrp.getAddress();
 					if (null == address) {
 						shipGrp.setAddress(addressItem);
 					} else {
 						//If Address exists , remove the address first and then set the new address.
 						Query addressRemovalQuery = new Query();
-						addressRemovalQuery.addCriteria(Criteria.where(CommerceContants._ID).is(address.getId()));
+						addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(address.getId()));
 						Address oldAddress = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
 						log.debug("Address Document Removed Successfully :" , oldAddress.getId());
 						shipGrp.setAddress(addressItem);
@@ -92,7 +92,7 @@ public class CheckoutServices {
 			}
 
 			// Invoke mongo operations to save order dbobject.
-			mongoOperation.save(orderItem, CommerceContants.ORDER);
+			mongoOperation.save(orderItem, CommerceConstants.ORDER);
 			isSuccess = Boolean.TRUE;
 		}
 		return isSuccess;
@@ -119,7 +119,7 @@ public class CheckoutServices {
 		if(StringUtils.isEmpty(orderId))
 			return isSuccess;
 		
-		Query query = new Query(Criteria.where(CommerceContants._ID).is(orderId));
+		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :" , query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 		
@@ -127,7 +127,7 @@ public class CheckoutServices {
 			
 			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
 			for (ShippingGroup shipGrp : shippingGroups) {
-				if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
 					Address addressItem = shipGrp.getAddress();
 					// Bean Utils copyProperties method is responsible for copying properties across two beans.
 					BeanUtils.copyProperties(addressItem, addressBean);
@@ -135,7 +135,7 @@ public class CheckoutServices {
 			}
 
 			// Invoke mongo operations to save order dbobject.
-			mongoOperation.save(orderItem, CommerceContants.ORDER);
+			mongoOperation.save(orderItem, CommerceConstants.ORDER);
 			isSuccess = Boolean.TRUE;
 		}
 		return isSuccess;
@@ -159,7 +159,7 @@ public class CheckoutServices {
 		if(StringUtils.isEmpty(orderId))
 			return isSuccess;
 		
-		Query query = new Query(Criteria.where(CommerceContants._ID).is(orderId));
+		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :" , query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 		
@@ -167,13 +167,13 @@ public class CheckoutServices {
 			
 			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
 			for (ShippingGroup shipGrp : shippingGroups) {
-				if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
 					Address addressItem = shipGrp.getAddress();
 					
 					if (null != addressItem) {
 						//Remove the address document first.
 						Query addressRemovalQuery = new Query();
-						addressRemovalQuery.addCriteria(Criteria.where(CommerceContants._ID).is(addressItem.getId()));
+						addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(addressItem.getId()));
 						Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
 						log.debug("Address Document Removed Successfully :" , address.getId());
 						//Set the address to null in shipping group.
@@ -183,7 +183,7 @@ public class CheckoutServices {
 			}
 
 			// Invoke mongo operations to save order dbobject.
-			mongoOperation.save(orderItem, CommerceContants.ORDER);
+			mongoOperation.save(orderItem, CommerceConstants.ORDER);
 			isSuccess = Boolean.TRUE;
 		}
 		return isSuccess;
@@ -208,7 +208,7 @@ public class CheckoutServices {
 			return null;
 
 		AddressResponse addressResponse = new AddressResponse();
-		Query query = new Query(Criteria.where(CommerceContants._ID).is(orderId));
+		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :", query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 
@@ -217,7 +217,7 @@ public class CheckoutServices {
 			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
 			if (null != shippingGroups && !shippingGroups.isEmpty()) {
 				for (ShippingGroup shipGrp : shippingGroups) {
-					if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+					if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
 						Address addressItem = shipGrp.getAddress();
 	
 						if (null != addressItem) {
@@ -250,7 +250,7 @@ public class CheckoutServices {
 		if (StringUtils.isEmpty(orderId))
 			return savedAddress;
 
-		Query findOrderQuery = new Query(Criteria.where(CommerceContants._ID).is(orderId));
+		Query findOrderQuery = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Find Order Query to be executed is :", findOrderQuery);
 		Order orderItem = mongoOperation.findOne(findOrderQuery , Order.class);
 
@@ -263,7 +263,7 @@ public class CheckoutServices {
 		
 		log.debug("Profile Id from Order is" , profileId);
 		
-		Query findProfileQuery = new Query(Criteria.where(CommerceContants._ID).is(profileId));
+		Query findProfileQuery = new Query(Criteria.where(CommerceConstants._ID).is(profileId));
 		log.debug("Find Profile Query to be executed is :", findProfileQuery);
 		Account accountItem = mongoOperation.findOne(findProfileQuery, Account.class);
 		

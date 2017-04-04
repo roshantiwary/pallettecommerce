@@ -30,7 +30,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Address;
 import com.pallette.domain.CommerceItem;
@@ -218,7 +218,7 @@ public class PaymentIntegrator {
 		
 		List<ShippingGroup> shippingGroups = order.getShippingGroups();
 		for (ShippingGroup shipGrp : shippingGroups) {
-			if (CommerceContants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
 				Address address = shipGrp.getAddress();
 				if (null != address) {
 					//Mandatory Parameters
