@@ -78,9 +78,9 @@ public class RestURLConstants {
 	
 	public static final String ORDER_DETAIL_URL = "/account/{orderId}/orderDetail";
 	
-	public static final String ORDER_HISTORY_URL = "/account/{profileId}/orders";
+	public static final String ORDER_HISTORY_URL = "/account/orders";
 	
-	public static final String PROFILE_ADDRESSES_URL = "/account/{profileId}/addresses";
+	public static final String PROFILE_ADDRESSES_URL = "/account/addresses";
 	
 	public static final String CREATE_PROFILE_URL = "/account/create";
 	

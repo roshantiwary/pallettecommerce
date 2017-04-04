@@ -46,12 +46,13 @@ public class UserService {
 	 * This Method updates the user's personal
 	 * details
 	 * @param account
+	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public AccountResponse updateProfile(AccountBean account) throws Exception {
+	public AccountResponse updateProfile(AccountBean account, String profileId) throws Exception {
 		AccountResponse genericResponse = null;
-		genericResponse = accountService.updateProfile(account);
+		genericResponse = accountService.updateProfile(account,profileId);
 		return genericResponse;
 	}
 	
@@ -90,12 +91,13 @@ public class UserService {
 	 * This method adds the new address in user profile
 	 * 
 	 * @param address
+	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse addNewAddress(AddressBean address) throws Exception {
+	public AddressResponse addNewAddress(AddressBean address, String profileId) throws Exception {
 		AddressResponse genericResponse = null;
-		genericResponse = accountService.addNewAddress(address);
+		genericResponse = accountService.addNewAddress(address,profileId);
 		return genericResponse;
 	}
 
@@ -105,12 +107,13 @@ public class UserService {
 	 * 
 	 * @param addressKey
 	 * @param address
+	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse editAddress(String addressKey,AddressBean address) throws Exception {
+	public AddressResponse editAddress(String addressKey,AddressBean address, String profileId) throws Exception {
 		AddressResponse genericResponse = null;
-		genericResponse = accountService.editAddress(addressKey,address);
+		genericResponse = accountService.editAddress(addressKey,address,profileId);
 		return genericResponse;
 	}
 
@@ -132,12 +135,13 @@ public class UserService {
 	 * This method updates the password
 	 * 
 	 * @param password
+	 * @param profileId 
 	 * @return
 	 * @throws Exception
 	 */
-	public Response changePassword(PasswordBean password) throws Exception {
+	public Response changePassword(PasswordBean password, String profileId) throws Exception {
 		Response genericResponse = null;
-		genericResponse = accountService.changePassword(password);
+		genericResponse = accountService.changePassword(password,profileId);
 		return genericResponse;
 	}
 

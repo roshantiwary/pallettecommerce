@@ -49,7 +49,6 @@ public class AddressBean {
 	@Size(min=10,max=10)
 	private String phoneNumber;
 
-	@NotBlank(message="Please provide profile Id")
 	private String ownerId;
 	
 	@NotBlank(message="Please enter Email")

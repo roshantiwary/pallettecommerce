@@ -26,7 +26,7 @@ import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
 import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
-import com.pallette.commerce.contants.CommerceContants;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Role;
@@ -263,17 +263,19 @@ public class AccountService {
 	
 	/**
 	 * This method Updates the user's personal details
+	 * @param profileId 
 	 * 
 	 * @param account
 	 * @return
 	 * @throws Exception 
 	 */
-	public AccountResponse updateProfile(AccountBean accountBean) throws Exception {
-		logger.debug("AccountService.updateProfile: updating profile with id : " + accountBean.getId());
-		if(StringUtils.isEmpty(accountBean.getId()))
+	public AccountResponse updateProfile(AccountBean accountBean, String profileId) throws Exception {
+		logger.debug("AccountService.updateProfile: updating profile with id : " + profileId);
+		if(StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("Please provide Profile Id for update");
 		Account accountItem = new Account();
 		BeanUtils.copyProperties(accountItem, accountBean);
+		accountItem.setId(profileId);
 		Account accountForUpdate = accounts.findOne(accountItem.getId());
 		if (accountForUpdate != null) {
 			accountForUpdate.setId(accountItem.getId());
@@ -307,16 +309,17 @@ public class AccountService {
 	 * This method add new address in user profile
 	 * 
 	 * @param addressBean
+	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse addNewAddress(AddressBean addressBean) throws Exception {
+	public AddressResponse addNewAddress(AddressBean addressBean, String profileId) throws Exception {
 		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		
 		AddressResponse genericResponse = new AddressResponse();
 		Address addressItem = new Address();
 		BeanUtils.copyProperties(addressItem, addressBean);
-		Account account = accounts.findOne(addressItem.getOwnerId());
+		Account account = accounts.findOne(profileId);
 		Address address = addressRepository.save(addressItem);
 		if(null != address && null != account){
 			logger.debug("AccountService.addNewAddress: New Address Added To The Profile :   with address ID : "+address.getId());
@@ -346,16 +349,17 @@ public class AccountService {
 	 * 
 	 * @param addressKey
 	 * @param addressBean
+	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse editAddress(String addressKey, AddressBean addressBean) throws Exception {
+	public AddressResponse editAddress(String addressKey, AddressBean addressBean, String profileId) throws Exception {
 		logger.debug("AccountService.editAddress: Editing Address");
 		
 		AddressResponse genericResponse = new AddressResponse();
 		Address addressItem = addressRepository.findOne(addressKey);
 		BeanUtils.copyProperties(addressItem, addressBean);
-		Account account = accounts.findOne(addressItem.getOwnerId());
+		Account account = accounts.findOne(profileId);
 		
 		if(null != addressItem && null != account){
 			logger.debug("AccountService.editAddress: Edited Address with address : "+addressItem.getId());
@@ -397,7 +401,7 @@ public class AccountService {
 		Address addressItem = addressRepository.findOne(addressKey);
 		Account account = accounts.findOne(addressItem.getOwnerId());
 		Query addressRemovalQuery = new Query();
-		addressRemovalQuery.addCriteria(Criteria.where(CommerceContants._ID).is(addressItem.getId()));
+		addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(addressItem.getId()));
 		Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
 		account.removeAddress(addressItem);
 		accounts.save(account);
@@ -418,11 +422,12 @@ public class AccountService {
 	 * This method updates the password
 	 * 
 	 * @param password
+	 * @param profileId 
 	 * @return
 	 * @throws Exception
 	 */
-	public Response changePassword(PasswordBean password) throws Exception {
-		Account account = accounts.findOne(password.getId());
+	public Response changePassword(PasswordBean password, String profileId) throws Exception {
+		Account account = accounts.findOne(profileId);
 		Response genericResponse = new Response();
 		if(!passwordEncoder.matches(password.getOldPassword(), account.getPassword())){
 			logger.error("Incorrect Old Password for user : " + account.getUsername());

@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class AccountBean {
 
-	@NotBlank(message="Please enter Id")
 	private String id;
 
 	@NotBlank(message="Please enter Username")
