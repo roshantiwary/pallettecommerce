@@ -390,7 +390,7 @@ public class OrderService {
 					cartItemResponse.setProductTitle(productItem.getProductTitle());
 					cartItemResponse.setProductSlug(productItem.getProductSlug());
 
-					ImagesDocument imageDocument = skuItem.getImagesDocument();
+					ImagesDocument imageDocument = productItem.getImagesDocument();
 					cartItemResponse.setProductImage(imageDocument.getThumbnailImageUrl());
 
 					ItemPriceInfo itemPriceInfo = itm.getItemPriceInfo();

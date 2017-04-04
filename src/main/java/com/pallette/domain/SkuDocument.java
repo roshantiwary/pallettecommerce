@@ -35,9 +35,6 @@ public class SkuDocument {
 	private boolean returnable;
 	
 	@DBRef
-	private ImagesDocument imagesDocument;
-	
-	@DBRef
 	private PriceDocument priceDocument;
 	
 	@DBRef
@@ -114,14 +111,5 @@ public class SkuDocument {
 	public void setInventoryDocument(InventoryDocument inventoryDocument) {
 		this.inventoryDocument = inventoryDocument;
 	}
-
-	public ImagesDocument getImagesDocument() {
-		return imagesDocument;
-	}
-
-	public void setImagesDocument(ImagesDocument imagesDocument) {
-		this.imagesDocument = imagesDocument;
-	}
-
 	
 }

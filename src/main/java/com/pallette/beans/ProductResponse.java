@@ -1,10 +1,6 @@
 package com.pallette.beans;
 
-import com.pallette.domain.BrandDocument;
-import com.pallette.domain.CategoryDocument;
-import com.pallette.domain.ImagesDocument;
-import com.pallette.domain.InventoryDocument;
-import com.pallette.domain.PriceDocument;
+import java.util.List;
 
 /**
  * @author vdwiv3
@@ -16,21 +12,14 @@ public class ProductResponse {
 
 	private String productTitle;
 
-	private String productSlug;
-
 	private String productDescription;
 
-	private BrandDocument productBrand;
-
-	private String productStatus;
-
-	private ImagesDocument imagesDocument;
-
-	private PriceDocument priceDocument;
-
-	private InventoryDocument inventoryDocument;
-
-	private CategoryDocument categoryDocument;
+	private CategoryResponse categoryResponse;
+	
+	private List<SkuResponse> skuResponse;
+	
+	private ImageResponse imageResponse;
+	
 
 	/**
 	 * @return the id
@@ -63,21 +52,6 @@ public class ProductResponse {
 	}
 
 	/**
-	 * @return the productSlug
-	 */
-	public String getProductSlug() {
-		return productSlug;
-	}
-
-	/**
-	 * @param productSlug
-	 *            the productSlug to set
-	 */
-	public void setProductSlug(String productSlug) {
-		this.productSlug = productSlug;
-	}
-
-	/**
 	 * @return the productDescription
 	 */
 	public String getProductDescription() {
@@ -93,92 +67,47 @@ public class ProductResponse {
 	}
 
 	/**
-	 * @return the productBrand
+	 * @return the skuResponse
 	 */
-	public BrandDocument getProductBrand() {
-		return productBrand;
+	public List<SkuResponse> getSkuResponse() {
+		return skuResponse;
 	}
 
 	/**
-	 * @param productBrand
-	 *            the productBrand to set
+	 * @param skuResponse
+	 *            the skuResponse to set
 	 */
-	public void setProductBrand(BrandDocument productBrand) {
-		this.productBrand = productBrand;
+	public void setSkuResponse(List<SkuResponse> skuResponse) {
+		this.skuResponse = skuResponse;
 	}
 
 	/**
-	 * @return the productStatus
+	 * @return the imageResponse
 	 */
-	public String getProductStatus() {
-		return productStatus;
+	public ImageResponse getImageResponse() {
+		return imageResponse;
 	}
 
 	/**
-	 * @param productStatus
-	 *            the productStatus to set
+	 * @param imageResponse
+	 *            the imageResponse to set
 	 */
-	public void setProductStatus(String productStatus) {
-		this.productStatus = productStatus;
+	public void setImageResponse(ImageResponse imageResponse) {
+		this.imageResponse = imageResponse;
 	}
 
 	/**
-	 * @return the imagesDocument
+	 * @return the categoryResponse
 	 */
-	public ImagesDocument getImagesDocument() {
-		return imagesDocument;
+	public CategoryResponse getCategoryResponse() {
+		return categoryResponse;
 	}
 
 	/**
-	 * @param imagesDocument
-	 *            the imagesDocument to set
+	 * @param categoryResponse
+	 *            the categoryResponse to set
 	 */
-	public void setImagesDocument(ImagesDocument imagesDocument) {
-		this.imagesDocument = imagesDocument;
-	}
-
-	/**
-	 * @return the priceDocument
-	 */
-	public PriceDocument getPriceDocument() {
-		return priceDocument;
-	}
-
-	/**
-	 * @param priceDocument
-	 *            the priceDocument to set
-	 */
-	public void setPriceDocument(PriceDocument priceDocument) {
-		this.priceDocument = priceDocument;
-	}
-
-	/**
-	 * @return the inventoryDocument
-	 */
-	public InventoryDocument getInventoryDocument() {
-		return inventoryDocument;
-	}
-
-	/**
-	 * @param inventoryDocument
-	 *            the inventoryDocument to set
-	 */
-	public void setInventoryDocument(InventoryDocument inventoryDocument) {
-		this.inventoryDocument = inventoryDocument;
-	}
-
-	/**
-	 * @return the categoryDocument
-	 */
-	public CategoryDocument getCategoryDocument() {
-		return categoryDocument;
-	}
-
-	/**
-	 * @param categoryDocument
-	 *            the categoryDocument to set
-	 */
-	public void setCategoryDocument(CategoryDocument categoryDocument) {
-		this.categoryDocument = categoryDocument;
+	public void setCategoryResponse(CategoryResponse categoryResponse) {
+		this.categoryResponse = categoryResponse;
 	}
 }

@@ -40,6 +40,9 @@ public class ProductDocument {
 	private CategoryDocument categoryDocument;
 	
 	@DBRef
+	private ImagesDocument imagesDocument;
+	
+	@DBRef
 	private List<SkuDocument> skuDocument;
 
 	/**
@@ -147,14 +150,36 @@ public class ProductDocument {
 		this.productBrand = productBrand;
 	}
 
+	/**
+	 * @return the skuDocument
+	 */
 	public List<SkuDocument> getSkuDocument() {
 		if(null == skuDocument)
 			skuDocument = new ArrayList<SkuDocument>();
 		return skuDocument;
 	}
 
+	/**
+	 * @param skuDocument
+	 *            the skuDocument to set
+	 */
 	public void setSkuDocument(List<SkuDocument> skuDocument) {
 		this.skuDocument = skuDocument;
+	}
+
+	/**
+	 * @return the imagesDocument
+	 */
+	public ImagesDocument getImagesDocument() {
+		return imagesDocument;
+	}
+
+	/**
+	 * @param imagesDocument
+	 *            the imagesDocument to set
+	 */
+	public void setImagesDocument(ImagesDocument imagesDocument) {
+		this.imagesDocument = imagesDocument;
 	}
 
 }

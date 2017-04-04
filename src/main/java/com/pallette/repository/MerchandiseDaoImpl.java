@@ -117,6 +117,7 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			update.set("productBrand", productDocument.getProductBrand());
 			update.set("productStatus", productDocument.getProductStatus());
 			update.set("categoryDocument", productDocument.getCategoryDocument());
+			update.set("imagesDocument", productDocument.getImagesDocument());
 			update.set("skuDocument", productDocument.getSkuDocument());
 			mongoTemplate.upsert(query, update, ProductDocument.class);
 
@@ -150,7 +151,6 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			update.set("active", skuDocument.isActive());
 			update.set("unitOfMeasure", skuDocument.getUnitOfMeasure());
 			update.set("returnable", skuDocument.isReturnable());
-			update.set("imagesDocument", skuDocument.getImagesDocument());
 			update.set("priceDocument", skuDocument.getPriceDocument());
 			update.set("inventoryDocument", skuDocument.getInventoryDocument());
 			mongoTemplate.upsert(query, update, SkuDocument.class);

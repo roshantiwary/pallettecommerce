@@ -1,28 +1,22 @@
 package com.pallette.beans;
 
-import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
-import com.pallette.domain.ImagesDocument;
 
 /**
  * @author vdwiv3
  *
  */
-public class CategoryBean {
+public class CategoryResponse {
 
 	private String id;
 
 	private String categoryTitle;
 
-	private String categorySlug;
-
 	private String categoryDescription;
 
-	private BrandDocument categoryBrand;
-
 	private String categoryStatus;
-
-	private ImagesDocument imagesDocument;
+	
+	private ImageResponse imageResponse;
 
 	private CategoryDocument parentCategoryDocument;
 
@@ -57,21 +51,6 @@ public class CategoryBean {
 	}
 
 	/**
-	 * @return the categorySlug
-	 */
-	public String getCategorySlug() {
-		return categorySlug;
-	}
-
-	/**
-	 * @param categorySlug
-	 *            the categorySlug to set
-	 */
-	public void setCategorySlug(String categorySlug) {
-		this.categorySlug = categorySlug;
-	}
-
-	/**
 	 * @return the categoryDescription
 	 */
 	public String getCategoryDescription() {
@@ -84,21 +63,6 @@ public class CategoryBean {
 	 */
 	public void setCategoryDescription(String categoryDescription) {
 		this.categoryDescription = categoryDescription;
-	}
-
-	/**
-	 * @return the categoryBrand
-	 */
-	public BrandDocument getCategoryBrand() {
-		return categoryBrand;
-	}
-
-	/**
-	 * @param categoryBrand
-	 *            the categoryBrand to set
-	 */
-	public void setCategoryBrand(BrandDocument categoryBrand) {
-		this.categoryBrand = categoryBrand;
 	}
 
 	/**
@@ -117,21 +81,6 @@ public class CategoryBean {
 	}
 
 	/**
-	 * @return the imagesDocument
-	 */
-	public ImagesDocument getImagesDocument() {
-		return imagesDocument;
-	}
-
-	/**
-	 * @param imagesDocument
-	 *            the imagesDocument to set
-	 */
-	public void setImagesDocument(ImagesDocument imagesDocument) {
-		this.imagesDocument = imagesDocument;
-	}
-
-	/**
 	 * @return the parentCategoryDocument
 	 */
 	public CategoryDocument getParentCategoryDocument() {
@@ -144,5 +93,20 @@ public class CategoryBean {
 	 */
 	public void setParentCategoryDocument(CategoryDocument parentCategoryDocument) {
 		this.parentCategoryDocument = parentCategoryDocument;
+	}
+
+	/**
+	 * @return the imageResponse
+	 */
+	public ImageResponse getImageResponse() {
+		return imageResponse;
+	}
+
+	/**
+	 * @param imageResponse
+	 *            the imageResponse to set
+	 */
+	public void setImageResponse(ImageResponse imageResponse) {
+		this.imageResponse = imageResponse;
 	}
 }

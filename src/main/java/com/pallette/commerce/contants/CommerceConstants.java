@@ -46,4 +46,6 @@ public class CommerceConstants {
 	
 	public static final String OWNER_ID = "ownerId";
 
+	public static final String FALSE = "false";
+
 }

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.BrandBean;
-import com.pallette.beans.CategoryBean;
-import com.pallette.beans.ProductResponse;
+import com.pallette.beans.CategoryResponse;
+import com.pallette.beans.ProductResponseBean;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
@@ -55,64 +55,58 @@ public class BrowseController {
 	@Autowired
 	private BrandService brandService;
 	
+	
+	
 	@RequestMapping(value = RestURLConstants.ALL_PRODUCTS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> getAllProducts() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<ProductResponseBean> getAllProducts() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getAllProduct()");
-		GenericResponse genericResponse = new GenericResponse();
 		List<ProductDocument> products = productService.getAllProduct();
-		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
 
-		for (ProductDocument product: products ) {
-	    	ProductResponse productBean= new ProductResponse();
-	        BeanUtils.copyProperties(productBean , product);
-	        productBeanList.add(productBean);
-		}
+		ProductResponseBean response = productService.constructProductResponse(products);
 		
-		if (null != productBeanList && !productBeanList.isEmpty()) {
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(productBeanList);
-			genericResponse.setItemCount(productBeanList.size());
-			genericResponse.setMessage("Product Items were Returned Successfully.");
+		if (null != response && !response.getProductResponse().isEmpty()) {
+			response.setStatus(Boolean.TRUE);
+			response.setStatusCode(HttpStatus.OK.value());
+			response.setMessage("Product Items were Returned Successfully.");
 			
-			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} else
 			throw new NoRecordsFoundException("No Products Found");
+		
+		
 	}
 
+	
+
 	@RequestMapping(value = RestURLConstants.SELECTED_PRODUCT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> getProduct(@PathVariable("productId") String productId) 
+	public ResponseEntity<ProductResponseBean> getProduct(@PathVariable("productId") String productId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		
 		logger.debug("BrowseController.getProduct()");
-		GenericResponse genericResponse = new GenericResponse();
 		if (StringUtils.isEmpty(productId)) {
 			throw new IllegalArgumentException("No Product Id was Passed");
 		}
 		
 		logger.debug("Product Id passed is : " + productId);
 		ProductDocument product = productService.getProductById(productId);
-		ProductResponse productBean = new ProductResponse();
-		BeanUtils.copyProperties(productBean, product);
-		if (null != productBean) {
-			List<ProductResponse> products = new ArrayList<ProductResponse>();
-			products.add(productBean);
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(products);
-			genericResponse.setItemCount(products.size());
-			genericResponse.setMessage("Product Item was Returned Successfully.");
-			
-			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+		List<ProductDocument> productList = new ArrayList<ProductDocument>();
+		productList.add(product);
+		ProductResponseBean response = productService.constructProductResponse(productList);
+		if (null != response && !response.getProductResponse().isEmpty()) {
+			response.setStatus(Boolean.TRUE);
+			response.setStatusCode(HttpStatus.OK.value());
+			response.setMessage("Product Item was Returned Successfully.");
+			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} else
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
 	@RequestMapping(value = RestURLConstants.GET_PRODUCTS_BY_TITLE_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> getProductsByTitle(@PathVariable("productTitle") String productTitle) 
+	public ResponseEntity<ProductResponseBean> getProductsByTitle(@PathVariable("productTitle") String productTitle) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getProductByTitle()");
-		GenericResponse genericResponse = new GenericResponse();
 		if (StringUtils.isEmpty(productTitle)) { 
 			throw new IllegalArgumentException("No Product Title was Passed");
 		}
@@ -120,52 +114,38 @@ public class BrowseController {
 		logger.debug("Product Title passed is : ", productTitle);
 		List<ProductDocument> products = productService.getProductByTitle(productTitle);
 		
-		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
-
-		for (ProductDocument product: products ) {
-	    	ProductResponse productBean= new ProductResponse();
-	        BeanUtils.copyProperties(productBean , product);
-	        productBeanList.add(productBean);
-		}
+		ProductResponseBean response = productService.constructProductResponse(products);
 		
-		if (null != productBeanList && !productBeanList.isEmpty()) {
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(productBeanList);
-			genericResponse.setItemCount(productBeanList.size());
-			genericResponse.setMessage("Product Items were Returned Successfully.");
+		if (null != response && !response.getProductResponse().isEmpty()) {
+			response.setStatus(Boolean.TRUE);
+			response.setStatusCode(HttpStatus.OK.value());
+			response.setMessage("Product Items were Returned Successfully.");
 			
-			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} else
 			throw new NoRecordsFoundException("No Products Found");
 	}
 
 	@RequestMapping(value = RestURLConstants.GET_PRODUCTS_BY_BRAND_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> getProductsByBrand(@PathVariable("brandId") String brandId) 
+	public ResponseEntity<ProductResponseBean> getProductsByBrand(@PathVariable("brandId") String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
 		logger.debug("BrowseController.getProductsByBrand()");
-		GenericResponse genericResponse = new GenericResponse();
 		if (StringUtils.isEmpty(brandId)) { 
 			throw new IllegalArgumentException("Brand Id not Passed");
 		}
 		
 		logger.debug("Brand Id passed is : ", brandId);
 		List<ProductDocument> products = productService.getProductByBrand(brandId);
-		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
-
-		for (ProductDocument product: products ) {
-	    	ProductResponse productBean= new ProductResponse();
-	        BeanUtils.copyProperties(productBean , product);
-	        productBeanList.add(productBean);
-		}
 		
-		if (null != productBeanList && !productBeanList.isEmpty()) {
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setItems(productBeanList);
-			genericResponse.setItemCount(productBeanList.size());
-			genericResponse.setMessage("Product Items were Returned Successfully.");
+		ProductResponseBean response = productService.constructProductResponse(products);
+		
+		if (null != response && !response.getProductResponse().isEmpty()) {
+			response.setStatus(Boolean.TRUE);
+			response.setStatusCode(HttpStatus.OK.value());
+			response.setMessage("Product Items were Returned Successfully.");
 			
-			return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 		} else
 			throw new NoRecordsFoundException("No Products Found");
 	}
@@ -176,10 +156,10 @@ public class BrowseController {
 		logger.debug("BrowseController.getAllCategories()");
 		GenericResponse genericResponse = new GenericResponse();
 		List<CategoryDocument> categories = categoryService.getAllCategories();
-		List<CategoryBean> categoryBeanList= new ArrayList<CategoryBean>(); 
+		List<CategoryResponse> categoryBeanList= new ArrayList<CategoryResponse>(); 
 
 		for (CategoryDocument category: categories ) {
-	    	CategoryBean categoryBean= new CategoryBean();
+	    	CategoryResponse categoryBean= new CategoryResponse();
 	        BeanUtils.copyProperties(categoryBean , category);
 	        categoryBeanList.add(categoryBean);
 		}
@@ -207,10 +187,10 @@ public class BrowseController {
 
 		logger.debug("Category Id passed is : " + categoryId);
 		CategoryDocument category = categoryService.getCategoryById(categoryId);
-		CategoryBean categoryBean = new CategoryBean();
+		CategoryResponse categoryBean = new CategoryResponse();
 		BeanUtils.copyProperties(categoryBean, category);
 		if (null != categoryBean) {
-			List<CategoryBean> categories = new ArrayList<CategoryBean>();
+			List<CategoryResponse> categories = new ArrayList<CategoryResponse>();
 			categories.add(categoryBean);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setItems(categories);
@@ -234,10 +214,10 @@ public class BrowseController {
 		
 		logger.debug("Category Title passed is : ", categoryTitle);
 		List<CategoryDocument> categories = categoryService.getCategoryByTitle(categoryTitle);
-		List<CategoryBean> categoryBeanList= new ArrayList<CategoryBean>(); 
+		List<CategoryResponse> categoryBeanList= new ArrayList<CategoryResponse>(); 
 
 		for (CategoryDocument category: categories ) {
-	    	CategoryBean categoryBean= new CategoryBean();
+	    	CategoryResponse categoryBean= new CategoryResponse();
 	        BeanUtils.copyProperties(categoryBean , category);
 	        categoryBeanList.add(categoryBean);
 		}
@@ -399,5 +379,5 @@ public class BrowseController {
 		} else
 			throw new NoRecordsFoundException("No Brands Found.");
 	}
-   
+
 }
