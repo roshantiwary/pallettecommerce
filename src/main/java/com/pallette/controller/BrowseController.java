@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.BrandBean;
 import com.pallette.beans.CategoryBean;
-import com.pallette.beans.ProductBean;
+import com.pallette.beans.ProductResponse;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CategoryDocument;
@@ -61,10 +61,10 @@ public class BrowseController {
 		logger.debug("BrowseController.getAllProduct()");
 		GenericResponse genericResponse = new GenericResponse();
 		List<ProductDocument> products = productService.getAllProduct();
-		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
 
 		for (ProductDocument product: products ) {
-	    	ProductBean productBean= new ProductBean();
+	    	ProductResponse productBean= new ProductResponse();
 	        BeanUtils.copyProperties(productBean , product);
 	        productBeanList.add(productBean);
 		}
@@ -92,10 +92,10 @@ public class BrowseController {
 		
 		logger.debug("Product Id passed is : " + productId);
 		ProductDocument product = productService.getProductById(productId);
-		ProductBean productBean = new ProductBean();
+		ProductResponse productBean = new ProductResponse();
 		BeanUtils.copyProperties(productBean, product);
 		if (null != productBean) {
-			List<ProductBean> products = new ArrayList<ProductBean>();
+			List<ProductResponse> products = new ArrayList<ProductResponse>();
 			products.add(productBean);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setItems(products);
@@ -120,10 +120,10 @@ public class BrowseController {
 		logger.debug("Product Title passed is : ", productTitle);
 		List<ProductDocument> products = productService.getProductByTitle(productTitle);
 		
-		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
 
 		for (ProductDocument product: products ) {
-	    	ProductBean productBean= new ProductBean();
+	    	ProductResponse productBean= new ProductResponse();
 	        BeanUtils.copyProperties(productBean , product);
 	        productBeanList.add(productBean);
 		}
@@ -151,10 +151,10 @@ public class BrowseController {
 		
 		logger.debug("Brand Id passed is : ", brandId);
 		List<ProductDocument> products = productService.getProductByBrand(brandId);
-		List<ProductBean> productBeanList= new ArrayList<ProductBean>(); 
+		List<ProductResponse> productBeanList= new ArrayList<ProductResponse>(); 
 
 		for (ProductDocument product: products ) {
-	    	ProductBean productBean= new ProductBean();
+	    	ProductResponse productBean= new ProductResponse();
 	        BeanUtils.copyProperties(productBean , product);
 	        productBeanList.add(productBean);
 		}

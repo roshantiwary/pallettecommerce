@@ -10,7 +10,7 @@ import com.pallette.domain.PriceDocument;
  * @author vdwiv3
  *
  */
-public class ProductBean {
+public class ProductResponse {
 
 	private String id;
 
