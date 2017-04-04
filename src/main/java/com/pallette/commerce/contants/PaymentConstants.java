@@ -22,7 +22,7 @@ public class PaymentConstants {
 	public static final String FURL = "furl";
 
 	public static final String SURL = "surl";
-	
+
 	public static final String CURL = "curl";
 
 	public static final String PRODUCTINFO = "productinfo";
@@ -64,7 +64,7 @@ public class PaymentConstants {
 	public static final String ADDRESS1 = "address1";
 
 	public static final String LASTNAME = "lastname";
-	
+
 	public static final String PAYMENT_IDENTIFIERS = "paymentIdentifiers";
 
 	public static final String TXN_ID = "TxnId";
@@ -90,12 +90,36 @@ public class PaymentConstants {
 	public static final String DESCRIPTION = "description";
 
 	public static final String NAME = "name";
-	
+
 	public static final String ACTION = "action";
-	
+
 	public static final String ITEM_LIST = "itemList";
-	
+
 	public static final String MODE = "mode";
+
+	public static final Object DISCOUNT = "discount";
+
+	public static final String DEBITED = "Debited";
+
+	public static final String SUCCESS = "success";
+
+	public static final String STATUS2 = "status";
+
+	public static final String ERROR = "error";
+
+	public static final String UNMAPPEDSTATUS = "unmappedstatus";
+
+	public static final String ERROR_MESSAGE = "error_Message";
+
+	public static final String PAYU = "payu";
+
+	public static final String MIHPAYID = "mihpayid";
+
+	public static final String ENCRYPTED_PAYMENT_ID = "encryptedPaymentId";
+
+	public static final String NET_AMOUNT_DEBIT = "net_amount_debit";
+
+	public static final String SUBMITTED = "Submitted";
 	
-	
+	public static final String ORDER_DOCUMENT = "Order";
 }

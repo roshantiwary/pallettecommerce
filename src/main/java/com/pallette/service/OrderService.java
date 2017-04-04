@@ -432,11 +432,6 @@ public class OrderService {
 		payGrp.setPaymentGroupType(CommerceContants.CREDIT_CARD);
 		payGrp.setPaymentMethod(CommerceContants.CREDIT_CARD);
 		
-		PaymentStatus paymentStatus = new PaymentStatus();
-		List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-		payGrp.setDebitStatus(paymentStatusList);
-		payGrp.setCreditStatus(paymentStatusList);
-		payGrp.setAuthorizationStatus(paymentStatusList);
 		order.addPaymentGroup(payGrp);
 	}
 
