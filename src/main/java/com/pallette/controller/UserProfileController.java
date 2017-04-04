@@ -1,5 +1,7 @@
 package com.pallette.controller;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.lang.reflect.InvocationTargetException;
 import javax.validation.Valid;
 
@@ -11,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -30,6 +33,7 @@ import com.pallette.response.GenericResponse;
 import com.pallette.response.AccountResponse;
 import com.pallette.service.UserService;
 import com.pallette.web.security.ApplicationUser;
+import com.pallette.web.security.CustomCredentialsService.CustomDetails;
 @RestController
 @RequestMapping("/private/rest/api/v1/userprofile")
 public class UserProfileController {
@@ -41,11 +45,11 @@ public class UserProfileController {
 	
 	@RequestMapping("/admin")
 	public ResponseEntity<GenericResponse> getAdmin(OAuth2Authentication oAuth2Authentication) {
-		logger.debug("BrowseController.getAllProduct()");
+		logger.debug("UserProfileController.getAdmin()");
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-		String profileId = user.getProfileId();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
 			System.out.println("Logged-in User" + authentication.getName());
@@ -61,10 +65,10 @@ public class UserProfileController {
 	
 	@RequestMapping("/administrator")
 	public ResponseEntity<GenericResponse> getAdministrator() {
-		logger.debug("BrowseController.getAllProduct()");
+		logger.debug("UserProfileController.getAdministrator()");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-		String profileId = user.getProfileId();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
 			System.out.println("Logged-in User" + authentication.getName());
@@ -80,11 +84,11 @@ public class UserProfileController {
 	
 	@RequestMapping("/anonymous")
 	public ResponseEntity<GenericResponse> getAnonymous(OAuth2Authentication oAuth2Authentication) {
-		logger.debug("BrowseController.getAllProduct()");
+		logger.debug("UserProfileController.getAnonymous()");
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-		String profileId = user.getProfileId();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
 			System.out.println("Logged-in User" + authentication.getName());
@@ -100,12 +104,11 @@ public class UserProfileController {
 	
 	@RequestMapping("/user")
 	public ResponseEntity<AccountResponse> getProfile(OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
-		logger.debug("UserProfileController.getUser()");
+		logger.debug("UserProfileController.getProfile()");
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-		String profileId = user.getProfileId();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		
 		AccountResponse acctResponse = new AccountResponse();
 		if (!profileId.isEmpty()) {
@@ -121,6 +124,18 @@ public class UserProfileController {
 		}
 		
 		return new ResponseEntity<>(acctResponse, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	private String getProfileId(Authentication authentication) {
+		String profileId;
+		if(!(authentication.getPrincipal() instanceof CustomDetails)) {
+			ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
+			profileId = user.getProfileId();	
+		} else {
+			CustomDetails details = (CustomDetails) authentication.getPrincipal();
+			profileId = details.getProfileId();	
+		}
+		return profileId;
 	}
 	
 	/**
