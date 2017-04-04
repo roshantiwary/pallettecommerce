@@ -41,5 +41,9 @@ public class CommerceContants {
 	public static final String COMMA = ",";
 	
 	public static final String STRING_TRUE = "TRUE";
+	
+	public static final String SUBMITTED = "submitted";
+	
+	public static final String OWNER_ID = "ownerId";
 
 }

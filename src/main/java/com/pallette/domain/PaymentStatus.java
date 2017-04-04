@@ -25,8 +25,6 @@ public class PaymentStatus implements Serializable {
 	@Field(value = "transaction_id")
 	private String transactionId;
 
-	private String amount;
-
 	@Field(value = "transaction_success")
 	private boolean transactionSuccess;
 
@@ -35,6 +33,12 @@ public class PaymentStatus implements Serializable {
 
 	@Field(value = "transaction_timestamp")
 	private Date transactionTimestamp;
+
+	@Field(value = "unmapped_status")
+	private String unmappedstatus;
+
+	@Field(value = "error_code")
+	private String errorCode;
 
 	public PaymentStatus() {
 		super();
@@ -47,10 +51,11 @@ public class PaymentStatus implements Serializable {
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append("transactionId:").append(getTransactionId()).append("; ");
-		buf.append("amount:").append(getAmount()).append("; ");
-		buf.append("transactionSuccess:").append(isTransactionSuccess()).append("; ");
+		buf.append("transactionSuccess:").append(isTransactionSuccess())
+				.append("; ");
 		buf.append("errorMessage:").append(getErrorMessage()).append("; ");
-		buf.append("transactionTimestamp:").append(getTransactionTimestamp()).append("; ");
+		buf.append("transactionTimestamp:").append(getTransactionTimestamp())
+				.append("; ");
 		return buf.toString();
 	}
 
@@ -82,21 +87,6 @@ public class PaymentStatus implements Serializable {
 	 */
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
-	}
-
-	/**
-	 * @return the amount
-	 */
-	public String getAmount() {
-		return amount;
-	}
-
-	/**
-	 * @param amount
-	 *            the amount to set
-	 */
-	public void setAmount(String amount) {
-		this.amount = amount;
 	}
 
 	/**
@@ -142,6 +132,36 @@ public class PaymentStatus implements Serializable {
 	 */
 	public void setTransactionTimestamp(Date transactionTimestamp) {
 		this.transactionTimestamp = transactionTimestamp;
+	}
+
+	/**
+	 * @return the unmappedstatus
+	 */
+	public String getUnmappedstatus() {
+		return unmappedstatus;
+	}
+
+	/**
+	 * @param unmappedstatus
+	 *            the unmappedstatus to set
+	 */
+	public void setUnmappedstatus(String unmappedstatus) {
+		this.unmappedstatus = unmappedstatus;
+	}
+
+	/**
+	 * @return the errorCode
+	 */
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	/**
+	 * @param errorCode
+	 *            the errorCode to set
+	 */
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
 	}
 
 }

@@ -3,6 +3,8 @@
  */
 package com.pallette.service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,6 +20,8 @@ import org.springframework.util.StringUtils;
 import com.pallette.commerce.contants.CommerceContants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
+import com.pallette.domain.PaymentGroup;
+import com.pallette.domain.PaymentStatus;
 
 /**
  * <p>
@@ -74,12 +78,83 @@ public class PaymentService {
 			Order orderItem = mongoOperation.findOne(query, Order.class);
 			if (null != orderItem) {
 				model.addAttribute(PaymentConstants.ITEM_LIST, orderService.populateItemDetails(orderItem));
+				
+				persistOrderDetails(orderItem , returnedValueMap);
+				persistPaymentDetails(orderItem , returnedValueMap);
+				mongoOperation.save(orderItem, PaymentConstants.ORDER_DOCUMENT);
 			}
 		}
 	    
 		model.addAttribute(PaymentConstants.AMOUNT, returnedValueMap.get(PaymentConstants.AMOUNT));
 		model.addAttribute(PaymentConstants.MODE, returnedValueMap.get(PaymentConstants.MODE));
 	}
-	
+
+	/**
+	 * 
+	 * @param orderItem
+	 * @param returnedValueMap 
+	 */
+	private void persistPaymentDetails(Order orderItem, Map<String, String> returnedValueMap) {
+
+		log.debug("Inside PaymentService.persistPaymentDetails() and Order Id is: ", orderItem.getId());
+		
+		List<PaymentGroup> paymentGroups = orderItem.getPaymentGroups();
+		if (null != paymentGroups && !paymentGroups.isEmpty()) {
+			for (PaymentGroup payGroup : paymentGroups) {
+				
+				double amount = Double.parseDouble(returnedValueMap.get(PaymentConstants.AMOUNT));
+				payGroup.setAmountDebited(amount);
+				
+				double discount = Double.parseDouble(returnedValueMap.get(PaymentConstants.DISCOUNT));
+				payGroup.setDiscount(discount);
+				
+				double netAmountDebit = Double.parseDouble(returnedValueMap.get(PaymentConstants.NET_AMOUNT_DEBIT));
+				payGroup.setNetAmountDebit(netAmountDebit);
+				
+				payGroup.setEncryptedPaymentId(returnedValueMap.get(PaymentConstants.ENCRYPTED_PAYMENT_ID));
+				payGroup.setMihpayid(returnedValueMap.get(PaymentConstants.MIHPAYID));
+				payGroup.setMode(returnedValueMap.get(PaymentConstants.MODE));
+				payGroup.setSubmittedDate(new Date());
+				payGroup.setState(PaymentConstants.DEBITED);
+				payGroup.setPaymentMethod(PaymentConstants.PAYU);
+				payGroup.setPaymentGroupType(PaymentConstants.PAYU);
+				
+				//Set the Payment Status to Payment Group.
+				PaymentStatus debitStatus = new PaymentStatus();
+				String status = returnedValueMap.get(PaymentConstants.STATUS2);
+				if (!StringUtils.isEmpty(status) && PaymentConstants.SUCCESS.equalsIgnoreCase(status)) {
+
+					debitStatus.setErrorCode(returnedValueMap.get(PaymentConstants.ERROR));
+					debitStatus.setTransactionTimestamp(new Date());
+					debitStatus.setTransactionId(returnedValueMap.get(PaymentConstants.TXNID));
+					debitStatus.setTransactionSuccess(Boolean.TRUE);
+					debitStatus.setUnmappedstatus(returnedValueMap.get(PaymentConstants.UNMAPPEDSTATUS));
+					debitStatus.setErrorMessage(returnedValueMap.get(PaymentConstants.ERROR_MESSAGE));
+
+				} else {
+					debitStatus.setErrorCode(returnedValueMap.get(PaymentConstants.ERROR));
+					debitStatus.setTransactionTimestamp(new Date());
+					debitStatus.setTransactionId(returnedValueMap.get(PaymentConstants.TXNID));
+					debitStatus.setTransactionSuccess(Boolean.FALSE);
+					debitStatus.setUnmappedstatus(returnedValueMap.get(PaymentConstants.UNMAPPEDSTATUS));
+					debitStatus.setErrorMessage(returnedValueMap.get(PaymentConstants.ERROR_MESSAGE));
+				}
+				payGroup.addDebitStatus(debitStatus);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param orderItem
+	 * @param returnedValueMap 
+	 */
+	private void persistOrderDetails(Order orderItem, Map<String, String> returnedValueMap) {
+
+		log.debug("Inside PaymentService.persistPaymentDetails() and Order Id is: ", orderItem.getId());
+		orderItem.setSubmittedDate(new Date());
+		orderItem.setState(PaymentConstants.SUBMITTED);
+
+	}
 
 }

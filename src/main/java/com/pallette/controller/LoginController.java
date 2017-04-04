@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AccountBean;
+import com.pallette.beans.AccountResponse;
+import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.exception.SymbolNotFoundException;
 import com.pallette.response.ExceptionResponse;
-import com.pallette.response.GenericResponse;
 import com.pallette.service.UserService;
 
 @RestController
@@ -54,8 +55,7 @@ public class LoginController {
 		return "index";
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	//@RequestMapping(value = "/login")
+	@RequestMapping(value = RestURLConstants.LOGIN_PROFILE_URL, method = RequestMethod.POST)
 	public String login(Model model, @ModelAttribute(value="loginForm")AuthenticationRequest login) {
 		logger.info("Logging in, user: " + login.getUsername());
 		//need to add account object to session?
@@ -68,13 +68,13 @@ public class LoginController {
 		return "index";
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@RequestMapping(value = RestURLConstants.LOGIN_PROFILE_URL, method = RequestMethod.GET)
 	public String getLogin(Model model, @ModelAttribute(value="loginForm") AuthenticationRequest login) {
 		logger.info("Logging in GET, user: " + login.getUsername());
 		return "login";
 	}
 	
-	@RequestMapping(value="/logout", method = RequestMethod.POST)
+	@RequestMapping(value=RestURLConstants.LOGOUT_URL, method = RequestMethod.POST)
 	public String postLogout(Model model, @ModelAttribute(value="login") AuthenticationRequest login) {
 		logger.info("Logout, user: " + login.getUsername());
 		logger.info(model.asMap().toString());
@@ -90,10 +90,10 @@ public class LoginController {
 	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/account/create", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> register(@Valid @RequestBody AccountBean account) throws Exception {
+	@RequestMapping(value = RestURLConstants.CREATE_PROFILE_URL, method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AccountResponse> register(@Valid @RequestBody AccountBean account) throws Exception {
 		logger.info("register: user:" + account.getUsername());
-		GenericResponse genericResponse = new GenericResponse();
+		AccountResponse genericResponse = new AccountResponse();
 		try{
 			genericResponse = accountService.createAccount(account);
 		}catch(Exception e){

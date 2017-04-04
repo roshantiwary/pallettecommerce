@@ -4,6 +4,7 @@
 package com.pallette.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +39,18 @@ public class PaymentGroup implements Serializable {
 
 	private double amount;
 
-	@Field(value = "amount_authorized")
-	private double amountAuthorized;
+	private String mode;
+
+	private double discount;
+
+	@Field(value = "net_amount_debit")
+	private double netAmountDebit;
+
+	@Field(value = "encrypted_payment_id")
+	private String encryptedPaymentId;
+
+	@Field(value = "mih_pay_id")
+	private String mihpayid;
 
 	@Field(value = "amount_debited")
 	private double amountDebited;
@@ -58,11 +69,16 @@ public class PaymentGroup implements Serializable {
 
 	@DBRef
 	@CascadeSave
-	private List<PaymentStatus> authorizationStatus;
-
-	@DBRef
-	@CascadeSave
 	private List<PaymentStatus> debitStatus;
+
+	public void addDebitStatus(PaymentStatus paymentStatus) {
+		if (null == this.debitStatus) {
+			debitStatus = new ArrayList<PaymentStatus>();
+			debitStatus.add(paymentStatus);
+		} else {
+			debitStatus.add(paymentStatus);
+		}
+	}
 
 	@DBRef
 	@CascadeSave
@@ -167,21 +183,6 @@ public class PaymentGroup implements Serializable {
 	}
 
 	/**
-	 * @return the amountAuthorized
-	 */
-	public double getAmountAuthorized() {
-		return amountAuthorized;
-	}
-
-	/**
-	 * @param amountAuthorized
-	 *            the amountAuthorized to set
-	 */
-	public void setAmountAuthorized(double amountAuthorized) {
-		this.amountAuthorized = amountAuthorized;
-	}
-
-	/**
 	 * @return the amountDebited
 	 */
 	public double getAmountDebited() {
@@ -257,33 +258,10 @@ public class PaymentGroup implements Serializable {
 	}
 
 	/**
-	 * @return the authorizationStatus
-	 */
-	public List<PaymentStatus> getAuthorizationStatus() {
-		return authorizationStatus;
-	}
-
-	/**
-	 * @param authorizationStatus
-	 *            the authorizationStatus to set
-	 */
-	public void setAuthorizationStatus(List<PaymentStatus> authorizationStatus) {
-		this.authorizationStatus = authorizationStatus;
-	}
-
-	/**
 	 * @return the debitStatus
 	 */
 	public List<PaymentStatus> getDebitStatus() {
 		return debitStatus;
-	}
-
-	/**
-	 * @param debitStatus
-	 *            the debitStatus to set
-	 */
-	public void setDebitStatus(List<PaymentStatus> debitStatus) {
-		this.debitStatus = debitStatus;
 	}
 
 	/**
@@ -299,6 +277,81 @@ public class PaymentGroup implements Serializable {
 	 */
 	public void setCreditStatus(List<PaymentStatus> creditStatus) {
 		this.creditStatus = creditStatus;
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public String getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	/**
+	 * @return the encryptedPaymentId
+	 */
+	public String getEncryptedPaymentId() {
+		return encryptedPaymentId;
+	}
+
+	/**
+	 * @param encryptedPaymentId
+	 *            the encryptedPaymentId to set
+	 */
+	public void setEncryptedPaymentId(String encryptedPaymentId) {
+		this.encryptedPaymentId = encryptedPaymentId;
+	}
+
+	/**
+	 * @return the mihpayid
+	 */
+	public String getMihpayid() {
+		return mihpayid;
+	}
+
+	/**
+	 * @param mihpayid
+	 *            the mihpayid to set
+	 */
+	public void setMihpayid(String mihpayid) {
+		this.mihpayid = mihpayid;
+	}
+
+	/**
+	 * @return the discount
+	 */
+	public double getDiscount() {
+		return discount;
+	}
+
+	/**
+	 * @param discount
+	 *            the discount to set
+	 */
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+
+	/**
+	 * @return the netAmountDebit
+	 */
+	public double getNetAmountDebit() {
+		return netAmountDebit;
+	}
+
+	/**
+	 * @param netAmountDebit
+	 *            the netAmountDebit to set
+	 */
+	public void setNetAmountDebit(double netAmountDebit) {
+		this.netAmountDebit = netAmountDebit;
 	}
 
 }

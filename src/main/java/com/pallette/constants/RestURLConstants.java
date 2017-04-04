@@ -65,5 +65,27 @@ public class RestURLConstants {
 	public static final String GET_SAVED_ADDRESSES_URL = "/shipping/address/savedAddress/{orderId}";
 
 	public static final String GET_SHIPMENT_ADDRESS_URL = "/shipping/address/shipmentAddress/{orderId}";
+	
+	public static final String PROFILE_ADD_ADDRESS_URL = "/account/addresses";
+	
+	public static final String PROFILE_EDIT_ADDRESS_URL = "/account/editAddress/{id}";
+	
+	public static final String POFILE_REMOVE_ADDRESS_URL = "/account/removeAddress/{id}";
+	
+	public static final String EDIT_PROFILE_URL = "/account/edit";
+	
+	public static final String CHANGE_PASSWORD_URL = "/account/changePassword";
+	
+	public static final String ORDER_DETAIL_URL = "/account/{orderId}/orderDetail";
+	
+	public static final String ORDER_HISTORY_URL = "/account/{profileId}/orders";
+	
+	public static final String PROFILE_ADDRESSES_URL = "/account/{profileId}/addresses";
+	
+	public static final String CREATE_PROFILE_URL = "/account/create";
+	
+	public static final String LOGIN_PROFILE_URL = "/login";
+	
+	public static final String LOGOUT_URL = "/logout";
 
 }
