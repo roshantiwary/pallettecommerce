@@ -122,4 +122,8 @@ public class PaymentConstants {
 	public static final String SUBMITTED = "Submitted";
 	
 	public static final String ORDER_DOCUMENT = "Order";
+
+	public static final String FAILED = "failed";
+
+	public static final String CONFIRMATION = "confirmation";
 }

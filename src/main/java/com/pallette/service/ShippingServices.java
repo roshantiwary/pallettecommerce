@@ -54,47 +54,51 @@ public class ShippingServices {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean saveNewAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
+	public AddressResponse saveNewAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside ShippingServices.saveNewAddress()");
 		log.debug("Order for which address to be saved is :" , orderId);
-		boolean isSuccess = Boolean.FALSE;
+		AddressResponse addressResponse = null;
 		
 		if(StringUtils.isEmpty(orderId))
-			return isSuccess;
+			return addressResponse;
 			
 		Address addressItem = new Address();
 		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :" , query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 
-		if (null != orderItem) {
-
-			// Bean Utils copyProperties method is responsible for copying properties across two beans.
-			BeanUtils.copyProperties(addressItem, addressBean);
+		if (null == orderItem)
+			return addressResponse;
+		
+		// Bean Utils copyProperties method is responsible for copying properties across two beans.
+		BeanUtils.copyProperties(addressItem, addressBean);
 			
-			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
-			for (ShippingGroup shipGrp : shippingGroups) {
-				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
-					Address address = shipGrp.getAddress();
-					if (null == address) {
-						shipGrp.setAddress(addressItem);
-					} else {
-						//If Address exists , remove the address first and then set the new address.
-						Query addressRemovalQuery = new Query();
-						addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(address.getId()));
-						Address oldAddress = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
-						log.debug("Address Document Removed Successfully :" , oldAddress.getId());
-						shipGrp.setAddress(addressItem);
-					}
+		List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
+		for (ShippingGroup shipGrp : shippingGroups) {
+			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				Address address = shipGrp.getAddress();
+				if (null == address) {
+					shipGrp.setAddress(addressItem);
+				} else {
+					//If Address exists , remove the address first and then set the new address.
+					Query addressRemovalQuery = new Query();
+					addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(address.getId()));
+					Address oldAddress = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
+					log.debug("Address Document Removed Successfully :" , oldAddress.getId());
+					shipGrp.setAddress(addressItem);
 				}
 			}
-
-			// Invoke mongo operations to save order dbobject.
-			mongoOperation.save(orderItem, CommerceConstants.ORDER);
-			isSuccess = Boolean.TRUE;
 		}
-		return isSuccess;
+
+		// Invoke mongo operations to save order dbobject.
+		mongoOperation.save(orderItem, CommerceConstants.ORDER);
+		
+		// Bean Utils copyProperties method is responsible for copying properties across two beans.
+		addressResponse = new AddressResponse();
+		BeanUtils.copyProperties(addressResponse, addressItem);
+		
+		return addressResponse;
 	}
 
 	
@@ -109,35 +113,39 @@ public class ShippingServices {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean editAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
+	public AddressResponse editAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside ShippingServices.editAddress()");
 		log.debug("Order for which address to be edited is :" , orderId);
-		boolean isSuccess = Boolean.FALSE;
+		AddressResponse addressResponse = null;
 		
 		if(StringUtils.isEmpty(orderId))
-			return isSuccess;
+			return addressResponse;
 		
 		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :" , query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 		
-		if (null != orderItem) {
+		if (null == orderItem)
+			return addressResponse;
 			
-			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
-			for (ShippingGroup shipGrp : shippingGroups) {
-				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
-					Address addressItem = shipGrp.getAddress();
-					// Bean Utils copyProperties method is responsible for copying properties across two beans.
-					BeanUtils.copyProperties(addressItem, addressBean);
-				}
+		List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
+		for (ShippingGroup shipGrp : shippingGroups) {
+			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				Address addressItem = shipGrp.getAddress();
+				// Bean Utils copyProperties method is responsible for copying properties across two beans.
+				BeanUtils.copyProperties(addressItem, addressBean);
 			}
-
-			// Invoke mongo operations to save order dbobject.
-			mongoOperation.save(orderItem, CommerceConstants.ORDER);
-			isSuccess = Boolean.TRUE;
 		}
-		return isSuccess;
+
+		// Invoke mongo operations to save order dbobject.
+		mongoOperation.save(orderItem, CommerceConstants.ORDER);
+		
+		addressResponse = new AddressResponse();
+		// Bean Utils copyProperties method is responsible for copying properties across two beans.
+		BeanUtils.copyProperties(addressResponse, addressBean);
+		
+		return addressResponse;
 	}
 	
 	
