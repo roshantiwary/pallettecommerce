@@ -182,7 +182,7 @@ public class CartController {
 		log.debug("Order Id from Request Body ", orderId);
 		cartResponse = orderService.getCartDetails(orderId);
 		cartResponse.setStatus(Boolean.TRUE);
-		cartResponse.setMessage("Item successfully updated.");
+		cartResponse.setMessage("Order Details Retrieved Successfully.");
 		cartResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.OK);
 		}

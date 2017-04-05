@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AddEditAddressBean;
-import com.pallette.beans.AddressBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
@@ -37,9 +36,9 @@ import com.pallette.response.AddressResponse;
  */
 
 @Service
-public class CheckoutServices {
+public class ShippingServices {
 
-	private static final Logger log = LoggerFactory.getLogger(CheckoutServices.class);
+	private static final Logger log = LoggerFactory.getLogger(ShippingServices.class);
 
 	@Autowired
 	private MongoOperations mongoOperation;
@@ -57,7 +56,7 @@ public class CheckoutServices {
 	 */
 	public boolean saveNewAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside OrderService.saveNewAddress()");
+		log.debug("Inside ShippingServices.saveNewAddress()");
 		log.debug("Order for which address to be saved is :" , orderId);
 		boolean isSuccess = Boolean.FALSE;
 		
@@ -112,7 +111,7 @@ public class CheckoutServices {
 	 */
 	public boolean editAddress(AddEditAddressBean addressBean, String orderId) throws IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside OrderService.editAddress()");
+		log.debug("Inside ShippingServices.editAddress()");
 		log.debug("Order for which address to be edited is :" , orderId);
 		boolean isSuccess = Boolean.FALSE;
 		
@@ -153,7 +152,7 @@ public class CheckoutServices {
 	 */
 	public boolean removeAddress(String orderId) {
 
-		log.debug("Inside OrderService.editAddress()");
+		log.debug("Inside ShippingServices.editAddress()");
 		log.debug("Order for which address to be edited is :" , orderId);
 		boolean isSuccess = Boolean.FALSE;
 		if(StringUtils.isEmpty(orderId))
@@ -201,7 +200,7 @@ public class CheckoutServices {
 	 */
 	public AddressResponse getShipmentAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside OrderService.getShipmentAddressFromOrder()");
+		log.debug("Inside ShippingServices.getShipmentAddressFromOrder()");
 		log.debug("Order for which address to be fetched is :", orderId);
 
 		if (StringUtils.isEmpty(orderId))
@@ -243,7 +242,7 @@ public class CheckoutServices {
 	 */
 	public List<AddressResponse> getSavedAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside OrderService.getSavedAddressFromOrder()");
+		log.debug("Inside ShippingServices.getSavedAddressFromOrder()");
 		log.debug("Order for which address to be fetched is :", orderId);
 		List<AddressResponse> savedAddress = new ArrayList<AddressResponse>();
 
