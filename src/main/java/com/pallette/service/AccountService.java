@@ -165,6 +165,7 @@ public class AccountService {
 			accountResponse.setLastName(account.getLastName());
 			accountResponse.setEmail(account.getUsername());
 			accountResponse.setAddress(account.getAddresses());
+			accountResponse.setPhoneNumber(account.getPhoneNumber());
 			accountResponse.setStatusCode(HttpStatus.ALREADY_REPORTED.value());
 			accountResponse.setMessage("Account has been already created for username : "+ accountItem.getUsername());
 			accountResponse.setStatus(Boolean.FALSE);
@@ -188,6 +189,7 @@ public class AccountService {
 			accountResponse.setLastName(account.getLastName());
 			accountResponse.setEmail(account.getUsername());
 			accountResponse.setAddress(account.getAddresses());
+			accountResponse.setPhoneNumber(account.getPhoneNumber());
 			accountResponse.setStatusCode(HttpStatus.OK.value());
 			accountResponse.setMessage("Account has been created");
 			accountResponse.setStatus(Boolean.TRUE);
