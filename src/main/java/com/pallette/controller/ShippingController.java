@@ -29,79 +29,95 @@ import com.pallette.constants.RestURLConstants;
 import com.pallette.response.AddEditAddressResponse;
 import com.pallette.response.AddressResponse;
 import com.pallette.response.GetAddressResponse;
-import com.pallette.service.CheckoutServices;
+import com.pallette.service.ShippingServices;
 
 @RestController
 @RequestMapping("/rest/api/v1")
-public class CheckoutController {
+public class ShippingController {
 
 	@Autowired
-	private CheckoutServices checkoutServices;
+	private ShippingServices checkoutServices;
 	
-	private static final Logger log = LoggerFactory.getLogger(CheckoutController.class);
+	private static final Logger log = LoggerFactory.getLogger(ShippingController.class);
 
 	@RequestMapping(value = RestURLConstants.ADD_ADDRESS_URL, method = RequestMethod.POST)
-	public ResponseEntity<AddEditAddressResponse> handleAddAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GetAddressResponse> handleAddAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside CheckoutController.addAddress()");
-		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
+		log.debug("Inside ShippingController.addAddress()");
+		GetAddressResponse getAddressResponse = new GetAddressResponse();
 		
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
-			addEditAddressResponse.setMessage(getValidationErrors(errors).toString());
-			addEditAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-			return ResponseEntity.badRequest().body(addEditAddressResponse);
+			getAddressResponse.setMessage(getValidationErrors(errors).toString());
+			getAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.badRequest().body(getAddressResponse);
 		}
 
 		String orderId = address.getOrderId();
 		log.debug("Order Id from Request Body ", orderId);
+		AddressResponse addrResponse = checkoutServices.saveNewAddress(address , orderId);
 
-		if(checkoutServices.saveNewAddress(address , orderId)){
-			addEditAddressResponse.setMessage("Address was successfully added.");
-			addEditAddressResponse.setStatus(Boolean.TRUE);
-			addEditAddressResponse.setStatusCode(HttpStatus.OK.value());
-			return new ResponseEntity<>(addEditAddressResponse, new HttpHeaders(), HttpStatus.OK);
+		if (null != addrResponse) {
+			getAddressResponse.setMessage("Address was successfully added.");
+			getAddressResponse.setStatus(Boolean.TRUE);
+			getAddressResponse.setStatusCode(HttpStatus.OK.value());
+			
+			List<AddressResponse> addresses = new ArrayList<AddressResponse>();
+			addresses.add(addrResponse);
+			Map<String, List<AddressResponse>> addressMap = new HashMap<>();
+			addressMap.put(CommerceConstants.ADDED_ADDRESS, addresses);
+			getAddressResponse.setDataMap(addressMap);
+			
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.OK);
 		} else {
-			addEditAddressResponse.setMessage("There was a problem while adding address.");
-			addEditAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			addEditAddressResponse.setStatus(Boolean.FALSE);
-			return new ResponseEntity<>(addEditAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			getAddressResponse.setMessage("There was a problem while adding address.");
+			getAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			getAddressResponse.setStatus(Boolean.FALSE);
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value = RestURLConstants.EDIT_ADDRESS_URL, method = RequestMethod.POST)
-	public ResponseEntity<AddEditAddressResponse> handleEditAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GetAddressResponse> handleEditAddress(@Valid @RequestBody AddEditAddressBean address , Errors errors) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside CheckoutController.editAddress()");
-		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
+		log.debug("Inside ShippingController.editAddress()");
+		GetAddressResponse getAddressResponse = new GetAddressResponse();
 
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
-			addEditAddressResponse.setMessage(getValidationErrors(errors).toString());
-			addEditAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-			return ResponseEntity.badRequest().body(addEditAddressResponse);
+			getAddressResponse.setMessage(getValidationErrors(errors).toString());
+			getAddressResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.badRequest().body(getAddressResponse);
 		}
 		
 		String orderId = address.getOrderId();
 		log.debug("Order Id from Request Body ", orderId);
-
-		if(checkoutServices.editAddress(address , orderId)){
-			addEditAddressResponse.setMessage("Address was successfully Edited.");
-			addEditAddressResponse.setStatusCode(HttpStatus.OK.value());
-			addEditAddressResponse.setStatus(Boolean.TRUE);
-			return new ResponseEntity<>(addEditAddressResponse, new HttpHeaders(), HttpStatus.OK);
+		AddressResponse addrResponse = checkoutServices.editAddress(address , orderId);
+		
+		if (null != addrResponse) {
+			getAddressResponse.setMessage("Address was successfully Edited.");
+			getAddressResponse.setStatusCode(HttpStatus.OK.value());
+			getAddressResponse.setStatus(Boolean.TRUE);
+			
+			List<AddressResponse> addresses = new ArrayList<AddressResponse>();
+			addresses.add(addrResponse);
+			Map<String, List<AddressResponse>> addressMap = new HashMap<>();
+			addressMap.put(CommerceConstants.EDITED_ADDRESS, addresses);
+			getAddressResponse.setDataMap(addressMap);
+			
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.OK);
 		} else {
-			addEditAddressResponse.setMessage("There was a problem while editing the address.");
-			addEditAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			addEditAddressResponse.setStatus(Boolean.FALSE);
-			return new ResponseEntity<>(addEditAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			getAddressResponse.setMessage("There was a problem while editing the address.");
+			getAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			getAddressResponse.setStatus(Boolean.FALSE);
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value = RestURLConstants.REMOVE_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<AddEditAddressResponse> handleRemoveAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException {
 
-		log.debug("Inside CheckoutController.removeAddress()");
+		log.debug("Inside ShippingController.removeAddress()");
 		AddEditAddressResponse addEditAddressResponse = new AddEditAddressResponse();
 
 		if (StringUtils.isEmpty(orderId))
@@ -125,7 +141,7 @@ public class CheckoutController {
 	@RequestMapping(value = RestURLConstants.GET_SHIPMENT_ADDRESS_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<GetAddressResponse> handleGetShipmentAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside CheckoutController.handleGetShipmentAddress()");
+		log.debug("Inside ShippingController.handleGetShipmentAddress()");
 		GetAddressResponse getAddressResponse = new GetAddressResponse();
 
 		if (StringUtils.isEmpty(orderId))
@@ -159,7 +175,7 @@ public class CheckoutController {
 	@RequestMapping(value = RestURLConstants.GET_SAVED_ADDRESSES_URL, method = RequestMethod.GET , produces = "application/json")
 	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		log.debug("Inside CheckoutController.handleGetSavedAddress()");
+		log.debug("Inside ShippingController.handleGetSavedAddress()");
 		GetAddressResponse getAddressResponse = new GetAddressResponse();
 
 		if (StringUtils.isEmpty(orderId))

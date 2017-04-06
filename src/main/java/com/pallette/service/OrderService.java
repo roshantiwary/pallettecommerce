@@ -137,6 +137,16 @@ public class OrderService {
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found to Update.");
 		
+		Query query = new Query();
+		query.addCriteria(Criteria.where(CommerceConstants._ID).is(skuId));
+		SkuDocument skuItem = mongoOperation.findOne(query, SkuDocument.class);
+		if (null == skuItem)
+			throw new NoRecordsFoundException("No Sku Found while creating order.");
+		
+		boolean isValid = validateProdSkuRelationships(prodItem, skuItem);
+		if (!isValid)
+			throw new NoRecordsFoundException("Sku and Product Relationship is not correct.");
+		
 		CommerceItem item = getItemFromOrder(skuId, order);
 		if (null == item) {
 
@@ -293,6 +303,16 @@ public class OrderService {
 		if(null == prodItem)
 			throw new NoRecordsFoundException("No Product Found while creating order.");
 		
+		Query query = new Query();
+		query.addCriteria(Criteria.where(CommerceConstants._ID).is(skuId));
+		SkuDocument skuItem = mongoOperation.findOne(query, SkuDocument.class);
+		if (null == skuItem)
+			throw new NoRecordsFoundException("No Sku Found while creating order.");
+		
+		boolean isValid = validateProdSkuRelationships(prodItem, skuItem);
+		if (!isValid)
+			throw new NoRecordsFoundException("Sku and Product Relationship is not correct.");
+		
 		//Create new Order Object an set the default values.
 		Order order = initializeOrder();
 		
@@ -320,6 +340,32 @@ public class OrderService {
 		Order orderItem= orderRepository.save(order);
 		
 		return constructResponse(orderItem);
+	}
+
+	/**
+	 * @param prodItem
+	 * @param skuItem
+	 * @return
+	 * @throws NoRecordsFoundException
+	 */
+	private boolean validateProdSkuRelationships(ProductDocument prodItem, SkuDocument skuItem) throws NoRecordsFoundException {
+
+		log.debug("Inside OrderService.validateProdSkuRelationships()");
+		boolean isValid = Boolean.FALSE;
+
+		List<SkuDocument> skuList = prodItem.getSkuDocument();
+		if (null != skuList && !skuList.isEmpty()) {
+
+			for (SkuDocument skuDoc : skuList) {
+				if (skuDoc.getId().equalsIgnoreCase(skuItem.getId())) {
+					return Boolean.TRUE;
+				}
+			}
+
+		} else
+			return isValid;
+		
+		return isValid;
 	}
 
 	/**

@@ -25,13 +25,8 @@ import com.pallette.payment.payu.PaymentIntegrator;
 import com.pallette.repository.OrderRepository;
 import com.pallette.service.PaymentService;
 
-
 @Controller
 public class PaymentController {
-
-	private static final String FAILED = "failed";
-
-	private static final String CONFIRMATION = "confirmation";
 
 	@Autowired
 	PaymentIntegrator paymentIntegrator;
@@ -104,7 +99,7 @@ public class PaymentController {
 	        parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
 		System.out.println("Payment Failure");
-		return FAILED;
+		return PaymentConstants.FAILED;
 	}
 
 	@RequestMapping(value = "/success", method = RequestMethod.POST)
@@ -124,6 +119,6 @@ public class PaymentController {
 		paymentService.processPaymentResponse(parameterNames, model);
 		
 		System.out.println("Payment Successfull");
-		return CONFIRMATION;
+		return PaymentConstants.CONFIRMATION;
 	}
 }
