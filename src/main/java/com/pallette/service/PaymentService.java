@@ -44,6 +44,8 @@ public class PaymentService {
 	private OrderService orderService;
 
 	/**
+	 * Method that processes the payment response and then submits the Order.
+	 * It sets the Payment Grp , Payment Status attributes from the Payment Response.
 	 * 
 	 * @param parameterNames
 	 * @param model 
@@ -155,6 +157,58 @@ public class PaymentService {
 		orderItem.setSubmittedDate(new Date());
 		orderItem.setState(PaymentConstants.SUBMITTED);
 
+	}
+
+	/**
+	 * Method responsible for populating Payment group and status from failure
+	 * response.
+	 * 
+	 * @param parameterNames
+	 * @param model
+	 */
+	public void processPaymentErrorResponse(Map<String, String> parameterNames, Model model) {
+
+		log.debug("Inside PaymentService.processPaymentErrorResponse()");
+
+		if (null == parameterNames || parameterNames.isEmpty())
+			return;
+		
+		// Populate and Return the Model Object.
+		String status = parameterNames.get(PaymentConstants.STATUS2);
+		if (StringUtils.isEmpty(status) || !PaymentConstants.FAILURE.equalsIgnoreCase(status))
+			return;
+
+		String submittedOrderId = parameterNames.get(PaymentConstants.UDF1);
+		log.debug("Order Id Passed Is", submittedOrderId);
+
+		if (!StringUtils.isEmpty(submittedOrderId)) {
+			model.addAttribute(CommerceConstants.ORDER_ID, parameterNames.get(PaymentConstants.UDF1));
+
+			Query query = new Query();
+			query.addCriteria(Criteria.where(CommerceConstants._ID).is(submittedOrderId));
+			Order orderItem = mongoOperation.findOne(query, Order.class);
+			if (null != orderItem) {
+				List<PaymentGroup> paymentGroups = orderItem.getPaymentGroups();
+				if (null != paymentGroups && !paymentGroups.isEmpty()) {
+					for (PaymentGroup payGroup : paymentGroups) {
+
+						// Set the Payment Status to Payment Group.
+						PaymentStatus debitStatus = new PaymentStatus();
+
+						debitStatus.setErrorCode(parameterNames.get(PaymentConstants.ERROR));
+						debitStatus.setTransactionTimestamp(new Date());
+						debitStatus.setTransactionId(parameterNames.get(PaymentConstants.TXNID));
+						debitStatus.setTransactionSuccess(Boolean.FALSE);
+						debitStatus.setUnmappedstatus(parameterNames.get(PaymentConstants.UNMAPPEDSTATUS));
+						debitStatus.setErrorMessage(parameterNames.get(PaymentConstants.ERROR_MESSAGE));
+						
+						payGroup.addDebitStatus(debitStatus);
+					}
+				}
+				//Save the Order Document.
+				mongoOperation.save(orderItem, PaymentConstants.ORDER_DOCUMENT);
+			}
+		}
 	}
 
 }

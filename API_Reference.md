@@ -63,8 +63,29 @@
 	"skuId":"sku003",
 	"quantity":1,
 	"profileId":"profile123"
-	}	
-	
+	}
+	Service Response:
+		{
+	  "message": "New Order created and Item successfully added to cart.",
+	  "status": true,
+	  "statusCode": 200,
+	  "orderId": "order34",
+	  "cartItems": [
+	    {
+	      "catalogRefId": "sku003",
+	      "quantity": 1,
+	      "description": "Milk Sugar Dry Fruits Rose Petal Jam ( Gulkand) Saffron",
+	      "productId": "prd002",
+	      "productTitle": "Mava Gulkand Roll",
+	      "productSlug": "Mava Gulkand Roll",
+	      "productBrand": "KC Das",
+	      "productImage": "prd002_t.jpg",
+	      "amount": 400
+	    }
+	  ],
+	  "orderSubTotal": 400
+	}
+
 ### Update Item .
 	Service URL - "/cart/update"
 	HTTP Method - POST
@@ -74,7 +95,28 @@
 	"productId":"prd002",
 	"skuId":"sku003",
 	"quantity":1
-	}	
+	}
+	Service Response:
+			{
+	  "message": "Item successfully updated.",
+	  "status": true,
+	  "statusCode": 200,
+	  "orderId": "order34",
+	  "cartItems": [
+	    {
+	      "catalogRefId": "sku003",
+	      "quantity": 5,
+	      "description": "Milk Sugar Dry Fruits Rose Petal Jam ( Gulkand) Saffron",
+	      "productId": "prd002",
+	      "productTitle": "Mava Gulkand Roll",
+	      "productSlug": "Mava Gulkand Roll",
+	      "productBrand": "KC Das",
+	      "productImage": "prd002_t.jpg",
+	      "amount": 2000
+	    }
+	  ],
+	  "orderSubTotal": 2000
+	}
 	
 ### Remove Item .
 	Service URL - "/cart/remove"
@@ -84,16 +126,54 @@
 	"orderId":"order33",
 	"productId":"prd002",
 	"skuId":"sku003"
-	}	
+	}
+	Service Response:
+		{
+	  "message": "Item successfully Removed.",
+	  "status": true,
+	  "statusCode": 200,
+	  "orderId": "order34",
+	  "cartItems": [],
+	  "orderSubTotal": 0
+	}
 	
 ### Get Cart Details .
 	Service URL - "/cart/{orderId}/details"
 	HTTP Method - GET
+	Service Response:
+		{
+	  "message": "Order Details Retrieved Successfully.",
+	  "status": true,
+	  "statusCode": 200,
+	  "orderId": "order34",
+	  "cartItems": [
+	    {
+	      "catalogRefId": "sku003",
+	      "quantity": 1,
+	      "description": "Milk Sugar Dry Fruits Rose Petal Jam ( Gulkand) Saffron",
+	      "productId": "prd002",
+	      "productTitle": "Mava Gulkand Roll",
+	      "productSlug": "Mava Gulkand Roll",
+	      "productBrand": "KC Das",
+	      "productImage": "prd002_t.jpg",
+	      "amount": 400
+	    }
+	  ],
+	  "orderSubTotal": 400
+	}
 
 ### Move To Checkout.
 	Service URL - "/cart/moveToCheckout/{orderId}"
 	HTTP Method - GET
-
+	Service Response:
+		{
+	  "message": "Good for Checkout.",
+	  "status": true,
+	  "statusCode": 200,
+	  "orderId": null,
+	  "cartItems": null,
+	  "orderSubTotal": 400
+	}
 
 ## Shipping Services:	
 	
@@ -114,6 +194,33 @@
 	"email":"abhirick12@gmail.com",
 	"phoneNumber":"7899788385"
 	}
+	Service Response:
+		{
+	  "message": "Address was successfully added.",
+	  "status": true,
+	  "statusCode": 200,
+	  "dataMap": {
+	    "Added_Address": [
+	      {
+	        "message": null,
+	        "status": false,
+	        "statusCode": 0,
+	        "firstName": "Test",
+	        "middleName": null,
+	        "lastName": "Mallick",
+	        "address1": "Flat 203 , Vahin Towers",
+	        "address2": "Bomanhalli",
+	        "address3": null,
+	        "city": "Bangalore",
+	        "state": "Karnataka",
+	        "postalCode": "560068",
+	        "country": null,
+	        "phoneNumber": "7899788385",
+	        "email": "abhirick12@gmail.com"
+	      }
+	    ]
+	  }
+	}
 	
 ### Edit Address.
 	Service URL - "/shipping/address/edit"
@@ -132,6 +239,33 @@
 	"email":"abhirick12@gmail.com",
 	"phoneNumber":"7899788385"
 	}
+	Service Response:
+		{
+	  "message": "Address was successfully Edited.",
+	  "status": true,
+	  "statusCode": 200,
+	  "dataMap": {
+	    "Edited_Address": [
+	      {
+	        "message": null,
+	        "status": false,
+	        "statusCode": 0,
+	        "firstName": "Test",
+	        "middleName": null,
+	        "lastName": "Mallick",
+	        "address1": "Flat 203 , Vahin Towers",
+	        "address2": "Bomanhalli",
+	        "address3": null,
+	        "city": "Bangalore",
+	        "state": "Karnataka",
+	        "postalCode": "560068",
+	        "country": null,
+	        "phoneNumber": "7899788385",
+	        "email": "abhirick12@gmail.com"
+	      }
+	    ]
+	  }
+	}
 	 
 ### Remove Address.
 	Service URL - "/shipping/address/remove/{orderId}"
@@ -140,11 +274,64 @@
 ### Get Saved Addresses.
 	Service URL - "/shipping/address/savedAddress/{orderId}"
 	HTTP Method - GET
+	Service Response:
+		{
+	  "message": "Shipment Address was successfully retreived.",
+	  "status": true,
+	  "statusCode": 200,
+	  "dataMap": {
+	    "shipmentAddress": [
+	      {
+	        "message": null,
+	        "status": false,
+	        "statusCode": 0,
+	        "firstName": "Test",
+	        "middleName": null,
+	        "lastName": "Mallick",
+	        "address1": "Flat 203 , Vahin Towers",
+	        "address2": "Bomanhalli",
+	        "address3": null,
+	        "city": "Bangalore",
+	        "state": "Karnataka",
+	        "postalCode": "560068",
+	        "country": null,
+	        "phoneNumber": "7899788385",
+	        "email": "abhirick12@gmail.com"
+	      }
+	    ]
+	  }
+	}
 
 ### Get Shipment Address.
 	Service URL - "/shipping/address/shipmentAddress/{orderId}"
 	HTTP Method - GET
-	 
+	Service Response:
+	{
+	  "message": "Shipment Address was successfully retreived.",
+	  "status": true,
+	  "statusCode": 200,
+	  "dataMap": {
+	    "shipmentAddress": [
+	      {
+	        "message": null,
+	        "status": false,
+	        "statusCode": 0,
+	        "firstName": "Test",
+	        "middleName": null,
+	        "lastName": "Mallick",
+	        "address1": "Flat 203 , Vahin Towers",
+	        "address2": "Bomanhalli",
+	        "address3": null,
+	        "city": "Bangalore",
+	        "state": "Karnataka",
+	        "postalCode": "560068",
+	        "country": null,
+	        "phoneNumber": "7899788385",
+	        "email": "abhirick12@gmail.com"
+	      }
+	    ]
+	  }
+	}
 	 
 ## Profile Services:	
 
@@ -215,12 +402,12 @@
 	}
 	
 ### Get Order Details.
-	URL : "/account/{orderId}/orderDetail"
+	Service URL : "/account/{orderId}/orderDetail"
 	Method : GET
 	Parameters : orderId : order12
 	
 ### Get Order History.
-	URL : "/account/orders"
+	Service URL : "/account/orders"
 	Method : GET
 	Parameters : 
 	{
@@ -228,7 +415,7 @@
 	}
 	
 ### Get All Profile Addresses.
-	URL : "/account/addresses"
+	Service URL : "/account/addresses"
 	Method : GET
 	Parameters : 
 	{
@@ -236,7 +423,7 @@
 	}
 	
 ### Create Profile.
-	URL : "/account/create"
+	Service URL : "/account/create"
 	Method : POST
 	Parameters : 
 	{
@@ -249,3 +436,50 @@
 	    "authtoken" : "9591480b-0ba4-4d91-a065-dfe4d0020783",
 	    "phoneNumber" : "9893084117"
 	}
+	Service Response :
+		{
+	  "message": "Account has been created",
+	  "status": true,
+	  "statusCode": 200,
+	  "id": "profile3",
+	  "firstName": "Abhishek",
+	  "lastName": "Mallick",
+	  "email": "abhirick12@gmail.com",
+	  "address": [],
+	  "phoneNumber": "9893084117"
+	}
+
+	
+## Merchandising Services:
+
+### Product Upload. 
+	Service URL - "/product/upload"
+	HTTP Method - POST
+	
+### Images Upload. 
+	Service URL - "/media/upload"
+	HTTP Method - POST
+	
+### Brand Upload. 
+	Service URL - "/brand/upload"
+	HTTP Method - POST
+	
+### Inventory Upload. 
+	Service URL - "/inventory/upload"
+	HTTP Method - POST
+	
+### Category Upload. 
+	Service URL - "/category/upload"
+	HTTP Method - POST
+	
+### Price Upload. 
+	Service URL - "/price/upload"
+	HTTP Method - POST
+	
+### City Upload. 
+	Service URL - "/city/upload"
+	HTTP Method - POST
+	
+### SKU Upload. 
+	Service URL - "/sku/upload"
+	HTTP Method - POST

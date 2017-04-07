@@ -120,10 +120,12 @@ public class PaymentConstants {
 	public static final String NET_AMOUNT_DEBIT = "net_amount_debit";
 
 	public static final String SUBMITTED = "Submitted";
-	
+
 	public static final String ORDER_DOCUMENT = "Order";
 
 	public static final String FAILED = "failed";
 
 	public static final String CONFIRMATION = "confirmation";
+
+	public static final String FAILURE = "failure";
 }
