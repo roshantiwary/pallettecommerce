@@ -90,15 +90,20 @@ public class PaymentController {
 	
 	@RequestMapping(value = "/failure", method = RequestMethod.POST)
 	public String paymentFailure(HttpServletRequest request, HttpServletResponse response , Model model) {
-		// do sume stuffs
+		 
+		log.debug("Inside PaymentController.paymentFailure()");
 		Map<String, String> parameterNames = new HashMap<String, String>();
 		Enumeration<String> enumeration = request.getParameterNames();
+		
 		while(enumeration.hasMoreElements()) {
 			String parameterName = (String) enumeration.nextElement();
 			System.out.println(parameterName + "=" + request.getParameter(parameterName));
 	        parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
-		System.out.println("Payment Failure");
+		//
+		paymentService.processPaymentErrorResponse(parameterNames, model);
+		
+		log.debug("Payment Failure");
 		return PaymentConstants.FAILED;
 	}
 
@@ -115,10 +120,10 @@ public class PaymentController {
 			System.out.println(parameterName + "=" + request.getParameter(parameterName));
 			parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
-		
+		//Process the payment response and then submit the Order.
 		paymentService.processPaymentResponse(parameterNames, model);
 		
-		System.out.println("Payment Successfull");
+		log.debug("Payment Successfull");
 		return PaymentConstants.CONFIRMATION;
 	}
 }
