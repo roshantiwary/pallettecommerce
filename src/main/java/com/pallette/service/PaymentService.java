@@ -22,6 +22,7 @@ import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Order;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
+import com.pallette.repository.OrderRepository;
 
 /**
  * <p>
@@ -39,6 +40,9 @@ public class PaymentService {
 	
 	@Autowired
 	private MongoOperations mongoOperation;
+	
+	@Autowired
+	private OrderRepository orderRepository;
 	
 	@Autowired
 	private OrderService orderService;
@@ -83,7 +87,7 @@ public class PaymentService {
 				
 				persistOrderDetails(orderItem , returnedValueMap);
 				persistPaymentDetails(orderItem , returnedValueMap);
-				mongoOperation.save(orderItem, PaymentConstants.ORDER_DOCUMENT);
+				orderRepository.save(orderItem);
 			}
 		}
 	    

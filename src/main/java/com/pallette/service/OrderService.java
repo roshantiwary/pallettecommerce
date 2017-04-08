@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.pallette.beans.OrderHistoryResponse;
 import com.pallette.beans.OrderResponse;
@@ -521,6 +522,21 @@ public class OrderService {
 		log.debug("The Passed In Order id : " + profileId);
 
 		List<Order> orders = orderRepository.findOrderByStateAndProfileId(CommerceConstants.SUBMITTED, profileId);
+
+		if (orders.isEmpty()) {
+			
+			Query query = new Query();
+			query.addCriteria(Criteria.where("profile_id").is(profileId));
+			List<Order> orderList = mongoOperation.find(query, Order.class);
+
+			for (Order order : orderList) {
+				String state = order.getState();
+				if (!StringUtils.isEmpty(state) && CommerceConstants.SUBMITTED.equalsIgnoreCase(state)) {
+					orders.add(order);
+				}
+			}
+		}
+		
 		if (null == orders || orders.isEmpty())
 			throw new NoRecordsFoundException("No Order Found to Update.");
 		
