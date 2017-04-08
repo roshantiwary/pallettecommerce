@@ -14,10 +14,10 @@ import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
 import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
+import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.domain.Account;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.repository.RoleRepository;
-import com.pallette.response.AddressResponse;
 import com.pallette.response.Response;
 
 @Service
@@ -86,6 +86,20 @@ public class UserService {
 		accountService.logout(user);
 	}
 	
+	/**
+	 * This method Get the address 
+	 * in user profile
+	 * 
+	 * @param addressKey
+	 * @param profileId 
+	 * @return
+	 * @throws Exception 
+	 */
+	public ProfileAddressResponse getAddress(String addressKey, String profileId) throws Exception {
+		ProfileAddressResponse genericResponse = null;
+		genericResponse = accountService.getAddress(addressKey,profileId);
+		return genericResponse;
+	}
 	
 	/**
 	 * This method adds the new address in user profile
@@ -95,8 +109,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse addNewAddress(AddressBean address, String profileId) throws Exception {
-		AddressResponse genericResponse = null;
+	public ProfileAddressResponse addNewAddress(AddressBean address, String profileId) throws Exception {
+		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.addNewAddress(address,profileId);
 		return genericResponse;
 	}
@@ -111,8 +125,8 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public AddressResponse editAddress(String addressKey,AddressBean address, String profileId) throws Exception {
-		AddressResponse genericResponse = null;
+	public ProfileAddressResponse editAddress(String addressKey,AddressBean address, String profileId) throws Exception {
+		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.editAddress(addressKey,address,profileId);
 		return genericResponse;
 	}

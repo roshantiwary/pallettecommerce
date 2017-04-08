@@ -70,6 +70,8 @@ public class RestURLConstants {
 	
 	public static final String PROFILE_EDIT_ADDRESS_URL = "/account/editAddress/{id}";
 	
+	public static final String PROFILE_GET_ADDRESS_URL = "/account/address/{id}";
+	
 	public static final String POFILE_REMOVE_ADDRESS_URL = "/account/removeAddress/{id}";
 	
 	public static final String EDIT_PROFILE_URL = "/account/edit";

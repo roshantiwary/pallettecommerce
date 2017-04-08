@@ -27,6 +27,7 @@ import com.pallette.beans.AddressBean;
 import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
+import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Account;
@@ -159,7 +160,7 @@ public class UserProfileController {
 	@RequestMapping(value = RestURLConstants.PROFILE_ADD_ADDRESS_URL, method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody AddressBean address, OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Adding New Address in Profile : " + address.toString());
-		AddressResponse genericResponse = new AddressResponse();
+		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String profileId = null;
 		profileId = getProfileId(authentication);
@@ -189,12 +190,42 @@ public class UserProfileController {
 	public ResponseEntity<AddressResponse> editAddress(@PathVariable("id") String addressKey,@Valid @RequestBody AddressBean address, OAuth2Authentication oAuth2Authentication) 
 			throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
-		AddressResponse genericResponse = new AddressResponse();
+		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String profileId = null;
 		profileId = getProfileId(authentication);
 		try {
 			genericResponse = accountService.editAddress(addressKey,address,profileId);
+		} catch (Exception e) {
+			genericResponse.setMessage(e.getMessage());
+			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity(genericResponse , new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * This method updates the address details in
+	 * user profile
+	 * 
+	 * @param addressKey
+	 * @param address
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = RestURLConstants.PROFILE_GET_ADDRESS_URL, method = RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AddressResponse> getAddress(@PathVariable("id") String addressKey, OAuth2Authentication oAuth2Authentication) 
+			throws IllegalAccessException, InvocationTargetException {
+		logger.debug("Editing Existing Address for Address Key : " + addressKey);
+		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
+		try {
+			genericResponse = accountService.getAddress(addressKey,profileId);
 		} catch (Exception e) {
 			genericResponse.setMessage(e.getMessage());
 			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
