@@ -336,7 +336,7 @@
 ## Profile Services:	
 
 ### Add new Address In Profile.
-	Service URL : "/account/addresses"
+	Service URL : "/account/addresses/add"
 	Method : POST
 	Parameters :
 	{

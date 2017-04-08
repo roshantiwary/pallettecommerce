@@ -66,7 +66,7 @@ public class RestURLConstants {
 
 	public static final String GET_SHIPMENT_ADDRESS_URL = "/shipping/address/shipmentAddress/{orderId}";
 	
-	public static final String PROFILE_ADD_ADDRESS_URL = "/account/addresses";
+	public static final String PROFILE_ADD_ADDRESS_URL = "/account/addresses/add";
 	
 	public static final String PROFILE_EDIT_ADDRESS_URL = "/account/editAddress/{id}";
 	

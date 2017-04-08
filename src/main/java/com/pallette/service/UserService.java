@@ -13,6 +13,7 @@ import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
 import com.pallette.beans.PasswordBean;
+import com.pallette.beans.ProfileAddressBean;
 import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.domain.Account;
@@ -109,7 +110,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse addNewAddress(AddressBean address, String profileId) throws Exception {
+	public ProfileAddressResponse addNewAddress(ProfileAddressBean address, String profileId) throws Exception {
 		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.addNewAddress(address,profileId);
 		return genericResponse;
@@ -125,7 +126,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse editAddress(String addressKey,AddressBean address, String profileId) throws Exception {
+	public ProfileAddressResponse editAddress(String addressKey,ProfileAddressBean address, String profileId) throws Exception {
 		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.editAddress(addressKey,address,profileId);
 		return genericResponse;

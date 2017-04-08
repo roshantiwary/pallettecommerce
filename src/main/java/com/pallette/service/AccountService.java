@@ -25,6 +25,7 @@ import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
 import com.pallette.beans.PasswordBean;
+import com.pallette.beans.ProfileAddressBean;
 import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
@@ -310,35 +311,37 @@ public class AccountService {
 	/**
 	 * This method add new address in user profile
 	 * 
-	 * @param addressBean
+	 * @param profileAddressBean
 	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse addNewAddress(AddressBean addressBean, String profileId) throws Exception {
+	public ProfileAddressResponse addNewAddress(ProfileAddressBean profileAddressBean, String profileId) throws Exception {
 		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address addressItem = new Address();
-		BeanUtils.copyProperties(addressItem, addressBean);
+		BeanUtils.copyProperties(addressItem, profileAddressBean);
 		Account account = accounts.findOne(profileId);
 		Address address = addressRepository.save(addressItem);
 		if(null != address && null != account){
-			logger.debug("AccountService.addNewAddress: New Address Added To The Profile :   with address ID : "+address.getId());
+			logger.debug("AccountService.addNewAddress: New Address Added To The Profile :   with address ID : "+ address.getId());
 			account.getAddresses().add(address);
 			account = accounts.save(account);
+			
+			BeanUtils.copyProperties(genericResponse , addressItem);
 			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Added Successfulley");
 			genericResponse.setId(address.getId().toString());
-			genericResponse.setFirstName(address.getFirstName());
+			/*genericResponse.setFirstName(address.getFirstName());
 			genericResponse.setLastName(address.getLastName());
 			genericResponse.setAddress1(address.getAddress1());
 			genericResponse.setAddress2(address.getAddress2());
 			genericResponse.setCity(address.getCity());
 			genericResponse.setState(address.getState());
 			genericResponse.setCountry(address.getCountry());
-			genericResponse.setPhoneNumber(address.getPhoneNumber());
+			genericResponse.setPhoneNumber(address.getPhoneNumber());*/
 		}else{
 			logger.error("AccountService.addNewAddress: There is Some Error While Adding New Address To The Profile ");
 			throw new Exception("There is Some Error While Adding New Address To The Profile");
@@ -383,35 +386,28 @@ public class AccountService {
 	 * This method edits the address details in user profile
 	 * 
 	 * @param addressKey
-	 * @param addressBean
+	 * @param address
 	 * @param profileId 
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse editAddress(String addressKey, AddressBean addressBean, String profileId) throws Exception {
+	public ProfileAddressResponse editAddress(String addressKey, ProfileAddressBean address, String profileId) throws Exception {
 		logger.debug("AccountService.editAddress: Editing Address");
 		
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address addressItem = addressRepository.findOne(addressKey);
-		BeanUtils.copyProperties(addressItem, addressBean);
+		BeanUtils.copyProperties(addressItem, address);
 		Account account = accounts.findOne(profileId);
-		
-		if(null != addressItem && null != account){
-			logger.debug("AccountService.editAddress: Edited Address with address : "+addressItem.getId());
+
+		if (null != addressItem && null != account) {
+			logger.debug("AccountService.editAddress: Edited Address with address : " + addressItem.getId());
 			addressItem = addressRepository.save(addressItem);
 			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Updated Successfulley");
 			genericResponse.setId(addressItem.getId().toString());
-			genericResponse.setFirstName(addressItem.getFirstName());
-			genericResponse.setLastName(addressItem.getLastName());
-			genericResponse.setAddress1(addressItem.getAddress1());
-			genericResponse.setAddress2(addressItem.getAddress2());
-			genericResponse.setCity(addressItem.getCity());
-			genericResponse.setState(addressItem.getState());
-			genericResponse.setCountry(addressItem.getCountry());
-			genericResponse.setPhoneNumber(addressItem.getPhoneNumber());
-		}else{
+			BeanUtils.copyProperties(genericResponse, addressItem);
+		} else {
 			logger.error("AccountService.editAddress: There is Some Error While Editing Address");
 			throw new Exception("There is Some Error While Updating Address");
 		}
@@ -487,29 +483,40 @@ public class AccountService {
 		return genericResponse;
 	}
 
+	/**
+	 * 
+	 * @param profileId
+	 * @return
+	 */
 	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
 		ProfileAddressResponseBean addressResponse = new ProfileAddressResponseBean();
-		List<Address> addressList = addressRepository.findAddressByOwnerId(profileId);
+
+		Account account = accounts.findOne(profileId);
+		if (null == account) {
+			
+			addressResponse.setMessage("There is Some Issue With Address");
+			addressResponse.setStatus(Boolean.FALSE);
+			addressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return addressResponse;
+		}
+
+		List<Address> addressList = account.getAddresses();
 		List<ProfileAddressResponse> addressResponseList = new ArrayList<ProfileAddressResponse>();
-		if(null != addressList && !addressList.isEmpty()){
-			for(Address address : addressList){
+		if (null != addressList && !addressList.isEmpty()) {
+			for (Address address : addressList) {
 				ProfileAddressResponse response = new ProfileAddressResponse();
 				response.setId(address.getId().toString());
-				response.setFirstName(address.getFirstName());
-				response.setLastName(address.getLastName());
-				response.setAddress1(address.getAddress1());
-				response.setAddress2(address.getAddress2());
-				response.setCity(address.getCity());
-				response.setState(address.getState());
-				response.setCountry(address.getCountry());
-				response.setPhoneNumber(address.getPhoneNumber());
+				try {
+					BeanUtils.copyProperties(response, address);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+				}
 				addressResponseList.add(response);
 			}
 			addressResponse.setAdressResponse(addressResponseList);
 			addressResponse.setMessage("All Profile Address Retrived Sucessfully");
 			addressResponse.setStatus(Boolean.TRUE);
 			addressResponse.setStatusCode(HttpStatus.OK.value());
-		}else{
+		} else {
 			addressResponse.setMessage("There is Some Issue With Address");
 			addressResponse.setStatus(Boolean.FALSE);
 			addressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
