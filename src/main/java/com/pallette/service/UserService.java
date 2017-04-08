@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
-import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponse;
+import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.domain.Account;
 import com.pallette.domain.AuthenticationRequest;
 import com.pallette.repository.RoleRepository;
@@ -159,8 +159,8 @@ public class UserService {
 		return genericResponse;
 	}
 
-	public AddressResponseBean getAllProfileAddress(String profileId) {
-		AddressResponseBean genericResponse = null;
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
+		ProfileAddressResponseBean genericResponse = null;
 		genericResponse = accountService.getAllProfileAddress(profileId);
 		return genericResponse;
 	}

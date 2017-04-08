@@ -24,9 +24,9 @@ import org.springframework.util.StringUtils;
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
 import com.pallette.beans.AddressBean;
-import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponse;
+import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
@@ -35,7 +35,6 @@ import com.pallette.exception.AuthenticationException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.AddressRepository;
 import com.pallette.repository.RoleRepository;
-import com.pallette.response.AddressResponse;
 import com.pallette.response.Response;
 
 @Service
@@ -488,13 +487,14 @@ public class AccountService {
 		return genericResponse;
 	}
 
-	public AddressResponseBean getAllProfileAddress(String profileId) {
-		AddressResponseBean addressResponse = new AddressResponseBean();
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
+		ProfileAddressResponseBean addressResponse = new ProfileAddressResponseBean();
 		List<Address> addressList = addressRepository.findAddressByOwnerId(profileId);
-		List<AddressResponse> addressResponseList = new ArrayList<AddressResponse>();
+		List<ProfileAddressResponse> addressResponseList = new ArrayList<ProfileAddressResponse>();
 		if(null != addressList && !addressList.isEmpty()){
 			for(Address address : addressList){
-				AddressResponse response = new AddressResponse();
+				ProfileAddressResponse response = new ProfileAddressResponse();
+				response.setId(address.getId().toString());
 				response.setFirstName(address.getFirstName());
 				response.setLastName(address.getLastName());
 				response.setAddress1(address.getAddress1());
@@ -502,7 +502,6 @@ public class AccountService {
 				response.setCity(address.getCity());
 				response.setState(address.getState());
 				response.setCountry(address.getCountry());
-				response.setEmail(address.getEmail());
 				response.setPhoneNumber(address.getPhoneNumber());
 				addressResponseList.add(response);
 			}

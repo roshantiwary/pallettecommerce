@@ -28,6 +28,7 @@ import com.pallette.beans.AddressResponseBean;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponse;
+import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Account;
@@ -382,13 +383,13 @@ public class UserProfileController {
 	 * @throws NoRecordsFoundException 
 	 */
 	@RequestMapping(value = RestURLConstants.PROFILE_ADDRESSES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponseBean> getAllProfileAddress(OAuth2Authentication oAuth2Authentication){
+	public ResponseEntity<ProfileAddressResponseBean> getAllProfileAddress(OAuth2Authentication oAuth2Authentication){
 		
 		logger.debug("Inside UserProfileController.getOrderDetail()");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String profileId = null;
 		profileId = getProfileId(authentication);
-		AddressResponseBean response = new AddressResponseBean();
+		ProfileAddressResponseBean response = new ProfileAddressResponseBean();
 		if (StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("No Profile Id was Passed");
 		
