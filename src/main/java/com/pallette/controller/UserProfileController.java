@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
-import com.pallette.beans.AddressBean;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressBean;

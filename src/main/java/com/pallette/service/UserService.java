@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
-import com.pallette.beans.AddressBean;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressBean;
 import com.pallette.beans.ProfileAddressResponse;

@@ -317,11 +317,13 @@ public class AccountService {
 	 * @throws Exception 
 	 */
 	public ProfileAddressResponse addNewAddress(ProfileAddressBean profileAddressBean, String profileId) throws Exception {
-		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		
+		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address addressItem = new Address();
+		
 		BeanUtils.copyProperties(addressItem, profileAddressBean);
+		addressItem.setOwnerId(profileId);
 		Account account = accounts.findOne(profileId);
 		Address address = addressRepository.save(addressItem);
 		if(null != address && null != account){
@@ -334,14 +336,6 @@ public class AccountService {
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Added Successfulley");
 			genericResponse.setId(address.getId().toString());
-			/*genericResponse.setFirstName(address.getFirstName());
-			genericResponse.setLastName(address.getLastName());
-			genericResponse.setAddress1(address.getAddress1());
-			genericResponse.setAddress2(address.getAddress2());
-			genericResponse.setCity(address.getCity());
-			genericResponse.setState(address.getState());
-			genericResponse.setCountry(address.getCountry());
-			genericResponse.setPhoneNumber(address.getPhoneNumber());*/
 		}else{
 			logger.error("AccountService.addNewAddress: There is Some Error While Adding New Address To The Profile ");
 			throw new Exception("There is Some Error While Adding New Address To The Profile");
@@ -397,6 +391,7 @@ public class AccountService {
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address addressItem = addressRepository.findOne(addressKey);
 		BeanUtils.copyProperties(addressItem, address);
+		addressItem.setOwnerId(profileId);
 		Account account = accounts.findOne(profileId);
 
 		if (null != addressItem && null != account) {
