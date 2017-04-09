@@ -51,5 +51,9 @@ public class CommerceConstants {
 	public static final String ADDED_ADDRESS = "Added_Address";
 	
 	public static final String EDITED_ADDRESS = "Edited_Address";
+	
+	public static final String ADDRESS_ID = "addressId";
+	
+	public static final String ADDRESS = "address";
 
 }

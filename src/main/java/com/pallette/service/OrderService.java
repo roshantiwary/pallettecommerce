@@ -25,7 +25,6 @@ import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
-import com.pallette.domain.Address;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ImagesDocument;
@@ -467,9 +466,6 @@ public class OrderService {
 		ShippingGroup shipGrp = new ShippingGroup();
 		shipGrp.setShippingGroupType(CommerceConstants.HARD_GOOD_SHIPPING_GROUP);
 		shipGrp.setState(CommerceConstants.INITIAL);
-		
-		Address address = new Address();
-		shipGrp.setAddress(address);
 		
 		order.addShippingGroup(shipGrp);
 	}
