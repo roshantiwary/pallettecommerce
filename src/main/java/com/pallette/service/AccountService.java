@@ -355,20 +355,25 @@ public class AccountService {
 		logger.debug("AccountService.getAddress: Get Address" + addressKey + "from profile " + profileId);
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address address = addressRepository.findOne(addressKey);
-		if(null != address && address.getOwnerId().equalsIgnoreCase(profileId)) {
-			logger.debug("AccountService.getAddress: Address found in Profile :   with address ID : "+address.getId());
-			genericResponse.setStatus(Boolean.TRUE);
-			genericResponse.setStatusCode(HttpStatus.OK.value());
-			genericResponse.setMessage("Address Retreived Successfulley");
-			genericResponse.setId(address.getId().toString());
-			genericResponse.setFirstName(address.getFirstName());
-			genericResponse.setLastName(address.getLastName());
-			genericResponse.setAddress1(address.getAddress1());
-			genericResponse.setAddress2(address.getAddress2());
-			genericResponse.setCity(address.getCity());
-			genericResponse.setState(address.getState());
-			genericResponse.setCountry(address.getCountry());
-			genericResponse.setPhoneNumber(address.getPhoneNumber());
+		if (null != address) {
+
+			if (null != address.getOwnerId() && address.getOwnerId().equalsIgnoreCase(profileId)) {
+				
+				logger.debug("AccountService.getAddress: Address found in Profile :   with address ID : " + address.getId());
+				
+				genericResponse.setStatus(Boolean.TRUE);
+				genericResponse.setStatusCode(HttpStatus.OK.value());
+				genericResponse.setMessage("Address Retreived Successfulley");
+				genericResponse.setId(address.getId().toString());
+				genericResponse.setFirstName(address.getFirstName());
+				genericResponse.setLastName(address.getLastName());
+				genericResponse.setAddress1(address.getAddress1());
+				genericResponse.setAddress2(address.getAddress2());
+				genericResponse.setCity(address.getCity());
+				genericResponse.setState(address.getState());
+				genericResponse.setCountry(address.getCountry());
+				genericResponse.setPhoneNumber(address.getPhoneNumber());
+			}
 		} else{
 			logger.error("AccountService.getAddress: Address not found in Profile");
 			throw new Exception("Address not found in Profile");
