@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -23,9 +25,13 @@ import com.pallette.beans.RemoveItemBean;
 import com.pallette.beans.UpdateCartBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.exception.NoRecordsFoundException;
+import com.pallette.repository.SequenceDao;
 import com.pallette.response.CartResponse;
 import com.pallette.service.OrderService;
+import com.pallette.web.security.ApplicationUser;
+import com.pallette.web.security.CustomCredentialsService.CustomDetails;
 
 @RestController
 @RequestMapping("/rest/api/v1")
@@ -33,6 +39,9 @@ public class CartController {
 
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private SequenceDao sequenceDao;
 	
 	private static final Logger log = LoggerFactory.getLogger(CartController.class);
 
@@ -50,6 +59,9 @@ public class CartController {
 		
 		log.debug("Inside CartController.handleAddItemToCart()");
 		CartResponse cartResponse = new CartResponse();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String profileId = null;
+		profileId = getProfileId(authentication);
 		
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
@@ -61,9 +73,8 @@ public class CartController {
 		String orderId = addToCartRequest.getOrderId();
 		if (StringUtils.isEmpty(orderId)) {
 			
-			String profileId = addToCartRequest.getProfileId();
 			if(StringUtils.isEmpty(profileId))
-				throw new IllegalArgumentException("No Profile Id was Passed");
+				profileId = sequenceDao.getNextProfileSequenceId(SequenceConstants.SEQ_KEY);
 				
 			log.debug("The Passed In Product Id :" + addToCartRequest.getProductId() + "Quantity :" + addToCartRequest.getQuantity());
 			//Creating a new Order and adding the item to the Order.
@@ -210,5 +221,17 @@ public class CartController {
 		}
 		
 		}
+	
+	private String getProfileId(Authentication authentication) {
+		String profileId = null;
+		if(!(authentication.getPrincipal() instanceof CustomDetails)) {
+			ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
+			profileId = user.getProfileId();	
+		} else {
+			CustomDetails details = (CustomDetails) authentication.getPrincipal();
+			profileId = details.getProfileId();	
+		}
+		return profileId;
+	}
 
 }

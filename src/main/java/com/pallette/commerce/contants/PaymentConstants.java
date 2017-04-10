@@ -125,7 +125,7 @@ public class PaymentConstants {
 
 	public static final String FAILED = "failed";
 
-	public static final String CONFIRMATION = "confirmation";
+	public static final String CONFIRMATION = "http://localhost:4200/checkout/confirmation";
 
 	public static final String FAILURE = "failure";
 }

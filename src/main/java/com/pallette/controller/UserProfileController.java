@@ -248,7 +248,7 @@ public class UserProfileController {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = RestURLConstants.REMOVE_ADDRESS_URL, method = RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = RestURLConstants.POFILE_REMOVE_ADDRESS_URL, method = RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		Response genericResponse = new Response();
