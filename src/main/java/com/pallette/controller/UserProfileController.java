@@ -38,6 +38,7 @@ import com.pallette.response.AddressResponse;
 import com.pallette.response.CartResponse;
 import com.pallette.response.ExceptionResponse;
 import com.pallette.response.GenericResponse;
+import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
@@ -333,21 +334,24 @@ public class UserProfileController {
 	 * @param password
 	 * @return
 	 * @throws NoRecordsFoundException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 */
 	@RequestMapping(value = RestURLConstants.ORDER_DETAIL_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> getOrderDetail(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws NoRecordsFoundException{
+	public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable(CommerceConstants.ORDER_ID) String orderId) 
+			throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException{
 		
 		logger.debug("Inside UserProfileController.getOrderDetail()");
-		CartResponse cartResponse = new CartResponse();
+		OrderDetailResponse orderResponse = new OrderDetailResponse();
 		if (StringUtils.isEmpty(orderId))
 			throw new IllegalArgumentException("No Order Id was Passed");
 		
 		logger.debug("Order Id from Request Body ", orderId);
-		cartResponse = orderService.getCartDetails(orderId);
-		cartResponse.setStatus(Boolean.TRUE);
-		cartResponse.setMessage("Order Detail Retrived Successfully");
-		cartResponse.setStatusCode(HttpStatus.OK.value());
-		return new ResponseEntity<>(cartResponse, new HttpHeaders(), HttpStatus.OK);
+		orderResponse = orderService.getOrderDetails(orderId);
+		orderResponse.setStatus(Boolean.TRUE);
+		orderResponse.setMessage("Order Detail Retrived Successfully");
+		orderResponse.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<>(orderResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**

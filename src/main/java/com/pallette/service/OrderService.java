@@ -3,10 +3,12 @@
  */
 package com.pallette.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
+import com.pallette.domain.Address;
 import com.pallette.domain.BrandDocument;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ImagesDocument;
@@ -40,8 +43,11 @@ import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
 import com.pallette.repository.ProductRepository;
 import com.pallette.repository.SequenceDao;
+import com.pallette.response.AddressResponse;
 import com.pallette.response.CartItemResponse;
 import com.pallette.response.CartResponse;
+import com.pallette.response.OrderDetailResponse;
+import com.pallette.response.OrderItemResponse;
 
 /**
  * <p>
@@ -384,6 +390,39 @@ public class OrderService {
 		
 		return constructResponse(order);
 	}
+	
+	/**
+	 * 
+	 * @param orderId
+	 * @return
+	 * @throws NoRecordsFoundException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	public OrderDetailResponse getOrderDetails(String orderId) 
+			throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
+		log.debug("Inside OrderService.getCartDetails()");
+		log.debug("The Passed In Order id : " + orderId);
+
+		Order order = orderRepository.findOne(orderId);
+		if (null == order)
+			throw new NoRecordsFoundException("No Order Found to Update.");
+		
+		return constructOrderDetailResponse(order);
+	}
+
+	private OrderDetailResponse constructOrderDetailResponse(Order order) throws IllegalAccessException, InvocationTargetException {
+		OrderDetailResponse response = new OrderDetailResponse();
+		response.setOrderId(order.getId());
+		OrderPriceInfo orderPriceInfo = order.getOrderPriceInfo();
+		response.setOrderSubTotal(orderPriceInfo.getAmount());
+		
+		List<OrderItemResponse> responseItemList = populateOrderItemDetails(order,response);
+		response.setOrderItems(responseItemList);
+		response.setSubmittedDate(order.getSubmittedDate());
+		log.debug("Response Item sent is :", response.toString());
+		return response;
+	}
 
 	/**
 	 * Method that is responsible for constructing response for cart operations.
@@ -447,6 +486,66 @@ public class OrderService {
 				responseItemList.add(cartItemResponse);
 			}
 		}
+		
+		
+		return responseItemList;
+	}
+	
+	/**
+	 * @param order
+	 * @param response 
+	 * @param responseItemList
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	public List<OrderItemResponse> populateOrderItemDetails(Order order, OrderDetailResponse response) 
+			throws IllegalAccessException, InvocationTargetException {
+		
+		List<OrderItemResponse> responseItemList = new ArrayList<OrderItemResponse>();
+		AddressResponse addressResponse = new AddressResponse();
+		List<CommerceItem> items = order.getCommerceItems();
+		if (null != items && !items.isEmpty()) {
+			for (CommerceItem itm : items) {
+				
+				OrderItemResponse orderItemResponse = new OrderItemResponse();
+				orderItemResponse.setQuantity(itm.getQuantity());
+				orderItemResponse.setProductId(itm.getProductId());
+				orderItemResponse.setCatalogRefId(itm.getCatalogRefId());
+				orderItemResponse.setItemAmount(itm.getItemPriceInfo().getListPrice());
+				ProductDocument productItem = productRepository.findOne(itm.getProductId());
+				Query query = new Query();
+				query.addCriteria(Criteria.where("_id").is(itm.getCatalogRefId()));
+				SkuDocument skuItem = mongoOperation.findOne(query, SkuDocument.class);
+				if (null != productItem) {
+					BrandDocument brandDocument = productItem.getProductBrand();
+					if (null != brandDocument) {
+						orderItemResponse.setProductBrand(brandDocument.getStoreName());
+					}
+					orderItemResponse.setDescription(productItem.getProductDescription());
+					orderItemResponse.setProductTitle(productItem.getProductTitle());
+					orderItemResponse.setProductSlug(productItem.getProductSlug());
+
+					ImagesDocument imageDocument = productItem.getImagesDocument();
+					orderItemResponse.setProductImage(imageDocument.getThumbnailImageUrl());
+
+					ItemPriceInfo itemPriceInfo = itm.getItemPriceInfo();
+					if (null != itemPriceInfo) {
+						orderItemResponse.setAmount(itemPriceInfo.getAmount());
+					}
+				}
+				responseItemList.add(orderItemResponse);
+			}
+		}
+		
+		List<ShippingGroup> shippingGroups = order.getShippingGroups();
+		if(null != shippingGroups && !shippingGroups.isEmpty()){
+			for(ShippingGroup shippingGroup : shippingGroups){
+				Address shippingAddress = shippingGroup.getAddress();
+				BeanUtils.copyProperties(addressResponse, shippingAddress);
+				break;
+			}
+		}
+		response.setAddressResponse(addressResponse);
 		return responseItemList;
 	}
 	
