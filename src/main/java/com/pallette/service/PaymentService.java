@@ -210,7 +210,7 @@ public class PaymentService {
 					}
 				}
 				//Save the Order Document.
-				mongoOperation.save(orderItem, PaymentConstants.ORDER_DOCUMENT);
+				orderRepository.save(orderItem);
 			}
 		}
 	}

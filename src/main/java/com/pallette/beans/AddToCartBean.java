@@ -24,8 +24,6 @@ public class AddToCartBean {
 	@Min(1)
 	@Max(100)
 	private long quantity;
-
-	private String profileId;
 	
 	@NotBlank(message = "Sku Id is mandatory.")
 	private String skuId;
@@ -73,21 +71,6 @@ public class AddToCartBean {
 	 */
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
-	}
-
-	/**
-	 * @return the profileId
-	 */
-	public String getProfileId() {
-		return profileId;
-	}
-
-	/**
-	 * @param profileId
-	 *            the profileId to set
-	 */
-	public void setProfileId(String profileId) {
-		this.profileId = profileId;
 	}
 
 	/**

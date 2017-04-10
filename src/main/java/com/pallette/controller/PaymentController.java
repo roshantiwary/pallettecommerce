@@ -124,6 +124,6 @@ public class PaymentController {
 		paymentService.processPaymentResponse(parameterNames, model);
 		
 		log.debug("Payment Successfull");
-		return PaymentConstants.CONFIRMATION;
+		return "redirect:" + "http://localhost:4200/checkout/" + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
 	}
 }
