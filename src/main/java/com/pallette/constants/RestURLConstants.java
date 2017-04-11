@@ -69,6 +69,9 @@ public class RestURLConstants {
 	public static final String SET_SHIPMENT_ADDRESS_URL = "/shipping/address/set/{addressId}/to/{orderId}";
 	//Shipping Services URL Starts.
 	
+	//Order Confirmation.
+	public static final String GET_ORDER_CONFIRMATION_DETAILS_URL = "/orderConfirmation/order/{orderId}";
+	
 	public static final String PROFILE_ADD_ADDRESS_URL = "/account/addresses/add";
 	
 	public static final String PROFILE_EDIT_ADDRESS_URL = "/account/editAddress/{id}";

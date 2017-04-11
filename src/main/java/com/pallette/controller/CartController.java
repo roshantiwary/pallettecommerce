@@ -223,13 +223,19 @@ public class CartController {
 		}
 	
 	private String getProfileId(Authentication authentication) {
+		
 		String profileId = null;
-		if(!(authentication.getPrincipal() instanceof CustomDetails)) {
-			ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-			profileId = user.getProfileId();	
+		if (!(authentication.getPrincipal() instanceof CustomDetails)) {
+			Object obj = authentication.getPrincipal();
+			if (obj instanceof ApplicationUser) {
+				ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
+				profileId = user.getProfileId();
+			} else {
+
+			}
 		} else {
 			CustomDetails details = (CustomDetails) authentication.getPrincipal();
-			profileId = details.getProfileId();	
+			profileId = details.getProfileId();
 		}
 		return profileId;
 	}

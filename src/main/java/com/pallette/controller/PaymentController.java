@@ -1,6 +1,7 @@
 package com.pallette.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
+import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Order;
 import com.pallette.payment.payu.PaymentIntegrator;
 import com.pallette.repository.OrderRepository;
+import com.pallette.response.OrderConfirmationDetailsResponse;
 import com.pallette.service.PaymentService;
 
 @Controller
@@ -121,9 +127,36 @@ public class PaymentController {
 			parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
 		//Process the payment response and then submit the Order.
-		paymentService.processPaymentResponse(parameterNames, model);
+		paymentService.processPaymentResponse(parameterNames);
 		
 		log.debug("Payment Successfull");
 		return "redirect:" + "http://localhost:4200/checkout/" + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
 	}
+	
+	
+	@RequestMapping(value = RestURLConstants.GET_ORDER_CONFIRMATION_DETAILS_URL, method = RequestMethod.GET , produces = "application/json")
+	public ResponseEntity<OrderConfirmationDetailsResponse> handleGetOrderConfirmationDetails(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalAccessException, InvocationTargetException {
+
+		log.debug("Inside PaymentController.handleGetOrderConfirmationDetails()");
+
+		log.debug("Order Id from GET Request ", orderId);
+		//Process the payment response and then submit the Order.
+		OrderConfirmationDetailsResponse orderConfirmationDetailsResponse = paymentService.getOrderConfirmationDetails(orderId);
+				
+		
+		if (null != orderConfirmationDetailsResponse) {
+			
+			log.debug("Address Bean to be returned is : ", orderConfirmationDetailsResponse);
+			orderConfirmationDetailsResponse.setMessage("Order Confirmation Details Successfully Retrieved.");
+			orderConfirmationDetailsResponse.setStatus(Boolean.TRUE);
+			orderConfirmationDetailsResponse.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<>(orderConfirmationDetailsResponse, new HttpHeaders(), HttpStatus.OK);
+		} else {
+			orderConfirmationDetailsResponse.setMessage("There was a problem while getting Order Conf Details.");
+			orderConfirmationDetailsResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			orderConfirmationDetailsResponse.setStatus(Boolean.FALSE);
+			return new ResponseEntity<>(orderConfirmationDetailsResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

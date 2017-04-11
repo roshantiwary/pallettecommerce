@@ -178,29 +178,42 @@ public class ShippingServices {
 		if (StringUtils.isEmpty(orderId))
 			return null;
 
-		AddressResponse addressResponse = new AddressResponse();
 		Query query = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
 		log.debug("Query to be executed is :", query);
 		Order orderItem = mongoOperation.findOne(query, Order.class);
 
 		if (null != orderItem) {
 
-			List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
-			if (null != shippingGroups && !shippingGroups.isEmpty()) {
-				for (ShippingGroup shipGrp : shippingGroups) {
-					if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
-						Address addressItem = shipGrp.getAddress();
-	
-						if (null != addressItem) {
-							// Bean Utils copyProperties method is responsible for copying properties across two beans.
-							BeanUtils.copyProperties(addressResponse, addressItem);
-							return addressResponse;
-						}
+			return getOrderShipmentAddress(orderItem);
+		}
+		return null;
+	}
+
+
+	/**
+	 * @param addressResponse
+	 * @param orderItem
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public AddressResponse getOrderShipmentAddress(Order orderItem) throws IllegalAccessException, InvocationTargetException {
+		
+		AddressResponse addressResponse = new AddressResponse();
+		List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
+		if (null != shippingGroups && !shippingGroups.isEmpty()) {
+			for (ShippingGroup shipGrp : shippingGroups) {
+				if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+					Address addressItem = shipGrp.getAddress();
+
+					if (null != addressItem) {
+						// Bean Utils copyProperties method is responsible for copying properties across two beans.
+						BeanUtils.copyProperties(addressResponse, addressItem);
+						return addressResponse;
 					}
 				}
 			}
 		}
-		return null;
+		return addressResponse;
 	}
 
 

@@ -3,6 +3,7 @@
  */
 package com.pallette.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ import com.pallette.domain.Order;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.PaymentStatus;
 import com.pallette.repository.OrderRepository;
+import com.pallette.response.AddressResponse;
+import com.pallette.response.CartItemResponse;
+import com.pallette.response.OrderConfirmationDetailsResponse;
 
 /**
  * <p>
@@ -47,6 +51,10 @@ public class PaymentService {
 	@Autowired
 	private OrderService orderService;
 
+	@Autowired
+	private ShippingServices shippingServices;
+
+	
 	/**
 	 * Method that processes the payment response and then submits the Order.
 	 * It sets the Payment Grp , Payment Status attributes from the Payment Response.
@@ -54,36 +62,20 @@ public class PaymentService {
 	 * @param parameterNames
 	 * @param model 
 	 */
-	public void processPaymentResponse(Map<String, String> returnedValueMap, Model model) {
+	public void processPaymentResponse(Map<String, String> returnedValueMap) {
 		
 		log.debug("Inside PaymentService.processPaymentResponse()");
 
 		if (null == returnedValueMap || returnedValueMap.isEmpty())
 			return;
 		
-		//Populate and Return the Model Object.
-		
-		//Populate the shipment details.
-		model.addAttribute(PaymentConstants.FIRSTNAME, returnedValueMap.get(PaymentConstants.FIRSTNAME));
-		model.addAttribute(PaymentConstants.LASTNAME, returnedValueMap.get(PaymentConstants.LASTNAME));
-		model.addAttribute(PaymentConstants.EMAIL, returnedValueMap.get(PaymentConstants.EMAIL));
-		model.addAttribute(PaymentConstants.PHONE, returnedValueMap.get(PaymentConstants.PHONE));
-		model.addAttribute(PaymentConstants.ADDRESS1, returnedValueMap.get(PaymentConstants.ADDRESS1));
-		model.addAttribute(PaymentConstants.ADDRESS2, returnedValueMap.get(PaymentConstants.ADDRESS2));
-		model.addAttribute(PaymentConstants.CITY, returnedValueMap.get(PaymentConstants.CITY));
-		model.addAttribute(PaymentConstants.STATE, returnedValueMap.get(PaymentConstants.STATE));
-		model.addAttribute(PaymentConstants.COUNTRY, returnedValueMap.get(PaymentConstants.COUNTRY));
-		model.addAttribute(PaymentConstants.ZIPCODE, returnedValueMap.get(PaymentConstants.ZIPCODE));
-		
 		String submittedOrderId = returnedValueMap.get(PaymentConstants.UDF1);
 		if (!StringUtils.isEmpty(submittedOrderId)) {
-			 model.addAttribute(CommerceConstants.ORDER_ID, returnedValueMap.get(PaymentConstants.UDF1));
 			 
 			Query query = new Query();
 			query.addCriteria(Criteria.where(CommerceConstants._ID).is(submittedOrderId));
 			Order orderItem = mongoOperation.findOne(query, Order.class);
 			if (null != orderItem) {
-				model.addAttribute(PaymentConstants.ITEM_LIST, orderService.populateItemDetails(orderItem));
 				
 				persistOrderDetails(orderItem , returnedValueMap);
 				persistPaymentDetails(orderItem , returnedValueMap);
@@ -91,8 +83,6 @@ public class PaymentService {
 			}
 		}
 	    
-		model.addAttribute(PaymentConstants.AMOUNT, returnedValueMap.get(PaymentConstants.AMOUNT));
-		model.addAttribute(PaymentConstants.MODE, returnedValueMap.get(PaymentConstants.MODE));
 	}
 
 	/**
@@ -213,6 +203,42 @@ public class PaymentService {
 				orderRepository.save(orderItem);
 			}
 		}
+	}
+
+	/**
+	 * Method that is responsible for getting details shown at Order
+	 * Confirmation Page.
+	 * 
+	 * @param orderId
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	public OrderConfirmationDetailsResponse getOrderConfirmationDetails(String submittedOrderId) throws IllegalAccessException, InvocationTargetException {
+
+		log.debug("Inside PaymentService.getOrderConfirmationDetails()");
+		OrderConfirmationDetailsResponse response = new OrderConfirmationDetailsResponse();
+
+		Query query = new Query();
+		query.addCriteria(Criteria.where(CommerceConstants._ID).is(submittedOrderId));
+		Order orderItem = mongoOperation.findOne(query, Order.class);
+		if (null == orderItem)
+			return null;
+
+		response.setOrderId(orderItem.getId());
+		response.setProfileId(orderItem.getProfileId());
+		response.setOrderState(orderItem.getState());
+		response.setSubmittedDate(orderItem.getSubmittedDate());
+		response.setOrderSubTotal(orderItem.getOrderPriceInfo().getTotal());
+		AddressResponse addResp = shippingServices.getOrderShipmentAddress(orderItem);
+		if(null != addResp){
+			response.setAddressResponse(addResp);
+		}
+
+		List<CartItemResponse> items = orderService.populateItemDetails(orderItem);
+		response.setOrderItems(items);
+		
+		return response;
+
 	}
 
 }
