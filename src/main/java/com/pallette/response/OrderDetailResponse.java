@@ -14,6 +14,8 @@ public class OrderDetailResponse extends Response{
 	private Date submittedDate;
 	
 	private AddressResponse addressResponse;
+	
+	private String orderStatus;
 
 	public String getOrderId() {
 		return orderId;
@@ -53,5 +55,13 @@ public class OrderDetailResponse extends Response{
 
 	public void setAddressResponse(AddressResponse addressResponse) {
 		this.addressResponse = addressResponse;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 }

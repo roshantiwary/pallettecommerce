@@ -420,6 +420,7 @@ public class OrderService {
 		List<OrderItemResponse> responseItemList = populateOrderItemDetails(order,response);
 		response.setOrderItems(responseItemList);
 		response.setSubmittedDate(order.getSubmittedDate());
+		response.setOrderStatus(order.getState());
 		log.debug("Response Item sent is :", response.toString());
 		return response;
 	}
