@@ -29,6 +29,7 @@ import com.pallette.beans.ProfileAddressBean;
 import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Role;
@@ -36,6 +37,7 @@ import com.pallette.exception.AuthenticationException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.AddressRepository;
 import com.pallette.repository.RoleRepository;
+import com.pallette.repository.SequenceDao;
 import com.pallette.response.Response;
 
 @Service
@@ -60,6 +62,9 @@ public class AccountService {
 	
 	@Autowired
 	private MongoOperations mongoOperation; 
+	
+	@Autowired
+	private SequenceDao sequenceDao;
 
 	/**
 	 * Retrieve an account with Profile/Account id.
@@ -148,10 +153,14 @@ public class AccountService {
 
 		logger.debug("AccountService.saveAccount:" + accountBean.toString());
 		AccountResponse accountResponse = new AccountResponse();
-		
+		String profileId = null;
 		if(!accountBean.getPassword().equalsIgnoreCase(accountBean.getConfirmPassword())){
 			logger.error("Password and Confirm Password does not match");
 			throw new IllegalArgumentException("Password and Confirm Password does not match");
+		}
+		if(StringUtils.isEmpty(accountBean.getId())){
+			profileId = sequenceDao.getNextProfileSequenceId(SequenceConstants.SEQ_KEY);
+			accountBean.setId(profileId);
 		}
 		
 		Account accountItem = new Account();
