@@ -95,6 +95,7 @@ public class ShippingServices {
 		// Bean Utils copyProperties method is responsible for copying properties across two beans.
 		addressResponse = new AddressResponse();
 		BeanUtils.copyProperties(addressResponse, addressItem);
+		addressResponse.setAddressId(addressItem.getId().toString());
 		
 		return addressResponse;
 	}

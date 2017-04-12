@@ -222,16 +222,20 @@ public class CartController {
 		
 		}
 	
+	/**
+	 * Method to return the profile Id from the authentication object.
+	 * 
+	 * @param authentication
+	 * @return
+	 */
 	private String getProfileId(Authentication authentication) {
-		
+
 		String profileId = null;
 		if (!(authentication.getPrincipal() instanceof CustomDetails)) {
 			Object obj = authentication.getPrincipal();
 			if (obj instanceof ApplicationUser) {
 				ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
 				profileId = user.getProfileId();
-			} else {
-
 			}
 		} else {
 			CustomDetails details = (CustomDetails) authentication.getPrincipal();
