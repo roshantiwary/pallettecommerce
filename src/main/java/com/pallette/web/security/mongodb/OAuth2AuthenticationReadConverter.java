@@ -27,7 +27,6 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
     @Override
     @SuppressWarnings("unchecked")
     public OAuth2Authentication convert(DBObject source) {
-        System.out.println(source);
         DBObject storedRequest = (DBObject)source.get("storedRequest");
 
         OAuth2Request oAuth2Request = new OAuth2Request((Map<String, String>)storedRequest.get("requestParameters"),

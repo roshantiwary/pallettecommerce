@@ -103,7 +103,6 @@ public class PaymentController {
 		
 		while(enumeration.hasMoreElements()) {
 			String parameterName = (String) enumeration.nextElement();
-			System.out.println(parameterName + "=" + request.getParameter(parameterName));
 	        parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
 		//
@@ -123,7 +122,6 @@ public class PaymentController {
 		
 		while (enumeration.hasMoreElements()) {
 			String parameterName = (String) enumeration.nextElement();
-			System.out.println(parameterName + "=" + request.getParameter(parameterName));
 			parameterNames.put(parameterName, request.getParameter(parameterName));
 		}
 		//Process the payment response and then submit the Order.

@@ -65,9 +65,9 @@ public class UserProfileController {
 		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
-			System.out.println("Logged-in User" + authentication.getName());
+			logger.debug("Logged-in User" + authentication.getName());
 		} else {
-			System.out.println("Anonymous user");
+			logger.debug("Anonymous user");
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();
@@ -84,9 +84,9 @@ public class UserProfileController {
 		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
-			System.out.println("Logged-in User" + authentication.getName());
+			logger.debug("Logged-in User" + authentication.getName());
 		} else {
-			System.out.println("Anonymous user");
+			logger.debug("Anonymous user");
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();
@@ -104,9 +104,9 @@ public class UserProfileController {
 		profileId = getProfileId(authentication);
 		
 		if (!profileId.isEmpty()) {
-			System.out.println("Logged-in User" + authentication.getName());
+			logger.debug("Logged-in User" + authentication.getName());
 		} else {
-			System.out.println("Anonymous user");
+			logger.debug("Anonymous user");
 		}
 		
 		GenericResponse genericResponse = new GenericResponse();

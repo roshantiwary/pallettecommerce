@@ -24,7 +24,6 @@ public class OrderRepriceChain {
 	
 	public void reprice(Order order) {
 		 for (RepriceChain chain : repricingChains) {
-//			 System.out.println(chain.getClass().getName());
              chain.reprice(order);
      }
 	}
