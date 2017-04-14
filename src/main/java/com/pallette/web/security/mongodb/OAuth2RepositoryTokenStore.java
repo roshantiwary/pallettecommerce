@@ -14,14 +14,10 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import com.pallette.commerce.contants.CommerceConstants;
-import com.pallette.domain.Address;
 import com.pallette.oauth2.OAuth2AuthenticationAccessToken;
 import com.pallette.oauth2.OAuth2AuthenticationRefreshToken;
 

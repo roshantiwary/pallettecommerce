@@ -1,6 +1,12 @@
 package com.pallette.web.security.mongodb;
 import com.mongodb.DBObject;
-import com.pallette.domain.Account;
+import com.pallette.user.User;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
@@ -10,9 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * @version 1.0
@@ -47,7 +50,7 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
     private Object getPrincipalObject(Object principal) {
         if(principal instanceof DBObject) {
             DBObject principalDBObject = (DBObject)principal;
-            Account user = new Account(principalDBObject);
+            User user = new User(principalDBObject);
             return user;
         } else {
             return principal;

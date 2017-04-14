@@ -1,24 +1,16 @@
 package com.pallette.web.security;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import com.pallette.service.UserService;
-
-import com.pallette.domain.AuthenticationRequest;
-import com.pallette.domain.Role;
-
+import com.pallette.user.UserService;
+import com.pallette.user.api.ApiUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Component
@@ -29,44 +21,38 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String name = authentication.getName();
-		String password = authentication.getCredentials() != null ? authentication.getCredentials().toString() : null;
-		AuthenticationRequest request = new AuthenticationRequest();
-		request.setUsername(name);
-		request.setPassword(password);
-		try {
-			Map<String, Object> params = service.login(request);
-			List<GrantedAuthority> grantedAuths = new ArrayList<>();
-			if (params != null) {
-				
-				List<Role> roles = (List<Role>) params.get("role");
-				Iterator<Role> roleIter = roles.iterator(); 
-				while(roleIter.hasNext()) {
-					Role role = roleIter.next();
-					grantedAuths.add(new SimpleGrantedAuthority(role.getName()));
-				}
-				
-				// Add Logic to populate Order-id
-				String profileId = (String) params.get("accountid");
-				ApplicationUser appUser = new ApplicationUser(name, password, true, true, true, true, grantedAuths, profileId);
-				
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-						appUser, password, grantedAuths);
-				auth.setDetails(params);
-				return auth;
-			} else {
-				throw new BadCredentialsException("Username not found");
-			}
-		} catch (HttpServerErrorException e) {
-			throw new BadCredentialsException("Login failed!");
-		}
+
+		String username = authentication.getPrincipal() != null ? authentication.getPrincipal().toString() : null;
+        String password = authentication.getCredentials() != null ? authentication.getCredentials().toString() : null;
+        try {
+            // create an authentication request
+            final ApiUser apiUser = this.service.authenticate(username, password);
+            
+            // Add Logic to populate Order-id
+            String profileId = apiUser.getId();
+			ApplicationUser appUser = new ApplicationUser(username, password, true, true, true, true, Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")), profileId);
+			
+            final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(appUser, password, Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")));
+            token.setDetails(apiUser);
+            return token;
+
+        } catch (Exception e) {
+            throw new OAuth2Exception(e.getMessage(), e);
+        }
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-//		return authentication.equals(UsernamePasswordAuthenticationToken.class);
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-
 	}
 	
+//	List<GrantedAuthority> grantedAuths = new ArrayList<>();
+//	if (params != null) {
+//		
+//		List<Role> roles = (List<Role>) params.get("role");
+//		Iterator<Role> roleIter = roles.iterator(); 
+//		while(roleIter.hasNext()) {
+//			Role role = roleIter.next();
+//			grantedAuths.add(new SimpleGrantedAuthority(role.getName()));
+//		}
 }

@@ -3,6 +3,8 @@ package com.pallette;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,61 +35,63 @@ import com.pallette.web.security.mongodb.OAuth2AuthenticationReadConverter;
 @EnableScheduling
 @EnableOAuth2Client
 @EnableTransactionManagement
-public class Shop extends SpringBootServletInitializer{
-	    
+public class Shop extends SpringBootServletInitializer {
+
 	@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		setRegisterErrorPageFilter(false);
-        return application.sources(Shop.class);
-    }
-	
-	public static void main(String[] args) {
-		SpringApplication.run(Shop.class, args);	
+		return application.sources(Shop.class);
 	}
-	
+
+	public static void main(String[] args) {
+		SpringApplication.run(Shop.class, args);
+	}
+
 	@Value("${security.oauth2.client.access-token-uri}")
 	private String accessTokenUri;
 
-    @Value("${security.oauth2.client.grant-type}")
-    private String grantType;
+	@Value("${security.oauth2.client.grant-type}")
+	private String grantType;
 
-    @Value("${security.oauth2.client.client-id}")
-    private String clientID;
+	@Value("${security.oauth2.client.client-id}")
+	private String clientID;
 
-    @Value("${security.oauth2.client.client-secret}")
-    private String clientSecret;
-	
+	@Value("${security.oauth2.client.client-secret}")
+	private String clientSecret;
+
 	/**
-     * The heart of our interaction with the resource; handles redirection for authentication, access tokens, etc.
-     * @param oauth2ClientContext
-     * @return
-     */
-    @Bean
-    public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
-    	return new OAuth2RestTemplate(resource(), oauth2ClientContext);
-    }
-    
-    @Bean
-    public CascadingMongoEventListener cascadingMongoEventListener() {
-        return new CascadingMongoEventListener();
-    }
+	 * The heart of our interaction with the resource; handles redirection for
+	 * authentication, access tokens, etc.
+	 * 
+	 * @param oauth2ClientContext
+	 * @return
+	 */
+	@Bean
+	public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
+		return new OAuth2RestTemplate(resource(), oauth2ClientContext);
+	}
 
-    @Bean
-    protected OAuth2ProtectedResourceDetails resource() {
-    	List scopes = new ArrayList<String>(2);
-        scopes.add("write");
-        scopes.add("read");
-        ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
-        resource.setClientId(clientID);
-        resource.setClientSecret(clientSecret);
-        resource.setAccessTokenUri(accessTokenUri);
-        resource.setGrantType(grantType);
-        resource.setClientAuthenticationScheme(AuthenticationScheme.header);
-        resource.setTokenName("access_token");
-        resource.setScope(scopes);
-        resource.setClientAuthenticationScheme(AuthenticationScheme.form);
-        return resource;
-    }
+	@Bean
+	public CascadingMongoEventListener cascadingMongoEventListener() {
+		return new CascadingMongoEventListener();
+	}
+
+	@Bean
+	protected OAuth2ProtectedResourceDetails resource() {
+		List scopes = new ArrayList<String>(2);
+		scopes.add("write");
+		scopes.add("read");
+		ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
+		resource.setClientId(clientID);
+		resource.setClientSecret(clientSecret);
+		resource.setAccessTokenUri(accessTokenUri);
+		resource.setGrantType(grantType);
+		resource.setClientAuthenticationScheme(AuthenticationScheme.header);
+		resource.setTokenName("access_token");
+		resource.setScope(scopes);
+		resource.setClientAuthenticationScheme(AuthenticationScheme.form);
+		return resource;
+	}
 
 	@Bean
 	public CustomConversions customConversions() {
@@ -96,20 +100,23 @@ public class Shop extends SpringBootServletInitializer{
 		converterList.add(converter);
 		return new CustomConversions(converterList);
 	}
-	
-	@Bean
-    public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory,
-                                       MongoMappingContext context) {
 
-		MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
-				context);
+	@Bean
+	public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory, MongoMappingContext context) {
+
+		MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory), context);
 		converter.setCustomConversions(customConversions());
 		converter.afterPropertiesSet();
 
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
+		MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
 
-        return mongoTemplate;
+		return mongoTemplate;
 
-    }
+	}
+
+	@Bean
+	public Validator validator() {
+		return new org.springframework.validation.beanvalidation.LocalValidatorFactoryBean();
+	}
 
 }
