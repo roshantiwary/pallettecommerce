@@ -9,6 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -20,6 +27,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.pallette.config.CascadingMongoEventListener;
+import com.pallette.web.security.mongodb.OAuth2AuthenticationReadConverter;
 
 @SpringBootApplication
 @EnableScheduling
@@ -79,6 +87,29 @@ public class Shop extends SpringBootServletInitializer{
         resource.setScope(scopes);
         resource.setClientAuthenticationScheme(AuthenticationScheme.form);
         return resource;
+    }
+
+	@Bean
+	public CustomConversions customConversions() {
+		List<Converter<?, ?>> converterList = new ArrayList<Converter<?, ?>>();
+		OAuth2AuthenticationReadConverter converter = new OAuth2AuthenticationReadConverter();
+		converterList.add(converter);
+		return new CustomConversions(converterList);
+	}
+	
+	@Bean
+    public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory,
+                                       MongoMappingContext context) {
+
+		MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
+				context);
+		converter.setCustomConversions(customConversions());
+		converter.afterPropertiesSet();
+
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
+
+        return mongoTemplate;
+
     }
 
 }

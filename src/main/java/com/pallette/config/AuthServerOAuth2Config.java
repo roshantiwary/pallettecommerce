@@ -1,6 +1,7 @@
 package com.pallette.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,12 +10,23 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+
+import com.pallette.web.security.mongodb.OAuth2AccessTokenRepository;
+import com.pallette.web.security.mongodb.OAuth2RefreshTokenRepository;
+import com.pallette.web.security.mongodb.OAuth2RepositoryTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter{
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private OAuth2AccessTokenRepository oAuth2AccessTokenRepository;
+	
+	@Autowired
+	private OAuth2RefreshTokenRepository oAuth2RefreshTokenRepository;
 	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -38,6 +50,11 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 		
     }
 	
+	@Bean
+	public TokenStore tokenStore() {
+		return new OAuth2RepositoryTokenStore(oAuth2AccessTokenRepository, oAuth2RefreshTokenRepository);
+	}
+	
  
     @Override
     public void configure(
@@ -45,6 +62,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
       throws Exception {
     	
     	endpoints.authenticationManager(authenticationManager)
+    	.tokenStore(tokenStore())
 //    	.tokenEnhancer(tokenEnhancer())
     	.allowedTokenEndpointRequestMethods(HttpMethod.GET);
     	

@@ -52,6 +52,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 						appUser, password, grantedAuths);
+				auth.setDetails(params);
 				return auth;
 			} else {
 				throw new BadCredentialsException("Username not found");
@@ -63,7 +64,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+//		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+
 	}
 	
 }

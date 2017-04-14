@@ -1,5 +1,6 @@
 package com.pallette.domain;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -14,11 +15,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mongodb.DBObject;
 import com.pallette.config.CascadeSave;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document
-public class Account {
+public class Account implements Principal{
 
 	@Id
 	private String id;
@@ -141,6 +143,40 @@ public class Account {
 		return sb.toString();
 	}	
 	
+ public Account(DBObject dbObject) {
+        this((String)dbObject.get("_id"));
+        this.username = (String)dbObject.get("username");
+        this.firstName = (String)dbObject.get("firstName");
+        this.lastName = (String)dbObject.get("lastName");
+        this.password = (String)dbObject.get("password");
+        this.authtoken = (String)dbObject.get("authtoken");
+        List<String> roles = new ArrayList<String>();
+        roles =	(List<String>)dbObject.get("roles");
+        deSerializeRoles(roles);
+ }
+ 
+ public void addRole(Role role) {
+     this.roles.add(role);
+ }
+ 
+ private void deSerializeRoles(List<String> roles) {
+	 if(null!= roles && !roles.isEmpty()) {
+	     for(String role : roles) {
+	    	 Role userRole = new Role();
+	    	 userRole.setId("ROLE003");
+	    	 userRole.setName("USER");
+	         this.addRole(userRole);
+	     }
+	 }
+}
+	
+	 public Account(String id) {
+	     super();
+	 }
+	 
+	 public Account() {
+		 super();
+	 }
 	@Override
 	public String toString() {
 		return "Account{" +
@@ -168,5 +204,11 @@ public class Account {
 		if (null != this.addresses && !this.addresses.isEmpty()) {
 			addresses.remove(address);
 		}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.username;
 	} 
 }
