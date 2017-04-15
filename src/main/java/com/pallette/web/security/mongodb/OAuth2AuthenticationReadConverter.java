@@ -1,8 +1,10 @@
 package com.pallette.web.security.mongodb;
 import com.mongodb.DBObject;
 import com.pallette.user.User;
+import com.pallette.user.api.ApiUser;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,26 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
 	        Object principal = getPrincipalObject(userAuthorization.get("principal"));
 	        userAuthentication = new UsernamePasswordAuthenticationToken(principal,
                 (String)userAuthorization.get("credentials"), getAuthorities((List) userAuthorization.get("authorities")));
+	        ApiUser apiUser = getUserDetails(userAuthorization);
+	        ((UsernamePasswordAuthenticationToken)userAuthentication).setDetails(apiUser);
         }
         OAuth2Authentication authentication = new OAuth2Authentication(oAuth2Request,
                 userAuthentication );
+        authentication.setDetails(userAuthentication.getDetails());
         return authentication;
     }
+
+	private ApiUser getUserDetails(DBObject userAuthorization) {
+		DBObject userMap = (DBObject) userAuthorization.get("details");
+		User user = new User();
+		user.setEmailAddress((String) userMap.get("emailAddress"));
+		user.setFirstName((String) userMap.get("firstName"));
+		user.setLastName((String) userMap.get("lastName"));
+		user.setAge((int) userMap.get("age"));
+		ApiUser apiUser = new ApiUser(user);
+		apiUser.setId((String) userMap.get("_id"));
+		return apiUser;
+	}
 
     private Object getPrincipalObject(Object principal) {
         if(principal instanceof DBObject) {
