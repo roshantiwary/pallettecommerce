@@ -30,7 +30,7 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -57,13 +57,19 @@ public class LoginController extends BaseResource {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	private ClientDetailsService clientDetailsService;
-	
-	private DefaultTokenServices tokenServices;
 
 	@Autowired
+	private ClientDetailsService clientDetailsService;
+
+	private AuthorizationServerTokenServices tokenServices;
+
 	private UserService accountService;
+
+	@Autowired
+	public LoginController(final AuthorizationServerTokenServices defaultTokenServices, ClientDetailsService clientDetailsService) {
+		this.tokenServices = defaultTokenServices;
+		this.clientDetailsService = clientDetailsService;
+	}
 
 	@Autowired
 	private com.pallette.user.UserService service;
@@ -123,17 +129,13 @@ public class LoginController extends BaseResource {
 	public ResponseEntity<AccountResponse> register(@Valid @RequestBody CreateUserRequest request) {
 
 		ApiUser user = service.createUser(request);
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		CreateUserResponse createUserResponse = new CreateUserResponse(user, createTokenForNewUser(user.getId(),
-				request.getPassword().getPassword(), authentication.getName()));
-		AccountResponse genericResponse = new AccountResponse();
-		
-		if (HttpStatus.ALREADY_REPORTED.value() == genericResponse.getStatusCode())
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.ALREADY_REPORTED);
 
-		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		CreateUserResponse createUserResponse = new CreateUserResponse(user,
+				createTokenForNewUser(user.getId(), request.getPassword().getPassword(), authentication.getName()));
+
+		return new ResponseEntity(createUserResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	private OAuth2AccessToken createTokenForNewUser(String userId, String password, String clientId) {
