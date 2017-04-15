@@ -48,7 +48,9 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
         }
         OAuth2Authentication authentication = new OAuth2Authentication(oAuth2Request,
                 userAuthentication );
-        authentication.setDetails(userAuthentication.getDetails());
+        if(userAuthentication != null) {
+        	authentication.setDetails(userAuthentication.getDetails());
+        }
         return authentication;
     }
 
