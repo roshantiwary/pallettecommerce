@@ -6,12 +6,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.mongodb.DBObject;
 import com.pallette.user.Role;
 import com.pallette.persistence.BaseEntity;
@@ -27,7 +25,7 @@ public class User extends BaseEntity implements UserDetails {
 	private String hashedPassword;
 	private Boolean verified = false;
 	private List<Role> roles = new ArrayList<Role>();
-
+		
 	public User() {
 		super();
 	}
@@ -37,7 +35,7 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	public User(final ApiUser apiUser, final String hashedPassword, Role role) {
-		this();
+		this(apiUser.getId());
 		this.emailAddress = apiUser.getEmailAddress().toLowerCase();
 		this.hashedPassword = hashedPassword;
 		this.firstName = apiUser.getFirstName();

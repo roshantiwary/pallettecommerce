@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import static org.springframework.util.Assert.notNull;
+
+import com.pallette.constants.SequenceConstants;
+import com.pallette.repository.SequenceDao;
 import com.pallette.service.BaseService;
 import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
@@ -28,6 +31,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private SequenceDao sequenceDao;
 
 	@Autowired
 	public UserServiceImpl(final UserRepository userRepository, Validator validator, PasswordEncoder passwordEncoder) {
@@ -123,7 +129,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
     private User insertNewUser(final CreateUserRequest createUserRequest) {
         String hashedPassword = passwordEncoder.encode(createUserRequest.getPassword().getPassword());
-        User newUser = new User(createUserRequest.getUser(), hashedPassword, Role.USER);
+        ApiUser user = createUserRequest.getUser();
+        String profileId = sequenceDao.getNextProfileSequenceId(SequenceConstants.SEQ_KEY);
+        user.setId(profileId);
+        User newUser = new User(user, hashedPassword, Role.USER);
         return userRepository.save(newUser);
     }
 
