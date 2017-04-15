@@ -29,10 +29,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             final ApiUser apiUser = this.service.authenticate(username, password);
             
             // Add Logic to populate Order-id
-            String profileId = apiUser.getId();
-			ApplicationUser appUser = new ApplicationUser(username, password, true, true, true, true, Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")), profileId);
-			
-            final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(appUser, password, Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")));
+            final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password, Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("USER")));
             token.setDetails(apiUser);
             return token;
 
