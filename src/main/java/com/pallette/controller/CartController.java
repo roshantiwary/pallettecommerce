@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -30,6 +31,7 @@ import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.SequenceDao;
 import com.pallette.response.CartResponse;
 import com.pallette.service.OrderService;
+import com.pallette.user.api.ApiUser;
 import com.pallette.web.security.ApplicationUser;
 import com.pallette.web.security.CustomCredentialsService.CustomDetails;
 
@@ -55,13 +57,13 @@ public class CartController {
 	 * @throws NoRecordsFoundException
 	 */
 	@RequestMapping(value = RestURLConstants.CART_ADD, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> handleAddItemToCart(@Valid @RequestBody AddToCartBean addToCartRequest , Errors errors) throws NoRecordsFoundException {
+	public ResponseEntity<CartResponse> handleAddItemToCart(@Valid @RequestBody AddToCartBean addToCartRequest , Errors errors, OAuth2Authentication authentication) throws NoRecordsFoundException {
 		
 		log.debug("Inside CartController.handleAddItemToCart()");
 		CartResponse cartResponse = new CartResponse();
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String profileId = null;
-		profileId = getProfileId(authentication);
+		
+		ApiUser user = getProfileId(authentication);
+		String profileId = user.getId();
 		
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
@@ -228,20 +230,12 @@ public class CartController {
 	 * @param authentication
 	 * @return
 	 */
-	private String getProfileId(Authentication authentication) {
-
-		String profileId = null;
-		if (!(authentication.getPrincipal() instanceof CustomDetails)) {
-			Object obj = authentication.getPrincipal();
-			if (obj instanceof ApplicationUser) {
-				ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
-				profileId = user.getProfileId();
-			}
-		} else {
-			CustomDetails details = (CustomDetails) authentication.getPrincipal();
-			profileId = details.getProfileId();
+	private ApiUser getProfileId(OAuth2Authentication authentication) {
+		
+		ApiUser user = null;
+		if(authentication.getUserAuthentication().getDetails() != null) {
+			user = (ApiUser) authentication.getUserAuthentication().getDetails();
 		}
-		return profileId;
+		return user;
 	}
-
 }
