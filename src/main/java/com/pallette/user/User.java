@@ -6,12 +6,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import com.mongodb.DBObject;
-import com.pallette.user.Role;
 import com.pallette.persistence.BaseEntity;
 import com.pallette.user.api.ApiUser;
 
@@ -25,6 +27,9 @@ public class User extends BaseEntity implements UserDetails {
 	private String hashedPassword;
 	private Boolean verified = false;
 	private List<Role> roles = new ArrayList<Role>();
+	
+	@DBRef
+	private List<Address> shippingAddress;
 		
 	public User() {
 		super();
@@ -44,6 +49,7 @@ public class User extends BaseEntity implements UserDetails {
 		this.roles.add(role);
 	}
 
+	@SuppressWarnings("unchecked")
 	public User(DBObject dbObject) {
 		this((String) dbObject.get("_id"));
 		this.emailAddress = (String) dbObject.get("emailAddress");
@@ -54,7 +60,7 @@ public class User extends BaseEntity implements UserDetails {
 		List<String> roles = (List<String>) dbObject.get("roles");
 		deSerializeRoles(roles);
 	}
-
+	
 	private void deSerializeRoles(List<String> roles) {
 		for (String role : roles) {
 			this.addRole(Role.valueOf(role));
@@ -161,4 +167,17 @@ public class User extends BaseEntity implements UserDetails {
 		return (this.roles.contains(role));
 	}
 
+	public List<Address> getShippingAddress() {
+		if(null == shippingAddress)
+			shippingAddress = new ArrayList<Address>();
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(List<Address> shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	public void addShippingAddress(Address shippingAddress) {
+		this.shippingAddress.add(shippingAddress);
+	}
 }

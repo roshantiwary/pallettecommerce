@@ -1,5 +1,7 @@
 package com.pallette.user;
 
+import static org.springframework.util.Assert.notNull;
+
 import javax.validation.Validator;
 
 import org.slf4j.Logger;
@@ -12,14 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import static org.springframework.util.Assert.notNull;
 
 import com.pallette.constants.SequenceConstants;
 import com.pallette.repository.SequenceDao;
 import com.pallette.service.BaseService;
+import com.pallette.user.api.AddEditAddressRequest;
+import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
 import com.pallette.user.api.UpdateUserRequest;
+import com.pallette.user.exception.AddressNotFoundException;
 import com.pallette.user.exception.AuthenticationException;
 import com.pallette.user.exception.DuplicateUserException;
 import com.pallette.user.exception.UserNotFoundException;
@@ -31,14 +35,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	private UserRepository userRepository;
 	private PasswordEncoder passwordEncoder;
+	private UserAddressRepository addressRepository;
 	
 	@Autowired
 	private SequenceDao sequenceDao;
 
 	@Autowired
-	public UserServiceImpl(final UserRepository userRepository, Validator validator, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(final UserRepository userRepository, final UserAddressRepository addressRepository,
+			Validator validator, PasswordEncoder passwordEncoder) {
 		super(validator);
 		this.userRepository = userRepository;
+		this.addressRepository = addressRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -135,5 +142,46 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
         User newUser = new User(user, hashedPassword, Role.USER);
         return userRepository.save(newUser);
     }
+    
+    @Override
+	@Transactional
+	public ApiAddress addNewAddress(AddEditAddressRequest request) {
+		logger.info("Validating Address request.");
+		validate(request);
+		Address newAddress = insertNewAddress(request);
+		User user = userRepository.findOne(request.getAddress().getProfileId());
+		user.getShippingAddress().add(newAddress);
+		userRepository.save(user);
+		logger.debug("Added new address [{}].", newAddress.getId());
+		return new ApiAddress(newAddress);
+	}
+
+	private Address insertNewAddress(final AddEditAddressRequest request) {
+		ApiAddress address = request.getAddress();
+		String addressId = sequenceDao.getNextAddressSequenceId(SequenceConstants.SEQ_KEY);
+		address.setId(addressId);
+		Address newAddress = new Address(address);
+		return addressRepository.save(newAddress);
+	}
+
+	@Override
+	@Transactional
+	public ApiAddress editAddress(AddEditAddressRequest request) {
+		logger.info("Validating Address request.");
+		validate(request);
+		locateAddress(request.getAddress().getId());
+		Address updateAddress = new Address(request.getAddress());
+		logger.debug("Updated Address [{}].", updateAddress.getId());
+		return new ApiAddress(addressRepository.save(updateAddress));
+	}
+
+	private void locateAddress(String addressKey) {
+		notNull(addressKey, "Mandatory argument 'addressKey' missing.");
+		Address address = addressRepository.findOne(addressKey);
+		if(null == address){
+			logger.debug("Address not found for the key [{}]", addressKey);
+            throw new AddressNotFoundException();
+		}
+	}
 
 }

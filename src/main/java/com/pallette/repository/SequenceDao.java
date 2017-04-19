@@ -26,5 +26,13 @@ public interface SequenceDao {
 	 * @throws SequenceException
 	 */
 	public String getNextProfileSequenceId(String key) throws SequenceException;
+	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 * @throws SequenceException
+	 */
+	public String getNextAddressSequenceId(String key) throws SequenceException;
 
 }

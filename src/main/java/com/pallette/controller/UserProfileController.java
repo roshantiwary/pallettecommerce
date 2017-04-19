@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.validation.Valid;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,10 @@ import com.pallette.beans.AccountBean;
 import com.pallette.beans.AccountResponse;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
-import com.pallette.beans.ProfileAddressBean;
 import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.RestURLConstants;
-import com.pallette.domain.Account;
 import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.response.AddressResponse;
 import com.pallette.response.ExceptionResponse;
@@ -41,6 +38,9 @@ import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
+import com.pallette.user.api.AddEditAddressRequest;
+import com.pallette.user.api.AddEditAddressResponse;
+import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 
 
@@ -152,21 +152,15 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_ADD_ADDRESS_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody ProfileAddressBean address,
-			OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
-		logger.debug("Adding New Address in Profile : " + address.toString());
-		ProfileAddressResponse genericResponse = new ProfileAddressResponse();		
+	public ResponseEntity<AddEditAddressResponse> addNewAddress(@Valid @RequestBody AddEditAddressRequest request, 
+			OAuth2Authentication oAuth2Authentication){
+		logger.debug("Adding New Address in Profile : " + request.toString());
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
-		try {
-			genericResponse = accountService.addNewAddress(address, profileId);
-
-		} catch (Exception e) {
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
+		request.getAddress().setProfileId(profileId);
+		ApiAddress address = userService.addNewAddress(request);
+		AddEditAddressResponse addAddressResponse = new AddEditAddressResponse(address);
+		return new ResponseEntity(addAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -180,22 +174,11 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_EDIT_ADDRESS_URL, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponse> editAddress(@PathVariable("id") String addressKey,
-			@Valid @RequestBody ProfileAddressBean address, OAuth2Authentication oAuth2Authentication)
-			throws IllegalAccessException, InvocationTargetException {
-		logger.debug("Editing Existing Address for Address Key : " + addressKey);
-		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
-		ApiUser user = getProfileId(oAuth2Authentication);
-		String profileId = user.getId();
-		try {
-			genericResponse = accountService.editAddress(addressKey, address, profileId);
-		} catch (Exception e) {
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
+	public ResponseEntity<AddEditAddressResponse> editAddress(@Valid @RequestBody AddEditAddressRequest request){
+		logger.debug("Editing Existing Address for Address Key : " + request.getAddress().getId());
+		ApiAddress address = userService.editAddress(request);
+		AddEditAddressResponse editAddressResponse = new AddEditAddressResponse(address);
+		return new ResponseEntity(editAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -236,8 +219,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.POFILE_REMOVE_ADDRESS_URL, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey)
-			throws IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey) {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		Response genericResponse = new Response();
 

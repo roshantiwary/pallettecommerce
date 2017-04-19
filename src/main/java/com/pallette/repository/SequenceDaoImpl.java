@@ -101,4 +101,36 @@ public class SequenceDaoImpl implements SequenceDao {
 		return orderSequenceId;
 	}
 
+	@Override
+	public String getNextAddressSequenceId(String key) throws SequenceException {
+		log.debug("Inside SequenceDaoImpl.getNextAddressSequenceId()");
+		String sequenceId = "";
+
+		// get sequence id from the "sequence" document.
+		Query query = new Query(Criteria.where(SequenceConstants._ID).is(key));
+
+		// increase sequence id by 1
+		Update update = new Update();
+		//profile_seq being the property name in "sequence" document.
+		update.inc(SequenceConstants.ADDRESS_SEQ, 1);
+
+		// return new increased id
+		FindAndModifyOptions options = new FindAndModifyOptions();
+		options.returnNew(true);
+
+		SequenceId seqId = mongoOperation.findAndModify(query, update, options, SequenceId.class);
+
+		// if no id, throws SequenceException
+		// optional, just a way to tell user when the sequence id is failed to
+		// generate.
+		if (seqId == null) {
+			throw new SequenceException("Unable to get sequence id for key : " + key);
+		}
+
+		sequenceId =  Long.toString(seqId.getAddressSeq());
+		
+		String addressSequenceId = new StringBuilder().append(SequenceConstants.ADDRESS).append(sequenceId).toString();
+		return addressSequenceId;
+	}
+
 }

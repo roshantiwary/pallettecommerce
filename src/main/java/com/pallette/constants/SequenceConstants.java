@@ -23,5 +23,9 @@ public class SequenceConstants {
 	public static final String PROFILE = "profile";
 	
 	public static final String SEQ_KEY = "sequence";
+	
+	public static final String ADDRESS_SEQ = "addressSeq";
+	
+	public static final String ADDRESS = "address";
 
 }

@@ -26,6 +26,9 @@ public class SequenceId {
 
 	@Field(value = "profile_seq")
 	private long profileSeq;
+	
+	@Field(value = "address_seq")
+	private long addressSeq;
 
 	/**
 	 * @return the id
@@ -70,6 +73,14 @@ public class SequenceId {
 	 */
 	public void setProfileSeq(long profileSeq) {
 		this.profileSeq = profileSeq;
+	}
+
+	public long getAddressSeq() {
+		return addressSeq;
+	}
+
+	public void setAddressSeq(long addressSeq) {
+		this.addressSeq = addressSeq;
 	}
 
 }

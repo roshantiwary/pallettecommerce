@@ -1,5 +1,7 @@
 package com.pallette.user;
 
+import com.pallette.user.api.AddEditAddressRequest;
+import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
 import com.pallette.user.api.UpdateUserRequest;
@@ -19,5 +21,9 @@ public interface UserService {
 	 * @param request
 	 */
 	public ApiUser saveUser(String userId, UpdateUserRequest request);
+	
+	public ApiAddress addNewAddress(AddEditAddressRequest request);
+	
+	public ApiAddress editAddress(AddEditAddressRequest request);
 
 }
