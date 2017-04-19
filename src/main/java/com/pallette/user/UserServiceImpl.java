@@ -261,4 +261,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return addressResponse;
 	}
 
+	@Override
+	public Address getAddress(String addressKey, String profileId) {
+		Address address = addressRepository.findByProfileIdAndId(profileId, addressKey);
+		if(null == address){
+			logger.debug("Address not found for the key [{}]", addressKey);
+            throw new AddressNotFoundException();
+		}
+		return address;
+	}
+
 }

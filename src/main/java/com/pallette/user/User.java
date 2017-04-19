@@ -17,7 +17,7 @@ import com.mongodb.DBObject;
 import com.pallette.persistence.BaseEntity;
 import com.pallette.user.api.ApiUser;
 
-@Document(collection = "app_user")
+@Document(collection = "user")
 public class User extends BaseEntity implements UserDetails {
 
 	private String emailAddress;

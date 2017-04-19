@@ -6,7 +6,7 @@ import com.mongodb.DBObject;
 import com.pallette.persistence.BaseEntity;
 import com.pallette.user.api.AddEditAddressRequest;
 
-@Document(collection = "app_address")
+@Document(collection = "user_address")
 public class Address extends BaseEntity{
 
 	private String emailAddress;

@@ -30,5 +30,7 @@ public interface UserService {
 	public Response removeAddress(String addressKey);
 
 	public ProfileAddressResponseBean getAllProfileAddress(String profileId);
+	
+	public Address getAddress(String addressKey, String profileId);
 
 }

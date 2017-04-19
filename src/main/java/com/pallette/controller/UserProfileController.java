@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.validation.Valid;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
+import com.pallette.user.Address;
 import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.AddEditAddressResponse;
 import com.pallette.user.api.ApiUser;
@@ -197,13 +199,11 @@ public class UserProfileController {
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
-		try {
-			genericResponse = accountService.getAddress(addressKey, profileId);
-		} catch (Exception e) {
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	
+		Address address = userService.getAddress(addressKey, profileId);
+		BeanUtils.copyProperties(genericResponse , address);
+		genericResponse.setMessage("Address found");
+		genericResponse.setStatusCode(HttpStatus.OK.value());
 
 		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
 	}

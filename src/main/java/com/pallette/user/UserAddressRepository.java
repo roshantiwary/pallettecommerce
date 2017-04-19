@@ -9,4 +9,6 @@ public interface UserAddressRepository extends MongoRepository<Address, String>{
 	public List<Address> findByProfileId(final String profileId);
 
     public Address findById(final String id);
+    
+    public Address findByProfileIdAndId(final String profileId, String id);
 }
