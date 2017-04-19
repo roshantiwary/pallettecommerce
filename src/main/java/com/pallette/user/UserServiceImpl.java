@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -28,25 +28,26 @@ import com.pallette.user.exception.AuthenticationException;
 import com.pallette.user.exception.DuplicateUserException;
 import com.pallette.user.exception.UserNotFoundException;
 
-@Service
+@Component
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	private UserAddressRepository addressRepository;
 	
 	@Autowired
 	private SequenceDao sequenceDao;
 
 	@Autowired
-	public UserServiceImpl(final UserRepository userRepository, final UserAddressRepository addressRepository,
-			Validator validator, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(Validator validator) {
 		super(validator);
-		this.userRepository = userRepository;
-		this.addressRepository = addressRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
