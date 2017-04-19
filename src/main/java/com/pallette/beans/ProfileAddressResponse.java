@@ -16,25 +16,21 @@ public class ProfileAddressResponse extends Response {
 
 	private String firstName;
 
-	private String middleName;
-
 	private String lastName;
 
 	private String address1;
 
 	private String address2;
 
-	private String address3;
-
 	private String city;
 
 	private String state;
 
-	private String postalCode;
-
-	private String country;
+	private String zipcode;
 
 	private String phoneNumber;
+	
+	private String profileId;
 
 	public String getId() {
 		return id;
@@ -50,14 +46,6 @@ public class ProfileAddressResponse extends Response {
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-	}
-
-	public String getMiddleName() {
-		return middleName;
-	}
-
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
 	}
 
 	public String getLastName() {
@@ -84,14 +72,6 @@ public class ProfileAddressResponse extends Response {
 		this.address2 = address2;
 	}
 
-	public String getAddress3() {
-		return address3;
-	}
-
-	public void setAddress3(String address3) {
-		this.address3 = address3;
-	}
-
 	public String getCity() {
 		return city;
 	}
@@ -108,28 +88,28 @@ public class ProfileAddressResponse extends Response {
 		this.state = state;
 	}
 
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
 	}
 
 }

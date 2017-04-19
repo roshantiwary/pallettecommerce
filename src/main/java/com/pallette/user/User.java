@@ -180,4 +180,10 @@ public class User extends BaseEntity implements UserDetails {
 	public void addShippingAddress(Address shippingAddress) {
 		this.shippingAddress.add(shippingAddress);
 	}
+	
+	public void removeAddress(Address address) {
+		if (null != this.shippingAddress && !this.shippingAddress.isEmpty()) {
+			shippingAddress.remove(address);
+		}
+	}
 }

@@ -1,7 +1,8 @@
 package com.pallette.user;
 
+import com.pallette.beans.ProfileAddressResponseBean;
+import com.pallette.response.Response;
 import com.pallette.user.api.AddEditAddressRequest;
-import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
 import com.pallette.user.api.UpdateUserRequest;
@@ -22,8 +23,12 @@ public interface UserService {
 	 */
 	public ApiUser saveUser(String userId, UpdateUserRequest request);
 	
-	public ApiAddress addNewAddress(AddEditAddressRequest request);
+	public AddEditAddressRequest addNewAddress(AddEditAddressRequest request);
 	
-	public ApiAddress editAddress(AddEditAddressRequest request);
+	public AddEditAddressRequest editAddress(AddEditAddressRequest request);
+
+	public Response removeAddress(String addressKey);
+
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId);
 
 }

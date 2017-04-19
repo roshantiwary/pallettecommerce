@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.mongodb.DBObject;
 import com.pallette.persistence.BaseEntity;
+import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.ApiAddress;
 
 @Document(collection = "app_address")
@@ -33,7 +34,7 @@ public class Address extends BaseEntity{
 		super();
 	}
 
-	public Address(ApiAddress address) {
+	public Address(AddEditAddressRequest address) {
 		this(address.getId());
 		this.emailAddress = address.getEmailAddress().toLowerCase();
 		this.firstName = address.getFirstName();

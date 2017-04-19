@@ -6,22 +6,22 @@ import com.pallette.response.Response;
 
 public class AddEditAddressResponse extends Response{
 
-	private ApiAddress address;
+	private AddEditAddressRequest address;
 
 	public AddEditAddressResponse() {
 		
 	}
 
-	public AddEditAddressResponse(ApiAddress address) {
+	public AddEditAddressResponse(AddEditAddressRequest address) {
 		notNull(address, "Mandatory argument 'address' missing.");
 		this.address = address;
 	}
 
-	public ApiAddress getAddress() {
+	public AddEditAddressRequest getAddress() {
 		return address;
 	}
 
-	public void setAddress(ApiAddress address) {
+	public void setAddress(AddEditAddressRequest address) {
 		this.address = address;
 	}
 }

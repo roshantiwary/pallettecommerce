@@ -2,11 +2,20 @@ package com.pallette.user;
 
 import static org.springframework.util.Assert.notNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Validator;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,11 +24,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.pallette.beans.ProfileAddressResponse;
+import com.pallette.beans.ProfileAddressResponseBean;
+import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.SequenceConstants;
 import com.pallette.repository.SequenceDao;
+import com.pallette.response.Response;
 import com.pallette.service.BaseService;
 import com.pallette.user.api.AddEditAddressRequest;
-import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
 import com.pallette.user.api.UpdateUserRequest;
@@ -44,6 +56,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	
 	@Autowired
 	private SequenceDao sequenceDao;
+	
+	@Autowired
+	private MongoOperations mongoOperation; 
 
 	@Autowired
 	public UserServiceImpl(Validator validator) {
@@ -146,34 +161,33 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
     
     @Override
 	@Transactional
-	public ApiAddress addNewAddress(AddEditAddressRequest request) {
+	public AddEditAddressRequest addNewAddress(AddEditAddressRequest request) {
 		logger.info("Validating Address request.");
 		validate(request);
 		Address newAddress = insertNewAddress(request);
-		User user = userRepository.findOne(request.getAddress().getProfileId());
+		User user = userRepository.findOne(request.getProfileId());
 		user.getShippingAddress().add(newAddress);
 		userRepository.save(user);
 		logger.debug("Added new address [{}].", newAddress.getId());
-		return new ApiAddress(newAddress);
+		return new AddEditAddressRequest(newAddress);
 	}
 
 	private Address insertNewAddress(final AddEditAddressRequest request) {
-		ApiAddress address = request.getAddress();
 		String addressId = sequenceDao.getNextAddressSequenceId(SequenceConstants.SEQ_KEY);
-		address.setId(addressId);
-		Address newAddress = new Address(address);
+		request.setId(addressId);
+		Address newAddress = new Address(request);
 		return addressRepository.save(newAddress);
 	}
 
 	@Override
 	@Transactional
-	public ApiAddress editAddress(AddEditAddressRequest request) {
+	public AddEditAddressRequest editAddress(AddEditAddressRequest request) {
 		logger.info("Validating Address request.");
 		validate(request);
-		locateAddress(request.getAddress().getId());
-		Address updateAddress = new Address(request.getAddress());
+		locateAddress(request.getId());
+		Address updateAddress = new Address(request);
 		logger.debug("Updated Address [{}].", updateAddress.getId());
-		return new ApiAddress(addressRepository.save(updateAddress));
+		return new AddEditAddressRequest(addressRepository.save(updateAddress));
 	}
 
 	private void locateAddress(String addressKey) {
@@ -183,6 +197,68 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			logger.debug("Address not found for the key [{}]", addressKey);
             throw new AddressNotFoundException();
 		}
+	}
+
+	@Override
+	public Response removeAddress(String addressKey) {
+		logger.debug("AccountService.removeAddress: Removing Address : "+addressKey);
+		
+		Response genericResponse = new Response();
+		locateAddress(addressKey);
+		Address addressItem = addressRepository.findOne(addressKey);
+		User account = userRepository.findOne(addressItem.getProfileId());
+		Query addressRemovalQuery = new Query();
+		addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(addressItem.getId()));
+		Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
+		account.removeAddress(address);
+		userRepository.save(account);
+		logger.debug("Address Document Removed Successfully :" , address.getId());
+		if(null != addressItem && null != account){
+			logger.debug("AccountService.removeAddress: Removed Address From Profile : "+addressKey);
+			genericResponse.setStatus(Boolean.TRUE);
+			genericResponse.setStatusCode(HttpStatus.OK.value());
+			genericResponse.setMessage("Address Removed Succesfully");
+		}else{
+			logger.error("AccountService.removeAddress: There is Some Error While removing Address");
+		}
+		return genericResponse;
+	}
+
+	@Override
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
+		ProfileAddressResponseBean addressResponse = new ProfileAddressResponseBean();
+
+		User account = userRepository.findOne(profileId);
+		if (null == account) {
+			
+			addressResponse.setMessage("There is Some Issue With Address");
+			addressResponse.setStatus(Boolean.FALSE);
+			addressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return addressResponse;
+		}
+
+		List<Address> addressList = account.getShippingAddress();
+		List<ProfileAddressResponse> addressResponseList = new ArrayList<ProfileAddressResponse>();
+		if (null != addressList && !addressList.isEmpty()) {
+			for (Address address : addressList) {
+				ProfileAddressResponse response = new ProfileAddressResponse();
+				response.setId(address.getId().toString());
+				try {
+					BeanUtils.copyProperties(response, address);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+				}
+				addressResponseList.add(response);
+			}
+			addressResponse.setAdressResponse(addressResponseList);
+			addressResponse.setMessage("All Profile Address Retrived Sucessfully");
+			addressResponse.setStatus(Boolean.TRUE);
+			addressResponse.setStatusCode(HttpStatus.OK.value());
+		} else {
+			addressResponse.setMessage("There is Some Issue With Address");
+			addressResponse.setStatus(Boolean.FALSE);
+			addressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		}
+		return addressResponse;
 	}
 
 }

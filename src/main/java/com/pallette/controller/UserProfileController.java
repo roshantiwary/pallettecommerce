@@ -38,6 +38,7 @@ import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
+import com.pallette.user.Address;
 import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.AddEditAddressResponse;
 import com.pallette.user.api.ApiAddress;
@@ -157,8 +158,8 @@ public class UserProfileController {
 		logger.debug("Adding New Address in Profile : " + request.toString());
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
-		request.getAddress().setProfileId(profileId);
-		ApiAddress address = userService.addNewAddress(request);
+		request.setProfileId(profileId);
+		AddEditAddressRequest address = userService.addNewAddress(request);
 		AddEditAddressResponse addAddressResponse = new AddEditAddressResponse(address);
 		return new ResponseEntity(addAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
@@ -175,8 +176,8 @@ public class UserProfileController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_EDIT_ADDRESS_URL, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AddEditAddressResponse> editAddress(@Valid @RequestBody AddEditAddressRequest request){
-		logger.debug("Editing Existing Address for Address Key : " + request.getAddress().getId());
-		ApiAddress address = userService.editAddress(request);
+		logger.debug("Editing Existing Address for Address Key : " + request.getId());
+		AddEditAddressRequest address = userService.editAddress(request);
 		AddEditAddressResponse editAddressResponse = new AddEditAddressResponse(address);
 		return new ResponseEntity(editAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
@@ -224,7 +225,7 @@ public class UserProfileController {
 		Response genericResponse = new Response();
 
 		try {
-			genericResponse = accountService.removeAddress(addressKey);
+			genericResponse = userService.removeAddress(addressKey);
 		} catch (Exception e) {
 			genericResponse.setMessage(e.getMessage());
 			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -368,7 +369,7 @@ public class UserProfileController {
 			throw new IllegalArgumentException("No Profile Id was Passed");
 
 		logger.debug("Profile Id from Request Body ", profileId);
-		response = accountService.getAllProfileAddress(profileId);
+		response = userService.getAllProfileAddress(profileId);
 		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 	}
 }
