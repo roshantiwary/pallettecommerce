@@ -133,15 +133,19 @@ public class LoginController extends BaseResource {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		CreateUserResponse createUserResponse = new CreateUserResponse(user,
-				createTokenForNewUser(user.getId(), request.getPassword().getPassword(), authentication.getName()));
-
+				createTokenForNewUser(user.getId(), request.getPassword().getPassword(), authentication.getName(), user));
+		
+		createUserResponse.setMessage("User Created Successfully");
+		createUserResponse.setStatus(Boolean.TRUE);
+		createUserResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity(createUserResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
-	private OAuth2AccessToken createTokenForNewUser(String userId, String password, String clientId) {
+	private OAuth2AccessToken createTokenForNewUser(String userId, String password, String clientId, ApiUser user) {
 		String hashedPassword = passwordEncoder.encode(password);
 		UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(userId,
 				hashedPassword, Collections.singleton(new SimpleGrantedAuthority(Role.USER.toString())));
+		userAuthentication.setDetails(user);
 		ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
 		OAuth2Request oAuth2Request = createOAuth2Request(null, clientId,
 				Collections.singleton(new SimpleGrantedAuthority(Role.USER.toString())), true,
