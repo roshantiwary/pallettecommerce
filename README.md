@@ -70,7 +70,7 @@ Starting Mongo using user access:
 - Please update ResourceServerConfiguration.java with URL and Grant Authority based on Role
 - By default each user registration will have USER Role.
 
-### OAUTH2 ACCESS
+### OAUTH2 ACCESS using Mongo Token Store
 There are 2 types of Grant Types
 	- client_credentials - Browse/Checkout Services do not require password
 	- password - MyAccount services require users to be logged-in
