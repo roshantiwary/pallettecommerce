@@ -38,10 +38,8 @@ import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
 import com.pallette.service.UserService;
-import com.pallette.user.Address;
 import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.AddEditAddressResponse;
-import com.pallette.user.api.ApiAddress;
 import com.pallette.user.api.ApiUser;
 
 

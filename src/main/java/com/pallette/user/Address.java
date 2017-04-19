@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.mongodb.DBObject;
 import com.pallette.persistence.BaseEntity;
 import com.pallette.user.api.AddEditAddressRequest;
-import com.pallette.user.api.ApiAddress;
 
 @Document(collection = "app_address")
 public class Address extends BaseEntity{

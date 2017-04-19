@@ -380,7 +380,6 @@ public class AccountService {
 				genericResponse.setAddress2(address.getAddress2());
 				genericResponse.setCity(address.getCity());
 				genericResponse.setState(address.getState());
-				genericResponse.setCountry(address.getCountry());
 				genericResponse.setPhoneNumber(address.getPhoneNumber());
 			}
 		} else{
