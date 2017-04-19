@@ -63,7 +63,7 @@ public class CartController {
 		CartResponse cartResponse = new CartResponse();
 		
 		ApiUser user = getProfileId(authentication);
-		String profileId = user.getId();
+		String profileId = user != null ? user.getId() : null;
 		
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
@@ -233,7 +233,7 @@ public class CartController {
 	private ApiUser getProfileId(OAuth2Authentication authentication) {
 		
 		ApiUser user = null;
-		if(authentication.getUserAuthentication().getDetails() != null) {
+		if(null !=authentication.getUserAuthentication() && authentication.getUserAuthentication().getDetails() != null) {
 			user = (ApiUser) authentication.getUserAuthentication().getDetails();
 		}
 		return user;
