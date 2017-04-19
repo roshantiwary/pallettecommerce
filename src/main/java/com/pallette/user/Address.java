@@ -35,7 +35,7 @@ public class Address extends BaseEntity{
 
 	public Address(AddEditAddressRequest address) {
 		this(address.getId());
-		this.emailAddress = address.getEmailAddress().toLowerCase();
+		this.emailAddress = address.getEmailAddress() != null ? address.getEmailAddress().toLowerCase() : null;
 		this.firstName = address.getFirstName();
 		this.lastName = address.getLastName();
 		this.address1 = address.getAddress1();
