@@ -1,26 +1,18 @@
 package com.pallette.web.security;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.pallette.service.UserService;
-
 @Component
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
-	private static final Logger logger = LoggerFactory.getLogger(LogoutSuccessHandler.class);
 	
-	@Autowired
-	private UserService service;
+//	@Autowired
+//	private UserService service;
 
 	public LogoutSuccessHandler() {
 		super();
@@ -36,7 +28,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 			HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 
-		service.logout(authentication.getPrincipal().toString());
+//		service.logout(authentication.getPrincipal().toString());
 		super.onLogoutSuccess(request, response, authentication);
 	}
 }
