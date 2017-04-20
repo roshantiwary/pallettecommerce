@@ -1,5 +1,7 @@
 package com.pallette.beans;
 
+import static org.springframework.util.Assert.notNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -8,30 +10,18 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class PasswordBean {
 	
-	private String id;
-	
-	@NotBlank
 	private String oldPassword;
 	
-	@NotBlank
 	private String newPassword;
 	
-	@NotBlank
 	private String confirmPassword;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getOldPassword() {
 		return oldPassword;
 	}
 
 	public void setOldPassword(String oldPassword) {
+		notNull(oldPassword, "Mandatory argument 'oldPassword missing.'");
 		this.oldPassword = oldPassword;
 	}
 
@@ -40,6 +30,7 @@ public class PasswordBean {
 	}
 
 	public void setNewPassword(String newPassword) {
+		notNull(newPassword, "Mandatory argument 'newPassword missing.'");
 		this.newPassword = newPassword;
 	}
 
@@ -48,6 +39,7 @@ public class PasswordBean {
 	}
 
 	public void setConfirmPassword(String confirmPassword) {
+		notNull(confirmPassword, "Mandatory argument 'confirmPassword missing.'");
 		this.confirmPassword = confirmPassword;
 	}
 }

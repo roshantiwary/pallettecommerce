@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.pallette.beans.AccountResponse;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.AuthenticationRequest;

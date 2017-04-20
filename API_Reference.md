@@ -336,45 +336,91 @@
 ## Profile Services:	
 
 ### Add new Address In Profile.
-	Service URL : "/account/addresses/add"
+	Service URL : "/account/address/add"
 	Method : POST
 	Parameters :
 	{
-	    "firstName" : "Vivek",
-	    "lastName" : "Dwivedi",
-	    "address1" : "HNO 89 20th Main 4th 'A' Cross",
-	    "address2" : "Near gangothri Circle BTM 1st Stage",
-	    "city" : "Bangalore",
-	    "state" : "Karnataka",
-	    "postalCode" : "560029",
-	    "country" : "India",
-	    "ownerId" : "profile15",
-	    "phoneNumber" : "9893084117"
+		"firstName" : "Vivz",
+		"lastName" : "Dwivedi",
+		"emailAddress" : "vivzd@yahoo.com",
+		"address1" : "HNO 84",
+		"address2" : "BTM 1st Stage",
+		"city" : "Bangalore",
+		"state" : "KA",
+		"zipcode" : "560029",
+		"phoneNumber" : "8147928393"
 	}
 	
+	Service Response : 
+	{
+	  "message": "Address Added Successfully",
+	  "status": true,
+	  "statusCode": 200,
+	  "address": {
+	    "emailAddress": "vivzd@yahoo.com",
+	    "firstName": "Vivz",
+	    "lastName": "Dwivedi",
+	    "address1": "HNO 84",
+	    "address2": "BTM 1st Stage",
+	    "city": "Bangalore",
+	    "state": "KA",
+	    "zipcode": "560029",
+	    "phoneNumber": "8147928393",
+	    "profileId": "profile26",
+	    "id": "address18"
+	  }
+	}
 ### Edit Address in Profile.
-	Service URL : "/account/editAddress/{id}" id - AddressKey
+	Service URL : "/account/address/edit"
 	Method : PUT
 	Parameters : 
 	{
-	    "firstName" : "Vivz",
-	    "lastName" : "Dwivedi",
-	    "address1" : "HNO 85 20th Main 4th 'A' Cross",
-	    "address2" : "Near gangothri Circle BTM 1st Stage",
-	    "city" : "Bangalore",
-	    "state" : "Tamilnadu",
-	    "postalCode" : "560029",
-	    "country" : "IN",
-	    "ownerId" : "profile14",
-	    "phoneNumber" : "9893084117"
+		"id" : "address19",
+		"firstName" : "Vivek",
+		"lastName" : "Dwivedi",
+		"emailAddress" : "vivzd@yahoo.com",
+		"address1" : "HNO 84 Near Gangothri Circle",
+		"address2" : "BTM 1st Stage",
+		"city" : "Bangalore",
+		"state" : "KA",
+		"zipcode" : "560029",
+		"phoneNumber" : "8147928393"
+	}
+	
+	Service Response : 
+	{
+	  "message": "Address Updated Successfully",
+	  "status": true,
+	  "statusCode": 200,
+	  "address": {
+	    "emailAddress": "vivzd@yahoo.com",
+	    "firstName": "Vivek",
+	    "lastName": "Dwivedi",
+	    "address1": "HNO 84 Near Gangothri Circle",
+	    "address2": "BTM 1st Stage",
+	    "city": "Bangalore",
+	    "state": "KA",
+	    "zipcode": "560029",
+	    "phoneNumber": "8147928393",
+	    "profileId": "profile26",
+	    "id": "address19"
+	  }
 	}
 	
 ### Remove Address From Profile.
-	Service URL : "/account/removeAddress/{id}"
+	Service URL : "/account/address/{id}/remove"
+	id : addressKey
 	Method : DELETE
 	Parameters : 
 	{
-	    "id" : "Vivz"
+		OAuth2Authentication
+	}
+	
+	Service Response : 
+	{
+	  "message": "Address Removed Successfully",
+	  "status": true,
+	  "statusCode": 200
 	}
 	
 ### Edit Personal Details.
@@ -382,23 +428,39 @@
 	Method : PUT
 	Parameters : 
 	{
-	    "id" : "profile3",
-	    "username" : "vivz123456@gmail.com",
-	    "firstName" : "Vivek",
-	    "lastName" : "Dwivedi",
-	    "phoneNumber" : "9893084117"
+		"firstName" : "Shalu",
+		"lastName" : "Dwivedi",
+		"emailAddress" : "vivz@yahoo.com"
 	}
 	
+	Service Response :
+	
+	{
+	  "message": "Profile Updated Successfully",
+	  "status": true,
+	  "statusCode": 200,
+	  "user": {
+	    "firstName": "Shalu",
+	    "lastName": "Dwivedi",
+	    "emailAddress": "vivz@yahoo.com"
+	  }
+	}
 	
 ### Change Password.
 	Service URL : "/account/changePassword"
 	Method : PUT
 	Parameters : 
 	{
-	                "id" : "profile3",
-	    "oldPassword" : "Admin@123",
-	    "newPassword" : "Admin@1234",
-	    "confirmPassword" : "Admin@1234"
+    "oldPassword" : "Admin@123",
+    "newPassword" : "Admin@1234",
+    "confirmPassword" : "Admin@1234"
+	}
+	
+	Service Response :
+	{
+	  "message": "Password Updated Successfully",
+	  "status": true,
+	  "statusCode": 200
 	}
 	
 ### Get Order Details.
@@ -422,33 +484,106 @@
 		oAuth2Authentication
 	}
 	
+	Service Response : 
+	{
+	  "message": "Profile Addresses Retrived Successfully",
+	  "status": true,
+	  "statusCode": 200,
+	  "adressResponse": [
+	    {
+	      "message": null,
+	      "status": false,
+	      "statusCode": 0,
+	      "id": "address18",
+	      "firstName": "Vivz",
+	      "lastName": "Dwivedi",
+	      "address1": "HNO 84",
+	      "address2": "BTM 1st Stage",
+	      "city": "Bangalore",
+	      "state": "KA",
+	      "zipcode": "560029",
+	      "phoneNumber": "8147928393",
+	      "profileId": "profile26"
+	    },
+	    {
+	      "message": null,
+	      "status": false,
+	      "statusCode": 0,
+	      "id": "address19",
+	      "firstName": "Vikas",
+	      "lastName": "Dwivedi",
+	      "address1": "HNO 38",
+	      "address2": "BTM 2nd Stage",
+	      "city": "Bangalore",
+	      "state": "KA",
+	      "zipcode": "560029",
+	      "phoneNumber": "9685667831",
+	      "profileId": "profile26"
+	    }
+	  ]
+	}
+	
 ### Create Profile.
 	Service URL : "/account/create"
 	Method : POST
 	Parameters : 
 	{
-	    "id" : "profile3",
-	    "username" : "vivz123456@gmail.com",
-	    "password" : "Admin@123",
-	                "confirmPassword" : "Admin@123",
-	    "firstName" : "Vivek",
-	    "lastName" : "Dwivedi",
-	    "authtoken" : "9591480b-0ba4-4d91-a065-dfe4d0020783",
-	    "phoneNumber" : "9893084117"
+    "user" : {
+        "emailAddress": "vivz@yahoo.com",
+        "firstName": "Vivek",
+        "lastName": "Dwivedi",
+        "age": "25"
+    },
+    "password" : "Admin@123"
 	}
+	
 	Service Response :
-		{
-	  "message": "Account has been created",
+	{
+	  "message": "User Created Successfully",
 	  "status": true,
 	  "statusCode": 200,
-	  "id": "profile3",
-	  "firstName": "Abhishek",
-	  "lastName": "Mallick",
-	  "email": "abhirick12@gmail.com",
-	  "address": [],
-	  "phoneNumber": "9893084117"
+	  "apiUser": {
+	    "emailAddress": "vivz@yahoo.com",
+	    "firstName": "Vivek",
+	    "lastName": "Dwivedi",
+	    "age": 25,
+	    "id": "profile26",
+	    "name": "vivz@yahoo.com"
+	  },
+	  "oauth2AccessToken": {
+	    "access_token": "2341254b-70a3-4606-886e-67307236989c",
+	    "token_type": "bearer",
+	    "refresh_token": "85b1fe95-9673-49f5-b6b7-e15847c2ae17",
+	    "expires_in": 499,
+	    "scope": "read write"
+	  }
 	}
 
+### Get Profile Address
+	Service URL : "/account/address/{id}"
+	id : addressKey
+	Method : GET
+	Parameters : 
+	{
+		OAuth2Authentication
+	}
+	
+	Service Response :
+	{
+	  "message": "Address found",
+	  "status": false,
+	  "statusCode": 200,
+	  "id": "address18",
+	  "firstName": "Vivz",
+	  "lastName": "Dwivedi",
+	  "address1": "HNO 84",
+	  "address2": "BTM 1st Stage",
+	  "city": "Bangalore",
+	  "state": "KA",
+	  "zipcode": "560029",
+	  "phoneNumber": "8147928393",
+	  "profileId": "profile26"
+	}
 	
 ## Merchandising Services:
 
