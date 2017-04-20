@@ -1,4 +1,4 @@
-package com.pallette.beans;
+package com.pallette.browse.response;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.pallette.response.Response;
  * @author vdwiv3
  *
  */
-public class ProductResponseBean extends Response{
+public class ProductResponseBean extends Response {
 
 	List<ProductResponse> productResponse;
 

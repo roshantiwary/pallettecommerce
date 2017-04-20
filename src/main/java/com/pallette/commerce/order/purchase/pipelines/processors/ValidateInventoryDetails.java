@@ -14,11 +14,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.pallette.browse.documents.InventoryDocument;
+import com.pallette.browse.documents.SkuDocument;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.CommerceItem;
-import com.pallette.domain.InventoryDocument;
 import com.pallette.domain.Order;
-import com.pallette.domain.SkuDocument;
 
 /**
  * @author amall3

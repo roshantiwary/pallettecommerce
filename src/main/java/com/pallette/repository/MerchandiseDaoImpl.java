@@ -9,14 +9,14 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.pallette.domain.BrandDocument;
-import com.pallette.domain.CategoryDocument;
-import com.pallette.domain.CityDocument;
-import com.pallette.domain.ImagesDocument;
-import com.pallette.domain.InventoryDocument;
-import com.pallette.domain.PriceDocument;
-import com.pallette.domain.ProductDocument;
-import com.pallette.domain.SkuDocument;
+import com.pallette.browse.documents.BrandDocument;
+import com.pallette.browse.documents.CategoryDocument;
+import com.pallette.browse.documents.CityDocument;
+import com.pallette.browse.documents.ImagesDocument;
+import com.pallette.browse.documents.InventoryDocument;
+import com.pallette.browse.documents.PriceDocument;
+import com.pallette.browse.documents.ProductDocument;
+import com.pallette.browse.documents.SkuDocument;
 
 @Repository
 public class MerchandiseDaoImpl implements MerchandiseDao{

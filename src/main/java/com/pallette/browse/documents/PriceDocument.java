@@ -1,21 +1,19 @@
 /**
  * 
  */
-package com.pallette.domain;
+package com.pallette.browse.documents;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
  * @author amall3
  *
  */
 @Document(collection = "price")
-public class PriceDocument {
-
-	@Id
-	private String id;
+public class PriceDocument extends BaseEntity {
 
 	@Field(value = "list_price")
 	private double listPrice;
@@ -25,25 +23,6 @@ public class PriceDocument {
 
 	public PriceDocument() {
 		super();
-	}
-	
-	public PriceDocument(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**

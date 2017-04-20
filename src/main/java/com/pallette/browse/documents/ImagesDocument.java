@@ -1,33 +1,35 @@
-package com.pallette.beans;
+/**
+ * 
+ */
+package com.pallette.browse.documents;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
- * @author vdwiv3
+ * @author amall3
  *
  */
-public class ImageResponse {
 
-	private String id;
-	
+@Document(collection = "image")
+public class ImagesDocument extends BaseEntity {
+
+	@Field(value = "thumbnail_image_url")
 	private String thumbnailImageUrl;
 
+	@Field(value = "small_image_url")
 	private String smallImageUrl;
 
+	@Field(value = "large_image_url")
 	private String largeImageUrl;
 
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
+	@Field(value = "image_availablity")
+	private boolean imageAvailablity;
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
+	public ImagesDocument() {
+		super();
 	}
 
 	/**
@@ -74,4 +76,20 @@ public class ImageResponse {
 	public void setLargeImageUrl(String largeImageUrl) {
 		this.largeImageUrl = largeImageUrl;
 	}
+
+	/**
+	 * @return the imageAvailablity
+	 */
+	public boolean isImageAvailablity() {
+		return imageAvailablity;
+	}
+
+	/**
+	 * @param imageAvailablity
+	 *            the imageAvailablity to set
+	 */
+	public void setImageAvailablity(boolean imageAvailablity) {
+		this.imageAvailablity = imageAvailablity;
+	}
+
 }

@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.pallette.repository;
+package com.pallette.browse.repository;
 
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.pallette.domain.BrandDocument;
+import com.pallette.browse.documents.BrandDocument;
 
 /**
  * @author amall3

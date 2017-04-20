@@ -1,11 +1,12 @@
-package com.pallette.domain;
+package com.pallette.browse.documents;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
  * @author vdwiv3
@@ -13,40 +14,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 
 @Document(collection = "region")
-public class CityDocument {
+public class CityDocument extends BaseEntity {
 
-	@Id
-	private String id;
-	
 	private String name;
-	
+
 	@DBRef
 	private ImagesDocument imagesDocument;
-	
+
 	@DBRef
 	private List<BrandDocument> brandDocuments;
 
 	public CityDocument() {
 		super();
-	}
-
-	public CityDocument(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**
@@ -68,9 +47,9 @@ public class CityDocument {
 	 * @return the brandDocuments
 	 */
 	public List<BrandDocument> getBrandDocuments() {
-		if(null == brandDocuments)
+		if (null == brandDocuments)
 			brandDocuments = new ArrayList<BrandDocument>();
-		
+
 		return brandDocuments;
 	}
 
@@ -96,5 +75,5 @@ public class CityDocument {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

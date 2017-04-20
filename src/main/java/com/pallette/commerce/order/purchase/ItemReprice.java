@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.pallette.browse.documents.SkuDocument;
+import com.pallette.browse.repository.ProductRepository;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
-import com.pallette.domain.SkuDocument;
-import com.pallette.repository.ProductRepository;
 
 @Component
 public class ItemReprice implements RepriceChain, Ordered{

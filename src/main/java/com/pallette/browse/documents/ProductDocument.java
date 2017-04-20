@@ -1,25 +1,25 @@
 /**
  * 
  */
-package com.pallette.domain;
+package com.pallette.browse.documents;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
  * @author amall3
  *
  */
 @Document(collection = "product")
-public class ProductDocument {
+public class ProductDocument extends BaseEntity {
 
-	@Id
-	private String id;
+	private static final long serialVersionUID = 1L;
 
 	@Field(value = "product_title")
 	private String productTitle;
@@ -38,10 +38,10 @@ public class ProductDocument {
 
 	@DBRef
 	private CategoryDocument categoryDocument;
-	
+
 	@DBRef
 	private ImagesDocument imagesDocument;
-	
+
 	@DBRef
 	private List<SkuDocument> skuDocument;
 
@@ -58,21 +58,6 @@ public class ProductDocument {
 	 */
 	public void setCategoryDocument(CategoryDocument categoryDocument) {
 		this.categoryDocument = categoryDocument;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**
@@ -154,7 +139,7 @@ public class ProductDocument {
 	 * @return the skuDocument
 	 */
 	public List<SkuDocument> getSkuDocument() {
-		if(null == skuDocument)
+		if (null == skuDocument)
 			skuDocument = new ArrayList<SkuDocument>();
 		return skuDocument;
 	}

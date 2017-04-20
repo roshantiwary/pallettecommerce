@@ -30,15 +30,15 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.pallette.browse.documents.ProductDocument;
+import com.pallette.browse.repository.ProductRepository;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.domain.Address;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
-import com.pallette.domain.ProductDocument;
 import com.pallette.domain.ShippingGroup;
-import com.pallette.repository.ProductRepository;
 
 
 /**

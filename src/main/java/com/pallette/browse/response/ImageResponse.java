@@ -1,42 +1,19 @@
-/**
- * 
- */
-package com.pallette.domain;
+package com.pallette.browse.response;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * @author amall3
+ * @author vdwiv3
  *
  */
+public class ImageResponse {
 
-@Document(collection = "image")
-public class ImagesDocument {
-
-	@Id
 	private String id;
-
-	@Field(value = "thumbnail_image_url")
+	
 	private String thumbnailImageUrl;
 
-	@Field(value = "small_image_url")
 	private String smallImageUrl;
 
-	@Field(value = "large_image_url")
 	private String largeImageUrl;
-
-	@Field(value = "image_availablity")
-	private boolean imageAvailablity;
-	
-	public ImagesDocument() {
-		super();
-	}
-	
-	public ImagesDocument(String id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the id
@@ -97,20 +74,4 @@ public class ImagesDocument {
 	public void setLargeImageUrl(String largeImageUrl) {
 		this.largeImageUrl = largeImageUrl;
 	}
-
-	/**
-	 * @return the imageAvailablity
-	 */
-	public boolean isImageAvailablity() {
-		return imageAvailablity;
-	}
-
-	/**
-	 * @param imageAvailablity
-	 *            the imageAvailablity to set
-	 */
-	public void setImageAvailablity(boolean imageAvailablity) {
-		this.imageAvailablity = imageAvailablity;
-	}
-
 }

@@ -1,6 +1,8 @@
-package com.pallette.beans;
+package com.pallette.browse.response;
 
 import java.util.List;
+
+import com.pallette.beans.SkuResponse;
 
 /**
  * @author vdwiv3
@@ -11,6 +13,8 @@ public class ProductResponse {
 	private String id;
 
 	private String productTitle;
+	
+	private String productSlug;
 
 	private String productDescription;
 
@@ -109,5 +113,19 @@ public class ProductResponse {
 	 */
 	public void setCategoryResponse(CategoryResponse categoryResponse) {
 		this.categoryResponse = categoryResponse;
+	}
+
+	/**
+	 * @return the productSlug
+	 */
+	public String getProductSlug() {
+		return productSlug;
+	}
+
+	/**
+	 * @param productSlug the productSlug to set
+	 */
+	public void setProductSlug(String productSlug) {
+		this.productSlug = productSlug;
 	}
 }

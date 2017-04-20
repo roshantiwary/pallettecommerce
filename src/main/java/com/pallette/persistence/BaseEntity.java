@@ -7,11 +7,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * @version 1.0
- * @author: Iain Porter
- * @since 30/04/2013
- */
 public abstract class BaseEntity implements Serializable {
 
     private int version;

@@ -1,59 +1,44 @@
 /**
  * 
  */
-package com.pallette.domain;
+package com.pallette.browse.documents;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.pallette.persistence.BaseEntity;
 
 /**
  * @author vdwiv3
  *
  */
 @Document(collection = "sku")
-public class SkuDocument {
-
-	@Id
-	private String id;
+public class SkuDocument extends BaseEntity {
 
 	@Field(value = "name")
 	private String name;
-	
-	@Field(value="default_display_name")
+
+	@Field(value = "default_display_name")
 	private String defaultDisplayName;
-	
-	@Field(value="active")
+
+	@Field(value = "active")
 	private boolean active;
-	
-	@Field(value="unit_of_measure")
+
+	@Field(value = "unit_of_measure")
 	private String unitOfMeasure;
-	
-	@Field(value="returnable")
+
+	@Field(value = "returnable")
 	private boolean returnable;
-	
+
 	@DBRef
 	private PriceDocument priceDocument;
-	
+
 	@DBRef
 	private InventoryDocument inventoryDocument;
 
 	public SkuDocument() {
 		super();
-	}
-	
-	public SkuDocument(String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -111,5 +96,5 @@ public class SkuDocument {
 	public void setInventoryDocument(InventoryDocument inventoryDocument) {
 		this.inventoryDocument = inventoryDocument;
 	}
-	
+
 }

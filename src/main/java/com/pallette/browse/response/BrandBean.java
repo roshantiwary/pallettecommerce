@@ -1,20 +1,12 @@
-/**
- * 
- */
-package com.pallette.domain;
+package com.pallette.browse.response;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * @author amall3
+ * @author vdwiv3
  *
  */
+public class BrandBean {
 
-@Document(collection = "brand")
-public class BrandDocument {
-
-	@Id
 	private String id;
 
 	private String storeName;
@@ -32,14 +24,6 @@ public class BrandDocument {
 	private String countryCode;
 
 	private String phone;
-	
-	public BrandDocument() {
-		super();
-	}
-	
-	public BrandDocument(String id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the id

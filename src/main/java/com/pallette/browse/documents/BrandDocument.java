@@ -1,13 +1,19 @@
-package com.pallette.beans;
+/**
+ * 
+ */
+package com.pallette.browse.documents;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
- * @author vdwiv3
+ * @author amall3
  *
  */
-public class BrandBean {
 
-	private String id;
+@Document(collection = "brand")
+public class BrandDocument extends BaseEntity {
 
 	private String storeName;
 
@@ -25,19 +31,8 @@ public class BrandBean {
 
 	private String phone;
 
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
+	public BrandDocument() {
+		super();
 	}
 
 	/**

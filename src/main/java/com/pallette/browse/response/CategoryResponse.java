@@ -1,6 +1,4 @@
-package com.pallette.beans;
-
-import com.pallette.domain.CategoryDocument;
+package com.pallette.browse.response;
 
 /**
  * @author vdwiv3
@@ -15,10 +13,12 @@ public class CategoryResponse {
 	private String categoryDescription;
 
 	private String categoryStatus;
-	
-	private ImageResponse imageResponse;
 
-	private CategoryDocument parentCategoryDocument;
+	private ImageResponse image;
+
+	private CategoryResponse parentCategory;
+
+	private String categorySlug;
 
 	/**
 	 * @return the id
@@ -81,32 +81,47 @@ public class CategoryResponse {
 	}
 
 	/**
-	 * @return the parentCategoryDocument
+	 * @return the categorySlug
 	 */
-	public CategoryDocument getParentCategoryDocument() {
-		return parentCategoryDocument;
+	public String getCategorySlug() {
+		return categorySlug;
 	}
 
 	/**
-	 * @param parentCategoryDocument
-	 *            the parentCategoryDocument to set
+	 * @param categorySlug
+	 *            the categorySlug to set
 	 */
-	public void setParentCategoryDocument(CategoryDocument parentCategoryDocument) {
-		this.parentCategoryDocument = parentCategoryDocument;
+	public void setCategorySlug(String categorySlug) {
+		this.categorySlug = categorySlug;
 	}
 
 	/**
-	 * @return the imageResponse
+	 * @return the image
 	 */
-	public ImageResponse getImageResponse() {
-		return imageResponse;
+	public ImageResponse getImage() {
+		return image;
 	}
 
 	/**
-	 * @param imageResponse
-	 *            the imageResponse to set
+	 * @param image
+	 *            the image to set
 	 */
-	public void setImageResponse(ImageResponse imageResponse) {
-		this.imageResponse = imageResponse;
+	public void setImage(ImageResponse image) {
+		this.image = image;
+	}
+
+	/**
+	 * @return the parentCategory
+	 */
+	public CategoryResponse getParentCategory() {
+		return parentCategory;
+	}
+
+	/**
+	 * @param parentCategory
+	 *            the parentCategory to set
+	 */
+	public void setParentCategory(CategoryResponse parentCategory) {
+		this.parentCategory = parentCategory;
 	}
 }

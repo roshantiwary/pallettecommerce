@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.pallette.domain;
+package com.pallette.browse.documents;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.pallette.persistence.BaseEntity;
 
 /**
  * @author amall3
@@ -13,10 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 
 @Document(collection = "category")
-public class CategoryDocument {
-
-	@Id
-	private String id;
+public class CategoryDocument extends BaseEntity {
 
 	private String categoryTitle;
 
@@ -40,25 +38,6 @@ public class CategoryDocument {
 		super();
 	}
 	
-	public CategoryDocument(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	/**
 	 * @return the categoryTitle
 	 */
