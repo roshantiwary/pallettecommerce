@@ -10,22 +10,11 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class PasswordBean {
 	
-	private String id;
-	
 	private String oldPassword;
 	
 	private String newPassword;
 	
 	private String confirmPassword;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		notNull(id, "Mandatory argument 'id missing.'");
-		this.id = id;
-	}
 
 	public String getOldPassword() {
 		return oldPassword;
