@@ -1,5 +1,6 @@
 package com.pallette.user;
 
+import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.response.Response;
 import com.pallette.user.api.AddEditAddressRequest;
@@ -33,4 +34,7 @@ public interface UserService {
 	
 	public Address getAddress(String addressKey, String profileId);
 
+	public ApiUser updateProfile(UpdateUserRequest account, String profileId);
+
+	public ApiUser changePassword(PasswordBean password, String profileId);
 }

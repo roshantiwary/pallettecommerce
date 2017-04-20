@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
@@ -271,4 +272,39 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return address;
 	}
 
+	@Override
+	public ApiUser updateProfile(UpdateUserRequest request, String profileId) {
+		logger.info("Validating Address request.");
+		validate(request);
+		final String emailAddress = request.getEmailAddress().toLowerCase();
+		User user = locateUser(emailAddress);
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
+		user.setEmailAddress(request.getEmailAddress());
+		userRepository.save(user);
+		return new ApiUser(user);
+	}
+
+	@Override
+	public ApiUser changePassword(PasswordBean password, String profileId) {
+		validate(password);
+		User user = userRepository.findOne(profileId);
+		
+		if(null == user)
+			throw new UserNotFoundException();
+		
+		if(!passwordEncoder.matches(password.getOldPassword(), user.getPassword())){
+			logger.error("Incorrect Old Password for user : " + user.getUsername());
+			throw new IllegalArgumentException("Incorrect Old password supplied");
+		}
+		
+		if(!password.getNewPassword().equals(password.getConfirmPassword())){
+			logger.error("Password and Confirm Password Not Match for user : " + user.getUsername());
+			throw new IllegalArgumentException("Password and Confirm Password Does not match");
+		}
+		
+		user.setHashedPassword(passwordEncoder.encode(password.getNewPassword()));
+		user = userRepository.save(user);
+		return new ApiUser(user);
+	}
 }

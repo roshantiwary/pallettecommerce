@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pallette.beans.AccountBean;
-import com.pallette.beans.AccountResponse;
 import com.pallette.beans.OrderResponse;
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponse;
@@ -38,11 +36,13 @@ import com.pallette.response.GenericResponse;
 import com.pallette.response.OrderDetailResponse;
 import com.pallette.response.Response;
 import com.pallette.service.OrderService;
-import com.pallette.service.UserService;
 import com.pallette.user.Address;
+import com.pallette.user.UserService;
 import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.AddEditAddressResponse;
 import com.pallette.user.api.ApiUser;
+import com.pallette.user.api.UpdateUserRequest;
+import com.pallette.user.api.UpdateUserResponse;
 
 
 @RestController
@@ -50,16 +50,17 @@ import com.pallette.user.api.ApiUser;
 public class UserProfileController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
-
-	@Autowired
-	private UserService accountService;
 	
 	@Autowired
-	private com.pallette.user.UserService userService;
+	private UserService userService;
 
 	@Autowired
 	private OrderService orderService;
 
+	/**
+	 * @param oAuth2Authentication
+	 * @return
+	 */
 	@RequestMapping("/admin")
 	public ResponseEntity<GenericResponse> getAdmin(OAuth2Authentication oAuth2Authentication) {
 		logger.debug("UserProfileController.getAdmin()");
@@ -80,6 +81,10 @@ public class UserProfileController {
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
 
+	/**
+	 * @param oAuth2Authentication
+	 * @return
+	 */
 	@RequestMapping("/administrator")
 	public ResponseEntity<GenericResponse> getAdministrator(OAuth2Authentication oAuth2Authentication) {
 		logger.debug("UserProfileController.getAdministrator()");
@@ -98,6 +103,10 @@ public class UserProfileController {
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
 
+	/**
+	 * @param oAuth2Authentication
+	 * @return
+	 */
 	@RequestMapping("/anonymous")
 	public ResponseEntity<GenericResponse> getAnonymous(OAuth2Authentication oAuth2Authentication) {
 		logger.debug("UserProfileController.getAnonymous()");
@@ -117,6 +126,12 @@ public class UserProfileController {
 		return new ResponseEntity<>(genericResponse, new HttpHeaders(), HttpStatus.FOUND);
 	}
 
+	/**
+	 * @param oAuth2Authentication
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
 	@RequestMapping("/user")
 	public ResponseEntity<ApiUser> getProfile(OAuth2Authentication oAuth2Authentication)
 			throws IllegalAccessException, InvocationTargetException {
@@ -134,6 +149,10 @@ public class UserProfileController {
 
 	}
 
+	/**
+	 * @param authentication
+	 * @return
+	 */
 	private ApiUser getProfileId(OAuth2Authentication authentication) {
 		
 		ApiUser user = null;
@@ -148,8 +167,6 @@ public class UserProfileController {
 	 * 
 	 * @param address
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_ADD_ADDRESS_URL, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -161,6 +178,9 @@ public class UserProfileController {
 		request.setProfileId(profileId);
 		AddEditAddressRequest address = userService.addNewAddress(request);
 		AddEditAddressResponse addAddressResponse = new AddEditAddressResponse(address);
+		addAddressResponse.setMessage("Address Added Successfully");
+		addAddressResponse.setStatus(Boolean.TRUE);
+		addAddressResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity(addAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
@@ -170,8 +190,6 @@ public class UserProfileController {
 	 * @param addressKey
 	 * @param address
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_EDIT_ADDRESS_URL, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -179,6 +197,9 @@ public class UserProfileController {
 		logger.debug("Editing Existing Address for Address Key : " + request.getId());
 		AddEditAddressRequest address = userService.editAddress(request);
 		AddEditAddressResponse editAddressResponse = new AddEditAddressResponse(address);
+		editAddressResponse.setMessage("Address Updated Successfully");
+		editAddressResponse.setStatus(Boolean.TRUE);
+		editAddressResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity(editAddressResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
@@ -213,22 +234,16 @@ public class UserProfileController {
 	 * 
 	 * @param addressKey
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.POFILE_REMOVE_ADDRESS_URL, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey) {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		Response genericResponse = new Response();
-
-		try {
-			genericResponse = userService.removeAddress(addressKey);
-		} catch (Exception e) {
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		genericResponse = userService.removeAddress(addressKey);
+		genericResponse.setMessage("Address Removed Successfully");
+		genericResponse.setStatus(Boolean.TRUE);
+		genericResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
@@ -237,27 +252,19 @@ public class UserProfileController {
 	 * 
 	 * @param account
 	 * @return
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.EDIT_PROFILE_URL, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AccountResponse> updateProfile(@Valid @RequestBody AccountBean account,
-			OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
-
-		AccountResponse genericResponse = new AccountResponse();
+	public ResponseEntity<UpdateUserResponse> updateProfile(@Valid @RequestBody UpdateUserRequest account,OAuth2Authentication oAuth2Authentication){
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
 		logger.debug("Profile update for id : " + profileId);
-		try {
-			genericResponse = accountService.updateProfile(account, profileId);
-		} catch (Exception e) {
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
+		user = userService.updateProfile(account,profileId);
+		UpdateUserResponse response = new UpdateUserResponse(account);
+		response.setMessage("Profile Updated Successfully");
+		response.setStatus(Boolean.TRUE);
+		response.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity(response, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -274,14 +281,10 @@ public class UserProfileController {
 		String profileId = user.getId();
 		logger.debug("Password update for id : " + profileId);
 		Response genericResponse = new Response();
-		try {
-			genericResponse = accountService.changePassword(password, profileId);
-		} catch (Exception e) {
-			genericResponse.setStatus(Boolean.FALSE);
-			genericResponse.setMessage(e.getMessage());
-			genericResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		user = userService.changePassword(password, profileId);
+		genericResponse.setMessage("Password Updated Successfully");
+		genericResponse.setStatus(Boolean.TRUE);
+		genericResponse.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity(genericResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
@@ -354,7 +357,6 @@ public class UserProfileController {
 	 * 
 	 * @param password
 	 * @return
-	 * @throws NoRecordsFoundException
 	 */
 	@RequestMapping(value = RestURLConstants.PROFILE_ADDRESSES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProfileAddressResponseBean> getAllProfileAddress(OAuth2Authentication oAuth2Authentication) {
@@ -368,6 +370,9 @@ public class UserProfileController {
 
 		logger.debug("Profile Id from Request Body ", profileId);
 		response = userService.getAllProfileAddress(profileId);
+		response.setMessage("Profile Addresses Retrived Successfully");
+		response.setStatus(Boolean.TRUE);
+		response.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
 	}
 }
