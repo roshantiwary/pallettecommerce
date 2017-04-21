@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
+import com.pallette.commerce.order.purchase.pipelines.processors.SubmitOrderValidateChain;
+import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Order;
 import com.pallette.payment.payu.PaymentIntegrator;
@@ -39,6 +41,10 @@ public class PaymentController {
 	
 	@Autowired
 	private PaymentService paymentService;
+	
+	@Autowired
+	SubmitOrderValidateChain validateChain;
+
 	
 	/**
 	 * The Order repository.
@@ -57,6 +63,13 @@ public class PaymentController {
 		Order order = orderRepository.findOne(orderId);
 		if (null == order)
 			return null;
+		
+		boolean isValidationSuccess = Boolean.TRUE;
+		
+		isValidationSuccess = validateChain.validateForSubmitOrder(order);
+		if(!isValidationSuccess)
+			return PaymentConstants.FAILED;
+
 		
 		Map<String, String> values = new HashMap<String, String>();
 		values = paymentIntegrator.hashCalMethod(order);

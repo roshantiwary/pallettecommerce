@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,15 +20,12 @@ import com.pallette.browse.api.BrandService;
 import com.pallette.browse.api.CategoryService;
 import com.pallette.browse.api.ProductService;
 import com.pallette.browse.constants.BrowseConstants;
-import com.pallette.browse.documents.BrandDocument;
-import com.pallette.browse.response.BrandBean;
 import com.pallette.browse.response.BrandResponseBean;
 import com.pallette.browse.response.CategoryResponse;
 import com.pallette.browse.response.CategoryResponseBean;
 import com.pallette.browse.response.ProductResponseBean;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.exception.NoRecordsFoundException;
-import com.pallette.response.GenericResponse;
 
 
 /**
