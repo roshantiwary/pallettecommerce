@@ -159,6 +159,10 @@ public class OrderService {
 			// Create new CommerceItem Object an set the default values.
 			CommerceItem commerceItem = createAndPopulateCommerceItem(quantity, prodItem, skuId);
 			order.addCommerceItem(commerceItem);
+		} else {
+			long qty = item.getQuantity();
+			qty = qty + quantity;
+			item.setQuantity(qty);
 		}
 		
 		orderRepriceChain.reprice(order);
