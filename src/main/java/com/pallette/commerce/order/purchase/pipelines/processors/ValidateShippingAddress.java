@@ -37,37 +37,56 @@ public class ValidateShippingAddress extends ValidateOrderForSubmitOrder {
 		boolean isValidationSuccess = Boolean.FALSE;
 
 		List<ShippingGroup> shippingGroups = order.getShippingGroups();
-		if (null == shippingGroups)
+		if (null == shippingGroups) {
+			log.debug("No Shipping Grp.");
 			return isValidationSuccess;
+		}
 
 		if (shippingGroups.size() < 1)
 			return isValidationSuccess;
 
 		for (ShippingGroup shipGrp : shippingGroups) {
+			
 			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+
 				Address address = shipGrp.getAddress();
-				if (null == address)
+				if (null == address) {
+					log.debug("Address Object is Not Set");
 					return isValidationSuccess;
-				
-				if (StringUtils.isEmpty(address.getAddress1()))
-					return isValidationSuccess;
+				}
 
-				if (StringUtils.isEmpty(address.getFirstName()))
+				if (StringUtils.isEmpty(address.getAddress1())) {
+					log.debug("Address1 is Empty");
 					return isValidationSuccess;
+				}
 
-				if (StringUtils.isEmpty(address.getCity()))
+				if (StringUtils.isEmpty(address.getEmail())) {
+					log.debug("Email is Empty");
 					return isValidationSuccess;
+				}
 
-				if (StringUtils.isEmpty(address.getState()))
+				if (StringUtils.isEmpty(address.getFirstName())) {
+					log.debug("First Name is Empty");
 					return isValidationSuccess;
-				if (StringUtils.isEmpty(address.getEmail()))
+				}
+
+				if (StringUtils.isEmpty(address.getCity())) {
+					log.debug("City is Empty");
 					return isValidationSuccess;
+				}
+
+				if (StringUtils.isEmpty(address.getState())) {
+					log.debug("State is Empty");
+					return isValidationSuccess;
+				}
 
 				if (StringUtils.isEmpty(address.getPostalCode()))
 					return isValidationSuccess;
 
-				if (StringUtils.isEmpty(address.getAddress1()))
+				if (StringUtils.isEmpty(address.getPhoneNumber())) {
+					log.debug("Phone Number is Empty");
 					return isValidationSuccess;
+				}
 			}
 		}
 
