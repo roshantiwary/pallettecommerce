@@ -27,13 +27,13 @@ public class AddressResponse {
 
 	private String state;
 
-	private String postalCode;
+	private String zipcode;
 
 	private String country;
 
 	private String phoneNumber;
 
-	private String email;
+	private String emailAddress;
 
 	/**
 	 * @return the firstName
@@ -156,21 +156,6 @@ public class AddressResponse {
 	}
 
 	/**
-	 * @return the postalCode
-	 */
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	/**
-	 * @param postalCode
-	 *            the postalCode to set
-	 */
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	/**
 	 * @return the country
 	 */
 	public String getCountry() {
@@ -202,22 +187,6 @@ public class AddressResponse {
 	}
 
 	/**
-	 * 
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
 	 * @return the addressId
 	 */
 	public String getAddressId() {
@@ -230,6 +199,36 @@ public class AddressResponse {
 	 */
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
+	}
+
+	/**
+	 * @return the zipcode
+	 */
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	/**
+	 * @param zipcode
+	 *            the zipcode to set
+	 */
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	/**
+	 * @return the emailAddress
+	 */
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	/**
+	 * @param emailAddress
+	 *            the emailAddress to set
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 }

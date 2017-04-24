@@ -210,6 +210,7 @@ public class ShippingServices {
 					if (null != addressItem) {
 						// Bean Utils copyProperties method is responsible for copying properties across two beans.
 						BeanUtils.copyProperties(addressResponse, addressItem);
+						addressResponse.setAddressId(addressItem.getId().toString());
 						return addressResponse;
 					}
 				}
@@ -265,6 +266,7 @@ public class ShippingServices {
 			// Bean Utils copyProperties method is responsible for copying properties across two beans.
 			addressBean.setAddressId(address.getId().toString());
 			BeanUtils.copyProperties(addressBean, address);
+			addressBean.setAddressId(address.getId().toString());
 			savedAddress.add(addressBean);
 		}
 		return savedAddress;
@@ -314,6 +316,18 @@ public class ShippingServices {
 				Update update = new Update();
 				Address newAddress = new Address();
 				BeanUtils.copyProperties(newAddress, addressItem);
+				
+				//Code to set email address in address Obj from profile Starts.
+				String profileId = orderItem.getProfileId();
+				log.debug("Profile Id from Order is" , profileId);
+				
+				Query findProfileQuery = new Query(Criteria.where(CommerceConstants._ID).is(profileId));
+				log.debug("Find Profile Query to be executed is :", findProfileQuery);
+				User accountItem = mongoOperation.findOne(findProfileQuery, User.class);
+				newAddress.setEmailAddress(accountItem.getUsername());
+				
+				//Code to set email address in address Obj from profile Ends.
+				
 				update.set(CommerceConstants.ADDRESS, newAddress);
 				mongoOperation.upsert(shippingQuery, update, ShippingGroup.class);
 				
@@ -347,12 +361,12 @@ public class ShippingServices {
 
 		Query findProfileQuery = new Query(Criteria.where(CommerceConstants._ID).is(profileId));
 		log.debug("Find Profile Query to be executed is :", findProfileQuery);
-		Account accountItem = mongoOperation.findOne(findProfileQuery, Account.class);
+		User accountItem = mongoOperation.findOne(findProfileQuery, User.class);
 
 		if (null == accountItem)
 			return isValid;
 
-		List<Address> addresses = accountItem.getAddresses();
+		List<Address> addresses = accountItem.getShippingAddress();
 		if (addresses.isEmpty())
 			return isValid ;
 

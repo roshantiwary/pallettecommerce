@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.pallette.validation.Phone;
 
-
 /**
  * @author amall3
  *
@@ -41,14 +40,14 @@ public class AddEditAddressBean {
 	private String state;
 
 	@NotBlank(message = "Please enter Postal Code")
-	private String postalCode;
+	private String zipcode;
 
 	@Phone
 	private String phoneNumber;
 
 	@NotEmpty(message = "Please enter Email")
 	@Email
-	private String email;
+	private String emailAddress;
 
 	/**
 	 * @return the firstName
@@ -171,21 +170,6 @@ public class AddEditAddressBean {
 	}
 
 	/**
-	 * @return the postalCode
-	 */
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	/**
-	 * @param postalCode
-	 *            the postalCode to set
-	 */
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	/**
 	 * @return the orderId
 	 */
 	public String getOrderId() {
@@ -216,18 +200,33 @@ public class AddEditAddressBean {
 	}
 
 	/**
-	 * @return the email
+	 * @return the zipcode
 	 */
-	public String getEmail() {
-		return email;
+	public String getZipcode() {
+		return zipcode;
 	}
 
 	/**
-	 * @param email
-	 *            the email to set
+	 * @param zipcode
+	 *            the zipcode to set
 	 */
-	public void setEmail(String email) {
-		this.email = email;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	/**
+	 * @return the emailAddress
+	 */
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	/**
+	 * @param emailAddress
+	 *            the emailAddress to set
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 }
