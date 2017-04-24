@@ -20,7 +20,6 @@ import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AddEditAddressBean;
 import com.pallette.commerce.contants.CommerceConstants;
-import com.pallette.domain.Account;
 import com.pallette.domain.Address;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;

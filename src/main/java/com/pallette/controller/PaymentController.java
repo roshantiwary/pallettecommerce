@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.contants.PaymentConstants;
 import com.pallette.commerce.order.purchase.pipelines.processors.SubmitOrderValidateChain;
-import com.pallette.commerce.order.purchase.pipelines.processors.ValidateChain;
 import com.pallette.constants.RestURLConstants;
 import com.pallette.domain.Order;
 import com.pallette.payment.payu.PaymentIntegrator;
