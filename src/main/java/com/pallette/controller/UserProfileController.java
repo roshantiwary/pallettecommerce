@@ -221,7 +221,7 @@ public class UserProfileController {
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
 	
-		Address address = userService.getAddress(addressKey, profileId);
+		com.pallette.domain.Address address = userService.getAddress(addressKey, profileId);
 		BeanUtils.copyProperties(genericResponse , address);
 		genericResponse.setMessage("Address found");
 		genericResponse.setStatusCode(HttpStatus.OK.value());

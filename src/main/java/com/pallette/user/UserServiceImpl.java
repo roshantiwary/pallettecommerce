@@ -29,6 +29,7 @@ import com.pallette.beans.ProfileAddressResponse;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.constants.SequenceConstants;
+import com.pallette.domain.Address;
 import com.pallette.repository.SequenceDao;
 import com.pallette.response.Response;
 import com.pallette.service.BaseService;
@@ -165,7 +166,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	public AddEditAddressRequest addNewAddress(AddEditAddressRequest request) {
 		logger.info("Validating Address request.");
 		validate(request);
-		Address newAddress = insertNewAddress(request);
+		com.pallette.domain.Address newAddress = insertNewAddress(request);
 		User user = userRepository.findOne(request.getProfileId());
 		user.getShippingAddress().add(newAddress);
 		userRepository.save(user);
@@ -173,10 +174,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return new AddEditAddressRequest(newAddress);
 	}
 
-	private Address insertNewAddress(final AddEditAddressRequest request) {
+	private com.pallette.domain.Address insertNewAddress(final AddEditAddressRequest request) {
 		String addressId = sequenceDao.getNextAddressSequenceId(SequenceConstants.SEQ_KEY);
 		request.setId(addressId);
-		Address newAddress = new Address(request);
+		com.pallette.domain.Address newAddress = new com.pallette.domain.Address(request);
 		return addressRepository.save(newAddress);
 	}
 
@@ -186,14 +187,22 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		logger.info("Validating Address request.");
 		validate(request);
 		locateAddress(request.getId());
-		Address updateAddress = new Address(request);
-		logger.debug("Updated Address [{}].", updateAddress.getId());
-		return new AddEditAddressRequest(addressRepository.save(updateAddress));
+		com.pallette.domain.Address address = addressRepository.findOne(request.getId());
+		address.setFirstName(request.getFirstName());
+		address.setLastName(request.getLastName());
+		address.setAddress1(request.getAddress1());
+		address.setAddress2(request.getAddress2());
+		address.setEmailAddress(request.getEmailAddress());
+		address.setCity(request.getCity());
+		address.setZipcode(request.getZipcode());
+		address.setPhoneNumber(request.getPhoneNumber());
+		logger.debug("Updated Address [{}].", address.getId());
+		return new AddEditAddressRequest(addressRepository.save(address));
 	}
 
 	private void locateAddress(String addressKey) {
 		notNull(addressKey, "Mandatory argument 'addressKey' missing.");
-		Address address = addressRepository.findOne(addressKey);
+		com.pallette.domain.Address address = addressRepository.findOne(addressKey);
 		if(null == address){
 			logger.debug("Address not found for the key [{}]", addressKey);
             throw new AddressNotFoundException();
@@ -202,25 +211,25 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public Response removeAddress(String addressKey) {
-		logger.debug("AccountService.removeAddress: Removing Address : "+addressKey);
+		logger.debug("UserService.removeAddress: Removing Address : "+addressKey);
 		
 		Response genericResponse = new Response();
 		locateAddress(addressKey);
-		Address addressItem = addressRepository.findOne(addressKey);
+		com.pallette.domain.Address addressItem = addressRepository.findOne(addressKey);
 		User account = userRepository.findOne(addressItem.getProfileId());
 		Query addressRemovalQuery = new Query();
 		addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(addressItem.getId()));
-		Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
+		com.pallette.domain.Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);
 		account.removeAddress(address);
 		userRepository.save(account);
 		logger.debug("Address Document Removed Successfully :" , address.getId());
 		if(null != addressItem && null != account){
-			logger.debug("AccountService.removeAddress: Removed Address From Profile : "+addressKey);
+			logger.debug("UserService.removeAddress: Removed Address From Profile : "+addressKey);
 			genericResponse.setStatus(Boolean.TRUE);
 			genericResponse.setStatusCode(HttpStatus.OK.value());
 			genericResponse.setMessage("Address Removed Succesfully");
 		}else{
-			logger.error("AccountService.removeAddress: There is Some Error While removing Address");
+			logger.error("UserService.removeAddress: There is Some Error While removing Address");
 		}
 		return genericResponse;
 	}
@@ -238,10 +247,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			return addressResponse;
 		}
 
-		List<Address> addressList = account.getShippingAddress();
+		List<com.pallette.domain.Address> addressList = account.getShippingAddress();
 		List<ProfileAddressResponse> addressResponseList = new ArrayList<ProfileAddressResponse>();
 		if (null != addressList && !addressList.isEmpty()) {
-			for (Address address : addressList) {
+			for (com.pallette.domain.Address address : addressList) {
 				ProfileAddressResponse response = new ProfileAddressResponse();
 				response.setId(address.getId().toString());
 				try {
@@ -263,8 +272,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public Address getAddress(String addressKey, String profileId) {
-		Address address = addressRepository.findByProfileIdAndId(profileId, addressKey);
+	public com.pallette.domain.Address getAddress(String addressKey, String profileId) {
+		com.pallette.domain.Address address = addressRepository.findByProfileIdAndId(profileId, addressKey);
 		if(null == address){
 			logger.debug("Address not found for the key [{}]", addressKey);
             throw new AddressNotFoundException();

@@ -25,6 +25,7 @@ import com.pallette.domain.Address;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;
 import com.pallette.response.AddressResponse;
+import com.pallette.user.User;
 
 /**
  * <p>
@@ -250,12 +251,12 @@ public class ShippingServices {
 		
 		Query findProfileQuery = new Query(Criteria.where(CommerceConstants._ID).is(profileId));
 		log.debug("Find Profile Query to be executed is :", findProfileQuery);
-		Account accountItem = mongoOperation.findOne(findProfileQuery, Account.class);
+		User accountItem = mongoOperation.findOne(findProfileQuery, User.class);
 		
 		if(null == accountItem)
 			return savedAddress;
 		
-		List<Address> addresses = accountItem.getAddresses();
+		List<Address> addresses = accountItem.getShippingAddress();
 		if(addresses.isEmpty())
 			return savedAddress;
 		

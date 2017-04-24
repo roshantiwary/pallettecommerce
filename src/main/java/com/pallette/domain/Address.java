@@ -10,6 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.pallette.user.api.AddEditAddressRequest;
+
 /**
  * @author amall3
  *
@@ -46,15 +48,15 @@ public class Address implements Serializable {
 
 	private String county;
 
-	private String postalCode;
+	private String zipcode;
 
 	private String country;
 
-	private String ownerId;
+	private String profileId;
 	
 	private String phoneNumber;
 	
-	private String email;
+	private String emailAddress;
 
 	public Address() {
 		super();
@@ -64,10 +66,23 @@ public class Address implements Serializable {
 		this.id = id;
 	}
 
+	public Address(AddEditAddressRequest address) {
+		this.emailAddress = address.getEmailAddress() != null ? address.getEmailAddress().toLowerCase() : null;
+		this.firstName = address.getFirstName();
+		this.lastName = address.getLastName();
+		this.address1 = address.getAddress1();
+		this.address2 = address.getAddress2();
+		this.city = address.getCity();
+		this.state = address.getState();
+		this.zipcode = address.getZipcode();
+		this.phoneNumber = address.getPhoneNumber();
+		this.profileId = address.getProfileId();
+	}
+	
 	public String toString() {
 		StringBuilder address = new StringBuilder();
 		address.append("Address ").append("[").append("Email=")
-				.append(getEmail()).append(", ").append("Address1=")
+				.append(getEmailAddress()).append(", ").append("Address1=")
 				.append(getAddress1()).append(", ").append("Address2=")
 				.append(getAddress2()).append(", ").append("Address3=")
 				.append(getAddress3()).append(", ").append("City=")
@@ -78,7 +93,7 @@ public class Address implements Serializable {
 				.append(getFirstName()).append(", ").append("LastName=")
 				.append(getLastName()).append(", ").append("MiddleName=")
 				.append(getMiddleName()).append(", ").append("OwnerId=")
-				.append(getOwnerId()).append(", ").append("Prefix=")
+				.append(getProfileId()).append(", ").append("Prefix=")
 				.append(getPrefix()).append(", ").append("Suffix=")
 				.append(getSuffix()).append(", ").append("]");
 
@@ -97,8 +112,8 @@ public class Address implements Serializable {
 		String aPrefix = getPrefix();
 		String bPrefix = address.getPrefix();
 
-		String aEmail = getEmail();
-		String bEmail = address.getEmail();
+		String aEmail = getEmailAddress();
+		String bEmail = address.getEmailAddress();
 		
 		String aFirstName = getFirstName();
 		String bFirstName = address.getFirstName();
@@ -127,14 +142,14 @@ public class Address implements Serializable {
 		String aState = getState();
 		String bState = address.getState();
 
-		String aPostalCode = getPostalCode();
-		String bPostalCode = address.getPostalCode();
+		String aPostalCode = getZipcode();
+		String bPostalCode = address.getZipcode();
 
 		String aCountry = getCountry();
 		String bCountry = address.getCountry();
 
-		String aOwnerId = getOwnerId();
-		String bOwnerId = address.getOwnerId();
+		String aOwnerId = getProfileId();
+		String bOwnerId = address.getProfileId();
 
 		if ((aPrefix == null) && (bPrefix != null)) {
 			return false;
@@ -394,21 +409,6 @@ public class Address implements Serializable {
 	}
 
 	/**
-	 * @return the postalCode
-	 */
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	/**
-	 * @param postalCode
-	 *            the postalCode to set
-	 */
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	/**
 	 * @return the country
 	 */
 	public String getCountry() {
@@ -423,19 +423,21 @@ public class Address implements Serializable {
 		this.country = country;
 	}
 
-	/**
-	 * @return the ownerId
-	 */
-	public String getOwnerId() {
-		return ownerId;
+	public String getZipcode() {
+		return zipcode;
 	}
 
-	/**
-	 * @param ownerId
-	 *            the ownerId to set
-	 */
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
 	}
 
 	/**
@@ -453,19 +455,12 @@ public class Address implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 }

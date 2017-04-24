@@ -38,7 +38,7 @@ public class AddEditAddressRequest {
 	private String id;
 
 
-	public AddEditAddressRequest(Address address) {
+	public AddEditAddressRequest(com.pallette.domain.Address address) {
 		this.emailAddress = address.getEmailAddress();
 		this.firstName = address.getFirstName();
 		this.lastName = address.getLastName();
@@ -49,7 +49,7 @@ public class AddEditAddressRequest {
 		this.zipcode = address.getZipcode();
 		this.phoneNumber = address.getPhoneNumber();
 		this.profileId = address.getProfileId();
-		this.id = address.getId();
+		this.id = address.getId().toString();
 	}
 
 	public AddEditAddressRequest() {
