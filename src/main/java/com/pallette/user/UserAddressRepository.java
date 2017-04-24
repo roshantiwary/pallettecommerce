@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import com.pallette.domain.Address;
+
 public interface UserAddressRepository extends MongoRepository<Address, String>{
 
 	public List<Address> findByProfileId(final String profileId);

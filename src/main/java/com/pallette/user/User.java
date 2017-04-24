@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.mongodb.DBObject;
+import com.pallette.domain.Address;
 import com.pallette.persistence.BaseEntity;
 import com.pallette.user.api.ApiUser;
 
@@ -29,7 +30,7 @@ public class User extends BaseEntity implements UserDetails {
 	private List<Role> roles = new ArrayList<Role>();
 	
 	@DBRef
-	private List<Address> shippingAddress;
+	private List<com.pallette.domain.Address> shippingAddress;
 		
 	public User() {
 		super();
@@ -167,17 +168,17 @@ public class User extends BaseEntity implements UserDetails {
 		return (this.roles.contains(role));
 	}
 
-	public List<Address> getShippingAddress() {
+	public List<com.pallette.domain.Address> getShippingAddress() {
 		if(null == shippingAddress)
-			shippingAddress = new ArrayList<Address>();
+			shippingAddress = new ArrayList<com.pallette.domain.Address>();
 		return shippingAddress;
 	}
 
-	public void setShippingAddress(List<Address> shippingAddress) {
+	public void setShippingAddress(List<com.pallette.domain.Address> shippingAddress) {
 		this.shippingAddress = shippingAddress;
 	}
 
-	public void addShippingAddress(Address shippingAddress) {
+	public void addShippingAddress(com.pallette.domain.Address shippingAddress) {
 		this.shippingAddress.add(shippingAddress);
 	}
 	

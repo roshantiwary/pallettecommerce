@@ -332,7 +332,7 @@ public class AccountService {
 		Address addressItem = new Address();
 		
 		BeanUtils.copyProperties(addressItem, profileAddressBean);
-		addressItem.setOwnerId(profileId);
+		addressItem.setProfileId(profileId);
 		Account account = accounts.findOne(profileId);
 		Address address = addressRepository.save(addressItem);
 		if(null != address && null != account){
@@ -366,7 +366,7 @@ public class AccountService {
 		Address address = addressRepository.findOne(addressKey);
 		if (null != address) {
 
-			if (null != address.getOwnerId() && address.getOwnerId().equalsIgnoreCase(profileId)) {
+			if (null != address.getProfileId() && address.getProfileId().equalsIgnoreCase(profileId)) {
 				
 				logger.debug("AccountService.getAddress: Address found in Profile :   with address ID : " + address.getId());
 				
@@ -404,7 +404,7 @@ public class AccountService {
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Address addressItem = addressRepository.findOne(addressKey);
 		BeanUtils.copyProperties(addressItem, address);
-		addressItem.setOwnerId(profileId);
+		addressItem.setProfileId(profileId);
 		Account account = accounts.findOne(profileId);
 
 		if (null != addressItem && null != account) {
@@ -438,7 +438,7 @@ public class AccountService {
 			throw new IllegalArgumentException("Please provide address key");
 		
 		Address addressItem = addressRepository.findOne(addressKey);
-		Account account = accounts.findOne(addressItem.getOwnerId());
+		Account account = accounts.findOne(addressItem.getProfileId());
 		Query addressRemovalQuery = new Query();
 		addressRemovalQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(addressItem.getId()));
 		Address address = mongoOperation.findAndRemove(addressRemovalQuery , Address.class);

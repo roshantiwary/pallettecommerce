@@ -10,5 +10,5 @@ public interface AddressRepository extends PagingAndSortingRepository<Address, S
 
 	public Address findOne(String id);
 	
-	public List<Address> findAddressByOwnerId(String ownerId);
+	public List<Address> findAddressByProfileId(String profileId);
 }

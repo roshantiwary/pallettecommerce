@@ -2,6 +2,7 @@ package com.pallette.user;
 
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponseBean;
+import com.pallette.domain.Address;
 import com.pallette.response.Response;
 import com.pallette.user.api.AddEditAddressRequest;
 import com.pallette.user.api.ApiUser;

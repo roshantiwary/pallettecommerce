@@ -223,7 +223,7 @@ public class PaymentIntegrator {
 				if (null != address) {
 					//Mandatory Parameters
 					params.put(PaymentConstants.FIRSTNAME, (String) address.getFirstName());
-					params.put(PaymentConstants.EMAIL, (String) address.getEmail());
+					params.put(PaymentConstants.EMAIL, (String) address.getEmailAddress());
 					params.put(PaymentConstants.PHONE, (String) address.getPhoneNumber());
 					
 					//Set the additional Optional Parameters.
@@ -232,7 +232,7 @@ public class PaymentIntegrator {
 					params.put(PaymentConstants.ADDRESS2, (String) address.getAddress2());
 					params.put(PaymentConstants.CITY, (String) address.getCity());
 					params.put(PaymentConstants.STATE, (String) address.getState());
-					params.put(PaymentConstants.ZIPCODE, (String) address.getPostalCode());
+					params.put(PaymentConstants.ZIPCODE, (String) address.getZipcode());
 					
 					if (!StringUtils.isEmpty(address.getCountry())) {
 						params.put(PaymentConstants.COUNTRY, (String) address.getCountry());
