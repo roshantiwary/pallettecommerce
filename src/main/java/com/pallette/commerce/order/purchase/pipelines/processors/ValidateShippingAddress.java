@@ -60,7 +60,7 @@ public class ValidateShippingAddress extends ValidateOrderForSubmitOrder {
 					return isValidationSuccess;
 				}
 
-				if (StringUtils.isEmpty(address.getEmail())) {
+				if (StringUtils.isEmpty(address.getEmailAddress())) {
 					log.debug("Email is Empty");
 					return isValidationSuccess;
 				}
@@ -80,7 +80,7 @@ public class ValidateShippingAddress extends ValidateOrderForSubmitOrder {
 					return isValidationSuccess;
 				}
 
-				if (StringUtils.isEmpty(address.getPostalCode()))
+				if (StringUtils.isEmpty(address.getZipcode()))
 					return isValidationSuccess;
 
 				if (StringUtils.isEmpty(address.getPhoneNumber())) {
