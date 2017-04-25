@@ -166,10 +166,10 @@ public class ShippingController {
 			getAddressResponse.setStatusCode(HttpStatus.OK.value());
 			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.OK);
 		} else {
-			getAddressResponse.setMessage("There was a problem while getting the address.");
-			getAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			getAddressResponse.setMessage("No address found in profile.");
+			getAddressResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
 			getAddressResponse.setStatus(Boolean.FALSE);
-			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.NOT_FOUND);
 		}
 	}
 
