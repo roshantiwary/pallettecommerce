@@ -25,6 +25,10 @@ public class PriceDocument extends BaseEntity {
 		super();
 	}
 
+	public PriceDocument(String id) {
+		super(id);
+	}
+	
 	/**
 	 * @return the listPrice
 	 */
