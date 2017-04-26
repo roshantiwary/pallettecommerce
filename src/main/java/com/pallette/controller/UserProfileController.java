@@ -176,6 +176,7 @@ public class UserProfileController {
 		ApiUser user = getProfileId(oAuth2Authentication);
 		String profileId = user.getId();
 		request.setProfileId(profileId);
+		request.setEmailAddress(user.getEmailAddress());
 		AddEditAddressRequest address = userService.addNewAddress(request);
 		AddEditAddressResponse addAddressResponse = new AddEditAddressResponse(address);
 		addAddressResponse.setMessage("Address Added Successfully");

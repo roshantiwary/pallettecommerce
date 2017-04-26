@@ -67,8 +67,7 @@ public class PaymentController {
 		
 		isValidationSuccess = validateChain.validateForSubmitOrder(order);
 		if(!isValidationSuccess)
-			return PaymentConstants.FAILED;
-
+			return "redirect:" + PaymentConstants.FAILED;
 		
 		Map<String, String> values = new HashMap<String, String>();
 		values = paymentIntegrator.hashCalMethod(order);
@@ -121,7 +120,7 @@ public class PaymentController {
 		paymentService.processPaymentErrorResponse(parameterNames, model);
 		
 		log.debug("Payment Failure");
-		return PaymentConstants.FAILED;
+		return "redirect:" + PaymentConstants.FAILED;
 	}
 
 	@RequestMapping(value = "/success", method = RequestMethod.POST)

@@ -123,7 +123,7 @@ public class PaymentConstants {
 
 	public static final String ORDER_DOCUMENT = "Order";
 
-	public static final String FAILED = "failed";
+	public static final String FAILED = "http://localhost:4200/checkout/shipping?error=true";
 
 	public static final String CONFIRMATION = "http://localhost:4200/checkout/confirmation";
 

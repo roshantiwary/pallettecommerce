@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -30,6 +31,7 @@ import com.pallette.response.AddEditAddressResponse;
 import com.pallette.response.AddressResponse;
 import com.pallette.response.GetAddressResponse;
 import com.pallette.service.ShippingServices;
+import com.pallette.user.api.ApiUser;
 
 @RestController
 @RequestMapping("/rest/api/v1")
@@ -164,16 +166,16 @@ public class ShippingController {
 			getAddressResponse.setStatusCode(HttpStatus.OK.value());
 			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.OK);
 		} else {
-			getAddressResponse.setMessage("There was a problem while getting the address.");
-			getAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			getAddressResponse.setMessage("No address found in profile.");
+			getAddressResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
 			getAddressResponse.setStatus(Boolean.FALSE);
-			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.NOT_FOUND);
 		}
 	}
 
 	
 	@RequestMapping(value = RestURLConstants.GET_SAVED_ADDRESSES_URL, method = RequestMethod.GET , produces = "application/json")
-	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public ResponseEntity<GetAddressResponse> handleGetSavedAddress(@PathVariable(CommerceConstants.ORDER_ID) String orderId, OAuth2Authentication authentication) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside ShippingController.handleGetSavedAddress()");
 		GetAddressResponse getAddressResponse = new GetAddressResponse();
@@ -182,7 +184,9 @@ public class ShippingController {
 			throw new IllegalArgumentException("No order Id was Passed.");
 		
 		log.debug("Order Id from GET Request ", orderId);
-		List<AddressResponse> addressList = checkoutServices.getSavedAddressFromOrder(orderId);
+		
+		ApiUser profile = getProfileId(authentication);
+		List<AddressResponse> addressList = checkoutServices.getSavedAddressFromOrder(orderId, profile);
 		
 		if (!addressList.isEmpty()) {
 			
@@ -198,7 +202,7 @@ public class ShippingController {
 		} else {
 			getAddressResponse.setMessage("There was a problem while getting the saved address.");
 			getAddressResponse.setStatus(Boolean.FALSE);
-			getAddressResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			getAddressResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<>(getAddressResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -222,6 +226,21 @@ public class ShippingController {
 			errorMessages = errorMessages.append(objErr.getDefaultMessage()).append(CommerceConstants.COMMA);
 		}
 		return errorMessages;
+	}
+	
+	/**
+	 * Method to return the profile Id from the authentication object.
+	 * 
+	 * @param authentication
+	 * @return
+	 */
+	private ApiUser getProfileId(OAuth2Authentication authentication) {
+		
+		ApiUser user = null;
+		if(null !=authentication.getUserAuthentication() && authentication.getUserAuthentication().getDetails() != null) {
+			user = (ApiUser) authentication.getUserAuthentication().getDetails();
+		}
+		return user;
 	}
 
 }

@@ -19,12 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AddEditAddressBean;
+import com.pallette.browse.documents.ProductDocument;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.domain.Address;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;
 import com.pallette.response.AddressResponse;
 import com.pallette.user.User;
+import com.pallette.user.api.ApiUser;
 
 /**
  * <p>
@@ -227,7 +229,7 @@ public class ShippingServices {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public List<AddressResponse> getSavedAddressFromOrder(String orderId) throws IllegalAccessException, InvocationTargetException {
+	public List<AddressResponse> getSavedAddressFromOrder(String orderId, ApiUser user) throws IllegalAccessException, InvocationTargetException {
 
 		log.debug("Inside ShippingServices.getSavedAddressFromOrder()");
 		log.debug("Order for which address to be fetched is :", orderId);
@@ -244,6 +246,12 @@ public class ShippingServices {
 			return savedAddress;
 		
 		String profileId = orderItem.getProfileId();
+		
+		if(user != null && user.getId() != profileId) {
+			profileId = user.getId();
+			updateOrderWithProfileId(orderId, profileId);
+		}
+		
 		if(StringUtils.isEmpty(profileId))
 			return savedAddress;
 		
@@ -269,6 +277,15 @@ public class ShippingServices {
 			savedAddress.add(addressBean);
 		}
 		return savedAddress;
+	}
+
+
+	private void updateOrderWithProfileId(String orderId, String profileId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(orderId));
+		Update update = new Update();
+		update.set("profileId", profileId);
+		mongoOperation.upsert(query, update, Order.class);
 	}
 
 	/**
