@@ -31,6 +31,10 @@ public class BrandDocument extends BaseEntity {
 
 	private String phone;
 
+	public BrandDocument(String id) {
+		super(id);
+	}
+
 	public BrandDocument() {
 		super();
 	}

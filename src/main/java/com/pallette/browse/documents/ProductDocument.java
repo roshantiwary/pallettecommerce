@@ -45,6 +45,14 @@ public class ProductDocument extends BaseEntity {
 	@DBRef
 	private List<SkuDocument> skuDocument;
 
+	public ProductDocument(){
+		super();
+	}
+	
+	public ProductDocument(String id){
+		super(id);
+	}
+	
 	/**
 	 * @return the categoryDocument
 	 */

@@ -29,6 +29,10 @@ public class InventoryDocument extends BaseEntity {
 		super();
 	}
 
+	public InventoryDocument(String id) {
+		super(id);
+	}
+	
 	/**
 	 * @return the availableStockLevel
 	 */

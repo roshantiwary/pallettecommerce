@@ -40,6 +40,10 @@ public class SkuDocument extends BaseEntity {
 	public SkuDocument() {
 		super();
 	}
+	
+	public SkuDocument(String id) {
+		super(id);
+	}
 
 	public String getName() {
 		return name;

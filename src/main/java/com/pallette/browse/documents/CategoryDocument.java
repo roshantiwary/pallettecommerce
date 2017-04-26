@@ -34,10 +34,14 @@ public class CategoryDocument extends BaseEntity {
 	private CategoryDocument parentCategoryDocument;
 
 	
+	public CategoryDocument(String id) {
+		super(id);
+	}
+	
 	public CategoryDocument() {
 		super();
 	}
-	
+
 	/**
 	 * @return the categoryTitle
 	 */

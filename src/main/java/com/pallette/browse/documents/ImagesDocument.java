@@ -19,6 +19,7 @@ public class ImagesDocument extends BaseEntity {
 	@Field(value = "thumbnail_image_url")
 	private String thumbnailImageUrl;
 
+	
 	@Field(value = "small_image_url")
 	private String smallImageUrl;
 
@@ -27,6 +28,10 @@ public class ImagesDocument extends BaseEntity {
 
 	@Field(value = "image_availablity")
 	private boolean imageAvailablity;
+
+	public ImagesDocument(String id) {
+		super(id);
+	}
 
 	public ImagesDocument() {
 		super();
