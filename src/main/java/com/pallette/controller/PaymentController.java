@@ -139,7 +139,7 @@ public class PaymentController {
 		paymentService.processPaymentResponse(parameterNames);
 		
 		log.debug("Payment Successfull");
-		return "redirect:" + "http://localhost:4200/checkout/" + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
+		return "redirect:" + "https://shielded-dawn-79806.herokuapp.com/checkout/" + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
 	}
 	
 	
