@@ -143,5 +143,21 @@ public class FileUploadController {
         }
         return new ResponseEntity("Successfully uploaded - " + uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
     }
-    
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@PostMapping("/deliveryMethod/upload")
+	public ResponseEntity<?> uploadDeliveryMethod(@RequestParam("file") MultipartFile uploadfile) {
+		
+		logger.debug("Delivery Method file upload");
+		if (uploadfile.isEmpty()) {
+			return new ResponseEntity("please select a file!", HttpStatus.OK);
+		}
+		try {
+			merchServer.processDeliveryMethod(uploadfile);
+		} catch (PalletteException e) {
+			return new ResponseEntity(e.getMessage() + uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity("Successfully uploaded - " + uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
+	}
+
 }

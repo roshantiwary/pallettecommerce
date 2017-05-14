@@ -10,6 +10,7 @@ import com.pallette.browse.documents.InventoryDocument;
 import com.pallette.browse.documents.PriceDocument;
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.documents.SkuDocument;
+import com.pallette.domain.DeliveryMethod;
 
 public interface MerchandiseDao {
 
@@ -62,4 +63,10 @@ public interface MerchandiseDao {
 	 * 
 	 */
 	public void bulkSkuUpload(List<SkuDocument> skuDocumentList);
+	
+	/**
+	 * bulkSkuUpload method is used for initial set up of Delivery Methods Data.
+	 * 
+	 */
+	public void bulkDeliveryMethodUpload(List<DeliveryMethod> deliveryMethods);
 }

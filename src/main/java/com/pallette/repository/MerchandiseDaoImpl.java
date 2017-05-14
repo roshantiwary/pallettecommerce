@@ -17,6 +17,7 @@ import com.pallette.browse.documents.InventoryDocument;
 import com.pallette.browse.documents.PriceDocument;
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.documents.SkuDocument;
+import com.pallette.domain.DeliveryMethod;
 
 @Repository
 public class MerchandiseDaoImpl implements MerchandiseDao{
@@ -154,6 +155,25 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			update.set("priceDocument", skuDocument.getPriceDocument());
 			update.set("inventoryDocument", skuDocument.getInventoryDocument());
 			mongoTemplate.upsert(query, update, SkuDocument.class);
+
+		}
+	}
+
+	@Override
+	public void bulkDeliveryMethodUpload(List<DeliveryMethod> deliveryMethods) {
+		for (DeliveryMethod deliveryMethod : deliveryMethods) {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("id").is(deliveryMethod.getId()));
+
+			Update update = new Update();
+			update.set("deliveryMethodName", deliveryMethod.getDeliveryMethodName());
+			update.set("deliveryMethodDescription", deliveryMethod.getDeliveryMethodDescription());
+			update.set("active", deliveryMethod.isActive());
+			update.set("deliveryMethodType", deliveryMethod.getDeliveryMethodType());
+			update.set("convenienceFee", deliveryMethod.getConvenienceFee());
+			update.set("minDaysToShip", deliveryMethod.getMinDaysToShip());
+			update.set("maxDaysToShip", deliveryMethod.getMaxDaysToShip());
+			mongoTemplate.upsert(query, update, DeliveryMethod.class);
 
 		}
 	}

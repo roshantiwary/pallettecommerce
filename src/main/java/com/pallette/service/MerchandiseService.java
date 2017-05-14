@@ -23,6 +23,7 @@ import com.pallette.browse.documents.InventoryDocument;
 import com.pallette.browse.documents.PriceDocument;
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.documents.SkuDocument;
+import com.pallette.domain.DeliveryMethod;
 import com.pallette.exception.PalletteException;
 import com.pallette.repository.MerchandiseDao;
 
@@ -175,6 +176,21 @@ public class MerchandiseService {
 			}
 		} catch (IOException e) {
 			throw new PalletteException("Error while processing the file with City");
+		}
+	}
+
+	public void processDeliveryMethod(MultipartFile uploadfile) throws PalletteException {
+		InputStream inputStream;
+		try {
+			inputStream = getInputStream(Arrays.asList(uploadfile));
+			if (null != inputStream) {
+				List<DeliveryMethod> deliveryMethods = loadObjectList(DeliveryMethod.class, inputStream);
+				merchDao.bulkDeliveryMethodUpload(deliveryMethods);
+			} else {
+				throw new PalletteException("File is empty !!");
+			}
+		} catch (IOException e) {
+			throw new PalletteException("Error while processing the file with Delivery Methods");
 		}
 	}
 	
