@@ -19,12 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pallette.beans.AddEditAddressBean;
-import com.pallette.browse.documents.ProductDocument;
 import com.pallette.commerce.contants.CommerceConstants;
+import com.pallette.commerce.order.purchase.OrderRepriceChain;
 import com.pallette.domain.Address;
+import com.pallette.domain.DeliveryMethod;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;
+import com.pallette.repository.OrderRepository;
 import com.pallette.response.AddressResponse;
+import com.pallette.response.CartResponse;
+import com.pallette.response.DeliveryMethodResponse;
 import com.pallette.user.User;
 import com.pallette.user.api.ApiUser;
 
@@ -45,6 +49,21 @@ public class ShippingServices {
 
 	@Autowired
 	private MongoOperations mongoOperation;
+	
+	/**
+	 * New Pipeline Chain for Pricing.
+	 */
+	@Autowired
+	OrderRepriceChain orderRepriceChain;
+	
+	/**
+	 * The Order repository.
+	 */
+	@Autowired
+	private OrderRepository orderRepository;
+	
+	@Autowired
+	private OrderService orderService;
 
 	/**
 	 * Method responsible for creating a new Address Document and saving it to
@@ -393,6 +412,104 @@ public class ShippingServices {
 			}
 		}
 		return isValid;
+	}
+
+
+	/**
+	 * 
+	 * @param orderId 
+	 * @return
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	public List<DeliveryMethodResponse> getDeliveryMethodDetails(String orderId) throws IllegalAccessException, InvocationTargetException {
+
+		log.info("Inside ShippingServices.getDeliveryMethodDetails()");
+		List<DeliveryMethodResponse> deliveryMethodResponseList = new ArrayList<DeliveryMethodResponse>();
+		String shippingMethod = "";
+
+		Query orderQuery = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
+		log.debug("Query to be executed is :", orderQuery);
+		Order orderItem = mongoOperation.findOne(orderQuery, Order.class);
+
+		if (null == orderItem)
+			return deliveryMethodResponseList;
+
+		List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
+		for (ShippingGroup shipGrp : shippingGroups) {
+			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				shippingMethod = shipGrp.getShippingGroupMethod();
+			}
+
+			List<DeliveryMethod> deliveryMethods = mongoOperation.findAll(DeliveryMethod.class);
+
+			if (deliveryMethods.isEmpty())
+				return deliveryMethodResponseList;
+
+			for (DeliveryMethod dm : deliveryMethods) {
+
+				if (!dm.isActive())
+					continue;
+
+				DeliveryMethodResponse deliveryMethodResponse = new DeliveryMethodResponse();
+				log.debug("Delivery Method is :: " + dm.getId());
+				BeanUtils.copyProperties(deliveryMethodResponse, dm);
+
+				if (!StringUtils.isEmpty(shippingMethod) && dm.getId().equalsIgnoreCase(shippingMethod)) {
+					deliveryMethodResponse.setSelected(Boolean.TRUE);
+				} else {
+					deliveryMethodResponse.setSelected(Boolean.FALSE);
+				}
+				deliveryMethodResponseList.add(deliveryMethodResponse);
+			}
+		}
+		return deliveryMethodResponseList;
+	}
+
+
+	/**
+	 * Method that sets the passed in delivery method in shipping group's
+	 * shipping method. Also invokes the reprice chain to set the convenience
+	 * charge.
+	 * 
+	 * @param orderId
+	 * @param deliveryMethod
+	 * @return
+	 * @return
+	 */
+	public CartResponse setDeliveryMethod(String orderId, String deliveryMethod) {
+
+		log.info("Inside ShippingServices.setDeliveryMethod()");
+		boolean isUpdated = Boolean.FALSE;
+
+		Query orderQuery = new Query(Criteria.where(CommerceConstants._ID).is(orderId));
+		log.debug("Query to be executed is :", orderQuery);
+		Order orderItem = mongoOperation.findOne(orderQuery, Order.class);
+
+		if (null == orderItem)
+			return null;
+
+		Query deliveryMethodQuery = new Query(Criteria.where(CommerceConstants._ID).is(deliveryMethod));
+		log.debug("Query to be executed is :", deliveryMethodQuery);
+		DeliveryMethod deliveryMethodItem = mongoOperation.findOne(deliveryMethodQuery, DeliveryMethod.class);
+
+		if (null == deliveryMethod)
+			return null;
+
+		List<ShippingGroup> shippingGroups = orderItem.getShippingGroups();
+		for (ShippingGroup shipGrp : shippingGroups) {
+			if (CommerceConstants.HARD_GOOD_SHIPPING_GROUP.equalsIgnoreCase(shipGrp.getShippingGroupType())) {
+				shipGrp.setShippingGroupMethod(deliveryMethod);
+				isUpdated = Boolean.TRUE;
+			}
+		}
+
+		if (isUpdated) {
+			orderRepriceChain.reprice(orderItem);
+			Order order = orderRepository.save(orderItem);
+			return orderService.constructResponse(order);
+		}
+		return orderService.constructResponse(orderItem);
 	}
 
 }

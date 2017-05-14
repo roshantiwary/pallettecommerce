@@ -17,6 +17,23 @@ public class CartResponse extends Response {
 
 	private double orderSubTotal;
 
+	private double convenienceFee;
+
+	/**
+	 * @return the convenienceFee
+	 */
+	public double getConvenienceFee() {
+		return convenienceFee;
+	}
+
+	/**
+	 * @param convenienceFee
+	 *            the convenienceFee to set
+	 */
+	public void setConvenienceFee(double convenienceFee) {
+		this.convenienceFee = convenienceFee;
+	}
+
 	/**
 	 * @return the orderId
 	 */

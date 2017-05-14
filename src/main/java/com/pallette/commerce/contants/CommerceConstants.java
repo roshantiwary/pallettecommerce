@@ -55,5 +55,11 @@ public class CommerceConstants {
 	public static final String ADDRESS_ID = "addressId";
 	
 	public static final String ADDRESS = "address";
+	
+	public static final String APPLICATION_JSON = "application/json";
+	
+	public static final String DELIVERY_METHODS = "deliveryMethods";
+	
+	public static final String DELIVERY_METHOD = "deliveryMethod";
 
 }

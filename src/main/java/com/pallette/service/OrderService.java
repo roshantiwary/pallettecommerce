@@ -39,6 +39,7 @@ import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
 import com.pallette.domain.PaymentGroup;
 import com.pallette.domain.ShippingGroup;
+import com.pallette.domain.ShippingPriceInfo;
 import com.pallette.exception.NoRecordsFoundException;
 import com.pallette.repository.AccountRepository;
 import com.pallette.repository.OrderRepository;
@@ -435,7 +436,7 @@ public class OrderService {
 	 * @param order
 	 * @return
 	 */
-	private CartResponse constructResponse(Order order) {
+	public CartResponse constructResponse(Order order) {
 	
 		log.debug("Inside OrderService.constructResponse()");
 		CartResponse cartResponse = new CartResponse();
@@ -443,6 +444,16 @@ public class OrderService {
 		cartResponse.setOrderId(order.getId());
 		OrderPriceInfo orderPriceInfo = order.getOrderPriceInfo();
 		cartResponse.setOrderSubTotal(orderPriceInfo.getAmount());
+		
+		List<ShippingGroup> shippingGroups = order.getShippingGroups();
+		for (ShippingGroup shippingGroup : shippingGroups) {
+			if (shippingGroup.getShippingGroupType().equalsIgnoreCase("HardGoodShippingGroup")) {
+				ShippingPriceInfo shipPriceInfo = shippingGroup.getShippingPriceInfo();
+				if (null != shipPriceInfo) {
+					cartResponse.setConvenienceFee(shipPriceInfo.getAmount());
+				}
+			}
+		}
 		
 		List<CartItemResponse> responseItemList = populateItemDetails(order);
 		cartResponse.setCartItems(responseItemList);
