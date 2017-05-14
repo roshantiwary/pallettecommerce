@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pallette.browse.documents.BrandDocument;
-import com.pallette.browse.documents.CategoryDocument;
 import com.pallette.browse.repository.BrandRepository;
 import com.pallette.browse.response.BrandResponseBean;
 
@@ -57,7 +56,7 @@ public class BrandServiceImpl implements BrandService{
 
 		List<BrandDocument> brands = brandRepository.findAll();
 		if (null != brands && !brands.isEmpty()) {
-			logger.info(String.format("BrandServiceImpl.getAllBrands - retrieved Category list is: %s" , brands.toString()));
+			logger.info(String.format("BrandServiceImpl.getAllBrands - retrieved brand list is: %s" , brands.toString()));
 			response = browseServices.constructBrandResponse(brands);
 		} else {
 			logger.warn("BrandServiceImpl.getAllBrands could not find any Brands from Repository.");

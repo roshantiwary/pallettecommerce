@@ -9,8 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -32,8 +30,6 @@ import com.pallette.repository.SequenceDao;
 import com.pallette.response.CartResponse;
 import com.pallette.service.OrderService;
 import com.pallette.user.api.ApiUser;
-import com.pallette.web.security.ApplicationUser;
-import com.pallette.web.security.CustomCredentialsService.CustomDetails;
 
 @RestController
 @RequestMapping("/rest/api/v1")
