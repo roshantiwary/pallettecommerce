@@ -41,7 +41,7 @@ import com.pallette.exception.NoRecordsFoundException;
 @RequestMapping("/rest/api/v1")
 public class BrowseController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BrowseController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private ProductService productService;
@@ -64,7 +64,7 @@ public class BrowseController {
 	@RequestMapping(value = RestURLConstants.ALL_PRODUCTS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProductResponseBean> getAllProducts() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
-		logger.debug("Inside BrowseController.getAllProduct()");
+		logger.info("Inside BrowseController.getAllProduct()");
 		ProductResponseBean response = productService.getAllProduct();
 
 		if (null != response && !response.getProductResponse().isEmpty()) {
@@ -91,7 +91,7 @@ public class BrowseController {
 	public ResponseEntity<ProductResponseBean> getProduct(@PathVariable(BrowseConstants.PRODUCT_ID) String productId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		
-		logger.debug("BrowseController.getProduct()");
+		logger.info("BrowseController.getProduct()");
 		logger.debug("Product Id passed is : " + productId);
 		
 		ProductResponseBean response = productService.getProductById(productId);
@@ -120,7 +120,7 @@ public class BrowseController {
 	public ResponseEntity<ProductResponseBean> getProductsByTitle(@PathVariable(BrowseConstants.PRODUCT_TITLE) String productTitle) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
-		logger.debug("BrowseController.getProductByTitle()");
+		logger.info("BrowseController.getProductByTitle()");
 		logger.debug("Product Title passed is : ", productTitle);
 		
 		ProductResponseBean response = productService.getProductByTitle(productTitle);
@@ -149,7 +149,7 @@ public class BrowseController {
 	public ResponseEntity<ProductResponseBean> getProductsByBrand(@PathVariable(BrowseConstants.BRAND_ID) String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
-		logger.debug("BrowseController.getProductsByBrand()");
+		logger.info("BrowseController.getProductsByBrand()");
 		logger.debug("Brand Id passed is : ", brandId);
 		ProductResponseBean response = productService.getProductByBrand(brandId);
 		
@@ -174,7 +174,7 @@ public class BrowseController {
 	@RequestMapping(value= RestURLConstants.ALL_CATEGORIES_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CategoryResponseBean> getAllCategories() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		
-		logger.debug("BrowseController.getAllCategories()");
+		logger.info("BrowseController.getAllCategories()");
 		CategoryResponseBean response = categoryService.getAllCategories();
 
 		if (null != response && !response.getCategoryResponseList().isEmpty()) {
@@ -201,7 +201,7 @@ public class BrowseController {
 	public ResponseEntity<CategoryResponseBean> getCategory(@PathVariable(BrowseConstants.CATEGORY_ID) String categoryId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 
-		logger.debug("BrowseController.getCategory()");
+		logger.info("BrowseController.getCategory()");
 		logger.debug("Category Id passed is : " + categoryId);
 		CategoryResponseBean response = categoryService.getCategoryById(categoryId);
 		
@@ -229,7 +229,7 @@ public class BrowseController {
 	public ResponseEntity<CategoryResponseBean> getCategoriesByTitle(@PathVariable(BrowseConstants.CATEGORY_TITLE) String categoryTitle) 
 			throws IllegalArgumentException , NoRecordsFoundException, IllegalAccessException, InvocationTargetException{
 		
-		logger.debug("BrowseController.getCategoriesByTitle()");
+		logger.info("BrowseController.getCategoriesByTitle()");
 		logger.debug("Category Title passed is : ", categoryTitle);
 		CategoryResponseBean response  = categoryService.getCategoryByTitle(categoryTitle);
 		
@@ -256,7 +256,7 @@ public class BrowseController {
 	@RequestMapping(value= RestURLConstants.ALL_BRANDS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BrandResponseBean> getAllBrands() throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 
-		logger.debug("BrowseController.getAllBrands()");
+		logger.info("BrowseController.getAllBrands()");
 		BrandResponseBean response = brandService.getAllBrands();
 		
 		if (null != response && !response.getBrands().isEmpty()) {
@@ -284,7 +284,7 @@ public class BrowseController {
 	public ResponseEntity<BrandResponseBean> getBrand(@PathVariable(BrowseConstants.BRAND_ID) String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		logger.debug("BrowseController.getBrand()");
+		logger.info("BrowseController.getBrand()");
 		logger.debug("Brand Id passed is : " + brandId);
 		BrandResponseBean response = brandService.getBrandById(brandId);
 		
@@ -303,7 +303,7 @@ public class BrowseController {
 	public ResponseEntity<BrandResponseBean> getBrandByCity(@PathVariable(BrowseConstants.CITY2) String city) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		logger.debug("BrowseController.getBrandByCity()");
+		logger.info("BrowseController.getBrandByCity()");
 		logger.debug("Brand City passed is : " + city);
 		
 		BrandResponseBean response = brandService.getBrandByCity(city);
@@ -321,7 +321,7 @@ public class BrowseController {
 	public ResponseEntity<BrandResponseBean> getBrandByState(@PathVariable(BrowseConstants.STATE2) String state) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		logger.debug("BrowseController.getBrandByState()");
+		logger.info("BrowseController.getBrandByState()");
 		logger.debug("Brand state passed is : " + state);
 		
 		BrandResponseBean response = brandService.getBrandByState(state);
@@ -340,7 +340,7 @@ public class BrowseController {
 	public ResponseEntity<BrandResponseBean> getBrandByPostalCode(@PathVariable(BrowseConstants.POSTAL_CODE) String postalCode) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-		logger.debug("BrowseController.getBrandByPostalCode()");
+		logger.info("BrowseController.getBrandByPostalCode()");
 		logger.debug("Brand postalCode passed is : " + postalCode);
 		
 		BrandResponseBean response = brandService.getBrandByPostalCode(postalCode);
