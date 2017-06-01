@@ -17,4 +17,6 @@ public class EmailConstants {
 	public static final String DESCRIPTION = "description";
 
 	public static final String TITLE = "title";
+
+	public static final String FORGOT_PASSWORD_URL = "forgotPasswordUrl";
 }

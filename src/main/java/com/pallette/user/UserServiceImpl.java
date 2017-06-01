@@ -4,6 +4,8 @@ import static org.springframework.util.Assert.notNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Validator;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,9 +49,14 @@ import com.pallette.user.exception.UserNotFoundException;
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	
+	private static final int EXPIRATION = 60 * 24;
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -313,6 +321,68 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		
 		user.setHashedPassword(passwordEncoder.encode(password.getNewPassword()));
+		user = userRepository.save(user);
+		return new ApiUser(user);
+	}
+	
+
+	@Override
+	public void createPasswordResetTokenForUser(User user, String token) {
+
+		logger.info("Inside UserServiceImpl.createPasswordResetTokenForUser()");
+		logger.debug("The User Passed in is {} and Token is {}" , user.getId() , token);
+		
+		PasswordResetToken pwdToken = passwordResetTokenRepository.findByUserId(user.getId());
+		if (null == pwdToken) {
+			PasswordResetToken passwordToken = new PasswordResetToken(token, user);
+			passwordResetTokenRepository.save(passwordToken);
+		} else {
+			Query query = new Query();
+			query.addCriteria(Criteria.where("id").is(pwdToken.getId()));
+			Update update = new Update();
+			update.set("token", token);
+			update.set("expiryDate", calculateExpiryDate(EXPIRATION));
+			mongoOperation.upsert(query, update, PasswordResetToken.class);
+		}
+	}
+	
+	private Date calculateExpiryDate(final int expiryTimeInMinutes) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(new Date().getTime());
+		cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+		return new Date(cal.getTime().getTime());
+	}
+
+	@Override
+	public boolean validatePasswordResetToken(Date expiryDate) {
+
+		logger.info("Inside UserServiceImpl.validatePasswordResetToken()");
+		logger.debug("The Expiry Date for Token is {}", expiryDate);
+		boolean isValid = Boolean.TRUE;
+
+		final Calendar cal = Calendar.getInstance();
+		if ((expiryDate.getTime() - cal.getTime().getTime()) <= 0) {
+			isValid = Boolean.FALSE;
+		}
+		return isValid;
+	}
+
+	@Override
+	public ApiUser setNewPassword(String profileId, String newPassword, String confirmPassword) {
+
+		logger.info("Inside UserServiceImpl.setNewPassword()");
+		logger.debug("Updating Password For {}", profileId);
+		
+		User user = userRepository.findOne(profileId);
+		if (null == user)
+			throw new UserNotFoundException();
+
+		if (!newPassword.equals(confirmPassword)) {
+			logger.error("Password and Confirm Password Not Match for user : " + user.getUsername());
+			throw new IllegalArgumentException("Password and Confirm Password Does not match");
+		}
+
+		user.setHashedPassword(passwordEncoder.encode(newPassword));
 		user = userRepository.save(user);
 		return new ApiUser(user);
 	}

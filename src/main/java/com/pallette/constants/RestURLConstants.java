@@ -100,4 +100,10 @@ public class RestURLConstants {
 	
 	public static final String LOGOUT_URL = "/logout";
 
+	public static final String FORGOT_PASSWORD_URL = "/user/forgotPassword/";
+	
+	public static final String DISPLAY_FORGOT_PASSWORD = "/user/display/forgotPassword/";
+	
+	public static final String SET_NEW_PASSWORD = "/user/forgotPassword/setNewPassword/";
+
 }

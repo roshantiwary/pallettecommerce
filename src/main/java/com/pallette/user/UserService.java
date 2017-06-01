@@ -1,5 +1,7 @@
 package com.pallette.user;
 
+import java.util.Date;
+
 import com.pallette.beans.PasswordBean;
 import com.pallette.beans.ProfileAddressResponseBean;
 import com.pallette.domain.Address;
@@ -38,4 +40,30 @@ public interface UserService {
 	public ApiUser updateProfile(UpdateUserRequest account, String profileId);
 
 	public ApiUser changePassword(PasswordBean password, String profileId);
+
+	/**
+	 * Method that create and saves a new token document for Forgot Password
+	 * Functionality.
+	 * 
+	 * @param user
+	 * @param token
+	 */
+	public void createPasswordResetTokenForUser(User user, String token);
+
+	/**
+	 * Method that checks the validity/expiry of Password Reset Token.
+	 * 
+	 * @param expiryDate
+	 */
+	public boolean validatePasswordResetToken(Date expiryDate);
+	
+	/**
+	 * Method for Updating the Password in case of Forget Password.
+	 * 
+	 * @param profileId
+	 * @param newPassword
+	 * @param oldPassword
+	 * @return
+	 */
+	public ApiUser setNewPassword(String profileId , String newPassword , String confirmPassword);
 }
