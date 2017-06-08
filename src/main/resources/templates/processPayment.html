@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Processing Payment</title>
+	</head>
+	
+	<body>
+	
+	 	<form action="#" id="payuform" th:action="${action}" th:object="${payU}" name="payuform" method="POST">
+			<input type="hidden" name="key" th:field="*{key}"/>
+			<input type="hidden" name="hash" th:field="*{hash}"/>
+			<input type="hidden" name="txnid" th:field="*{txnid}"/>
+			<input type="hidden" name="amount" th:field="*{amount}"/>
+			<input type="hidden" name="firstname" th:field="*{firstname}"/>
+			<input type="hidden" name="email" th:field="*{email}"/>
+			<input type="hidden" name="phone" th:field="*{phone}"/>
+			<input type="hidden" name="productinfo" th:field="*{productinfo}"/>
+			<input type="hidden" name="surl" th:field="*{surl}"/>
+			<input type="hidden" name="furl" th:field="*{furl}"/>
+			<input type="hidden" name="service_provider" th:field="*{service_provider}"/>
+			<input type="hidden" name="lastname" th:field="*{lastname}"/>
+			<input type="hidden" name="curl" th:field="*{curl}"/>
+			<input type="hidden" name="address1" th:field="*{address1}"/>
+			<input type="hidden" name="address2" th:field="*{address2}"/>
+			<input type="hidden" name="city" th:field="*{city}"/>
+			<input type="hidden" name="state" th:field="*{state}"/>
+			<input type="hidden" name="country" th:field="*{country}"/>
+			<input type="hidden" name="zipcode" th:field="*{zipcode}"/>
+			<input type="hidden" name="udf1" th:field="*{udf1}"/>
+			<input type="hidden" name="udf2" th:field="*{udf2}"/>
+			<input type="hidden" name="hashString" th:field="*{hashString}"/>
+			<input type="hidden" name="udf3" th:field="*{udf3}"/>
+			<input type="hidden" name="udf4" th:field="*{udf4}"/>
+			<input type="hidden" name="udf5" th:field="*{udf5}"/>
+			<input type="hidden" name="pg" th:field="*{pg}"/>
+			<input type="submit" value="submit" style="display:none;"/>	 
+		 </form>
+		 
+		  <script type="text/javascript">
+		 	document.getElementById("payuform").submit();
+		 </script> 
+		 
+	</body>
+</html>
