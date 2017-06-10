@@ -8,6 +8,11 @@ spring:
       database: ${MONGODB_DATABASE}  
       username: ${OPENSHIFT_MONGODB_DB_USERNAME}
       password: ${OPENSHIFT_MONGODB_DB_PASSWORD}
+    solr:
+      host: 8983
+      zk-host: localhost
+      repositories:
+        enabled: false
   mail:
     host: smtp.gmail.com
     username: palettecommerce@gmail.com
