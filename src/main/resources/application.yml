@@ -10,7 +10,7 @@ spring:
       password: ${OPENSHIFT_MONGODB_DB_PASSWORD}
     solr:
       host: 8983
-      zk-host: localhost
+      zk-host: localhost:9983
       repositories:
         enabled: false
   mail:
