@@ -91,6 +91,22 @@ public class SolrController {
 		return response;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/search/products/customQuery/{searchTerm}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ProductsResponse handleSearchUsingCustomQuery(@PathVariable("searchTerm") String searchTerm) {
+
+		logger.debug("Inside SolrController.handleSearchUsingCustomQuery()");
+		Page<SolrProduct> products = solrProductRepository.findByCustomQuery(searchTerm, new PageRequest(0, 10));
+		ProductsResponse response = new ProductsResponse();
+		response.setProductsPage(products);
+		return response;
+	}
+	
+	
 	/**
 	 * 
 	 * @return
