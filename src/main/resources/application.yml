@@ -49,3 +49,5 @@ logging.level:
       
 pallette:
   default-password: ${DEFAULT_PASSWORD}
+  solr:
+    baseUrl: http://172.20.7.51:7574/solr

@@ -4,8 +4,7 @@
 package com.pallette.browse.repository;
 
 import java.util.List;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import com.pallette.browse.documents.ProductDocument;
 
@@ -13,7 +12,7 @@ import com.pallette.browse.documents.ProductDocument;
  * @author amall3
  *
  */
-public interface ProductRepository extends 	MongoRepository<ProductDocument, String> {
+public interface ProductRepository extends 	CrudRepository<ProductDocument, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular productId.

@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.repository.ProductRepository;
+import com.pallette.solr.document.ProductSolrDocument;
 import com.pallette.solr.domain.ProductSearchRequest;
-import com.pallette.solr.domain.SolrProduct;
 import com.pallette.solr.repository.SolrProductRepository;
 import com.pallette.solr.response.ProductsResponse;
 
@@ -65,12 +65,15 @@ public class SolrController {
 		if (null != products && !products.isEmpty()) {
 			for (ProductDocument product : products) {
 
-				SolrProduct solrProduct = new SolrProduct();
+				ProductSolrDocument solrProduct = new ProductSolrDocument();
 				solrProduct.setId(product.getId());
 				solrProduct.setProductDescription(product.getProductDescription());
 				solrProduct.setProductSlug(product.getProductSlug());
 				solrProduct.setProductStatus(product.getProductStatus());
 				solrProduct.setProductTitle(product.getProductTitle());
+				solrProduct.setCategoryDocument(product.getCategoryDocument());
+				solrProduct.setBrandDocument(product.getProductBrand());
+				solrProduct.setSkuDocument(product.getSkuDocument());
 				solrProductRepository.save(solrProduct);
 			}
 		}
@@ -85,7 +88,7 @@ public class SolrController {
 	public ProductsResponse handleSearchAllProducts() {
 		
 		logger.debug("Inside SolrController.getProducts()");
-		SolrResultPage<SolrProduct> products = (SolrResultPage<SolrProduct>) solrProductRepository.findAll();
+		SolrResultPage<ProductSolrDocument> products = (SolrResultPage<ProductSolrDocument>) solrProductRepository.findAll();
 		ProductsResponse response = new ProductsResponse();
 		response.setProducts(products);
 		return response;
@@ -100,7 +103,7 @@ public class SolrController {
 	public ProductsResponse handleSearchUsingCustomQuery(@PathVariable("searchTerm") String searchTerm) {
 
 		logger.debug("Inside SolrController.handleSearchUsingCustomQuery()");
-		Page<SolrProduct> products = solrProductRepository.findByCustomQuery(searchTerm, new PageRequest(0, 10));
+		Page<ProductSolrDocument> products = solrProductRepository.findByCustomQuery(searchTerm, new PageRequest(0, 10));
 		ProductsResponse response = new ProductsResponse();
 		response.setProductsPage(products);
 		return response;
@@ -115,7 +118,7 @@ public class SolrController {
 	public ProductsResponse handleSearchProductsBasedOnTitleAndDescription(@Valid @RequestBody ProductSearchRequest productSearchRequest , Errors errors) {
 
 		logger.debug("Inside SolrController.handleSearchProductsBasedOnTitleAndDescription()");
-		Page<SolrProduct> productsPage = solrProductRepository.findByProductTitleContainsOrProductDescriptionContains(
+		Page<ProductSolrDocument> productsPage = solrProductRepository.findByProductTitleContainsOrProductDescriptionContains(
 				productSearchRequest.getProductTitle(), productSearchRequest.getProductDescription(), new PageRequest(productSearchRequest.getStartPage(), productSearchRequest.getEndPage()));
 
 		logger.debug("Content" + productsPage.getContent()); // get a list of  (max) 10 books.
@@ -139,7 +142,7 @@ public class SolrController {
 	public ProductsResponse handleFindByTitleAndFacetOnStatus(@PathVariable(PRODUCT_TITLE) String productTitle) {
 
 		logger.debug("Inside SolrController.handleFindByTitleAndFacetOnStatus()");
-		FacetPage<SolrProduct> productsFacetPage = solrProductRepository.findByProductTitleAndFacetOnProductStatus(productTitle, new PageRequest(0, 10));
+		FacetPage<ProductSolrDocument> productsFacetPage = solrProductRepository.findByProductTitleAndFacetOnProductStatus(productTitle, new PageRequest(0, 10));
 
 		logger.debug("Content" + productsFacetPage.getContent()); // the first 10 books
 		/*
@@ -169,11 +172,11 @@ public class SolrController {
 	public ProductsResponse handleHighlightSearch(@PathVariable(PRODUCT_DESCRIPTION) String productDescription) {
 
 		logger.debug("Inside SolrController.handleHighlightSearch()");
-		HighlightPage<SolrProduct> productsHighlightPage = solrProductRepository.findByProductDescription(productDescription, new PageRequest(0, 10));
+		HighlightPage<ProductSolrDocument> productsHighlightPage = solrProductRepository.findByProductDescription(productDescription, new PageRequest(0, 10));
 
 		logger.debug("Content" + productsHighlightPage.getContent()); // the  first 10 books
 		
-		for (HighlightEntry<SolrProduct> he : productsHighlightPage.getHighlighted()) {
+		for (HighlightEntry<ProductSolrDocument> he : productsHighlightPage.getHighlighted()) {
 			// A HighlightEntry belongs to an Entity (SolrProduct) and may have multiple highlighted fields (description).
 			
 			for (Highlight highlight : he.getHighlights()) {

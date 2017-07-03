@@ -12,9 +12,9 @@ import org.springframework.data.solr.repository.Highlight;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 
-import com.pallette.solr.domain.SolrProduct;
+import com.pallette.solr.document.ProductSolrDocument;
 
-public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, String> {
+public interface SolrProductRepository extends SolrCrudRepository<ProductSolrDocument, String> {
 
 	/**
 	 * <p>
@@ -25,7 +25,7 @@ public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, S
 	 * @param title
 	 * @return
 	 */
-	List<SolrProduct> findByProductTitle(String title);
+	List<ProductSolrDocument> findByProductTitle(String title);
 
 	
 	/**
@@ -40,7 +40,7 @@ public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, S
 	 * @param description
 	 * @return
 	 */
-	Page<SolrProduct> findByProductTitleContainsOrProductDescriptionContains(@Boost(2) String title, String description , Pageable pageable);
+	Page<ProductSolrDocument> findByProductTitleContainsOrProductDescriptionContains(@Boost(2) String title, String description , Pageable pageable);
 	
 	/**
 	 * 
@@ -49,7 +49,7 @@ public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, S
 	 * @return
 	 */
 	@Query("product_title:*?0* OR product_slug:*?0*")
-	public Page<SolrProduct> findByCustomQuery(String searchTerm, Pageable pageable);
+	public Page<ProductSolrDocument> findByCustomQuery(String searchTerm, Pageable pageable);
 	
 	
 	/**
@@ -62,7 +62,7 @@ public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, S
 	 */
 	@Query("product_title:*?0*")
 	@Facet(fields = { "product_status" }, limit = 5)
-	FacetPage<SolrProduct> findByProductTitleAndFacetOnProductStatus(String productTitle, Pageable page);
+	FacetPage<ProductSolrDocument> findByProductTitleAndFacetOnProductStatus(String productTitle, Pageable page);
 	
 	
 	/**
@@ -74,6 +74,6 @@ public interface SolrProductRepository extends SolrCrudRepository<SolrProduct, S
 	 * @return
 	 */
 	@Highlight(prefix = "<highlight>", postfix = "</highlight>")
-	HighlightPage<SolrProduct> findByProductDescription(String productDescription, Pageable pageable);
+	HighlightPage<ProductSolrDocument> findByProductDescription(String productDescription, Pageable pageable);
 
 }

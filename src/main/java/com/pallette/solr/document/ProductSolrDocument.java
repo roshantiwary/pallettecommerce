@@ -1,13 +1,19 @@
-package com.pallette.solr.domain;
+package com.pallette.solr.document;
 
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
+
+import com.pallette.browse.documents.BrandDocument;
+import com.pallette.browse.documents.CategoryDocument;
+import com.pallette.browse.documents.SkuDocument;
 
 import org.apache.solr.client.solrj.beans.Field;
 
 @SolrDocument(solrCoreName = "gettingstarted")
-public class SolrProduct {
+public class ProductSolrDocument {
 
 	@Id
 	@Field
@@ -27,7 +33,16 @@ public class SolrProduct {
 	@Field(value = "product_status")
 	private String productStatus;
 
-	public SolrProduct() {
+	@Field(value = "product_category")
+	private CategoryDocument categoryDocument;
+	
+	@Field(value = "product_brand")
+	private BrandDocument brandDocument;
+	
+	@Field(value = "product_sku")
+	private List<SkuDocument> skuDocument;
+
+	public ProductSolrDocument() {
 		super();
 	}
 
@@ -107,4 +122,27 @@ public class SolrProduct {
 		this.timeCreated = timeCreated;
 	}
 
+	public CategoryDocument getCategoryDocument() {
+		return categoryDocument;
+	}
+
+	public void setCategoryDocument(CategoryDocument categoryDocument) {
+		this.categoryDocument = categoryDocument;
+	}
+
+	public BrandDocument getBrandDocument() {
+		return brandDocument;
+	}
+
+	public void setBrandDocument(BrandDocument brandDocument) {
+		this.brandDocument = brandDocument;
+	}
+
+	public List<SkuDocument> getSkuDocument() {
+		return skuDocument;
+	}
+
+	public void setSkuDocument(List<SkuDocument> skuDocument) {
+		this.skuDocument = skuDocument;
+	}
 }
