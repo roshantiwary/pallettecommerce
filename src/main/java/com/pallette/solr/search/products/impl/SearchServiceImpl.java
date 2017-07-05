@@ -19,7 +19,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import org.springframework.data.solr.core.SolrTemplate;
+
+import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.query.Criteria;
 import org.springframework.data.solr.core.query.FacetOptions;
 import org.springframework.data.solr.core.query.FacetQuery;
@@ -66,7 +67,7 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger logger = LoggerFactory.getLogger(SearchServiceImpl.class);
 
     @Autowired
-    private SolrTemplate productsTemplate;
+    private SolrOperations productsTemplate;
 
     @Autowired
     private ProductRepository productRepository;
@@ -173,11 +174,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    public SolrTemplate getProductsTemplate() {
+    public SolrOperations getProductsTemplate() {
         return productsTemplate;
     }
 
-    public void setProductsTemplate(SolrTemplate productsTemplate) {
+    public void setProductsTemplate(SolrOperations productsTemplate) {
         this.productsTemplate = productsTemplate;
     }
 
