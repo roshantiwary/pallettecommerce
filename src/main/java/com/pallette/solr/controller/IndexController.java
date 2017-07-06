@@ -1,6 +1,7 @@
 package com.pallette.solr.controller;
 
 import com.pallette.exception.NoRecordsFoundException;
+import com.pallette.solr.products.entities.PropertyValue;
 import com.pallette.solr.products.search.products.QueryOptions;
 import com.pallette.solr.products.search.products.Result;
 import com.pallette.solr.products.search.products.SearchService;
@@ -59,24 +60,24 @@ public class IndexController {
 
         queryOptions.setQuery(search);
 
-//        if (filters != null && !filters.isEmpty()) {
-//            filters.forEach(valueId -> {
+        if (filters != null && !filters.isEmpty()) {
+            filters.forEach(valueId -> {
 //                final PropertyValue value = valueRepository.findOne(valueId);
-//
-//                if (null == value) {
-//                    try {
-//						throw new NoRecordsFoundException("No records found");
-//					} catch (NoRecordsFoundException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//                }
-//
-//                queryOptions.addFilterValue(value.getProperty().getId(), valueId);
-//            });
-//        }
+            	final PropertyValue value = new PropertyValue();
+                if (null == value) {
+                    try {
+						throw new NoRecordsFoundException("No records found");
+					} catch (NoRecordsFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                }
+
+                queryOptions.addFilterValue(value.getProperty().getId(), valueId);
+            });
+        }
         
-        queryOptions.addFilterValue(Long.valueOf(1234), Long.valueOf(1234));
+//        queryOptions.addFilterValue(Long.valueOf(1234), Long.valueOf(1234));
 
         final Result result = queryOptions.search(new PageRequest(page - 1, PAGE_SIZE, new Sort(order)));
 
