@@ -6,23 +6,24 @@ import com.pallette.solr.products.search.products.QueryOptions;
 import com.pallette.solr.products.search.products.Result;
 import com.pallette.solr.products.search.products.SearchService;
 import com.pallette.solr.products.search.products.SortOrder;
+import com.pallette.solr.response.SearchPage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
  * Created by Roshan.
  */
-@Controller
+@RestController
 @RequestMapping("/rest/api/v1/")
 public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
@@ -33,12 +34,11 @@ public class IndexController {
     private SearchService searchService;
 
     @RequestMapping(value="search", method = RequestMethod.GET)
-    public String index(
+    public SearchPage index(
             @RequestParam(value = "p", required = false) Integer page,
             @RequestParam(value = "s", required = false) String orderString,
             @RequestParam(value = "search", required = false) final String search,
-            @RequestParam(value = "f", required = false) final List<Long> filters,
-            final ModelMap model) throws NoRecordsFoundException{
+            @RequestParam(value = "f", required = false) final List<Long> filters) throws NoRecordsFoundException{
 
         final SortOrder order = parseSortOrder(orderString);
 
@@ -80,18 +80,18 @@ public class IndexController {
 //        queryOptions.addFilterValue(Long.valueOf(1234), Long.valueOf(1234));
 
         final Result result = queryOptions.search(new PageRequest(page - 1, PAGE_SIZE, new Sort(order)));
+        
+        SearchPage searchPage = new SearchPage();
+        searchPage.setUrlPath("/");
+        searchPage.setSearch(search);
+        searchPage.setPage(page);
+        searchPage.setOrderString(orderString);
+        searchPage.setOrders(searchService.getAwailableSortOrders());
+        searchPage.setFacets(result.getFacets());
+        searchPage.setFilters(filters);
+        searchPage.setProducts(result.getProducts());
 
-        model.addAttribute("urlPath", "/");
-        model.addAttribute("search", search);
-        model.addAttribute("page", page);
-        model.addAttribute("orderString", orderString);
-        model.addAttribute("orders", searchService.getAwailableSortOrders());
-        model.addAttribute("facets", result.getFacets());
-        model.addAttribute("filters", filters);
-
-        model.addAttribute("products", result.getProducts());
-
-        return "index";
+        return searchPage;
     }
 
     private SortOrder parseSortOrder(final String s) {
