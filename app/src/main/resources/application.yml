@@ -1,0 +1,57 @@
+spring:
+  application:
+     name: shop
+  data:
+    mongodb:
+      host: ${MONGO_SERVER}
+      port: ${MONGO_PORT}
+      database: ${MONGO_INITDB_DATABASE}  
+      username: ${MONGO_INITDB_ROOT_USERNAME}
+      password: ${MONGO_INITDB_ROOT_PASSWORD}
+      authentication-database: ${MONGO_AUTHENTICATION_DATABASE}
+      #uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_SERVER}:${MONGO_PORT}/${MONGO_INITDB_DATABASE}
+#     repositories:
+#        enabled: true
+    solr:
+      host: 8983
+      zk-host: 127.0.0.1:9983
+      repositories:
+        enabled: false
+  mail:
+    host: smtp.gmail.com
+    username: palettecommerce@gmail.com
+    password: palettecommerce123
+    properties.mail.smtp:
+      auth: true
+      socketFactory:
+        port: 465
+        class: javax.net.ssl.SSLSocketFactory
+        fallback: false
+      
+      
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /views/
+server:
+  error:
+    whitelabel:
+      enabled: true 
+      
+security:
+  oauth2:
+    client:
+      client-id: ${SECURITY_OAUTH2_CLIENT_ID}
+      client-secret: ${SECURITY_OAUTH2_CLIENT_SECRET}
+      grant-type: ${SECURITY_OAUTH2_CLIENT_GRANT_TYPE}
+      access-token-uri: ${SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI}
+      
+logging.level:
+  org.springframework.web: DEBUG
+  org.hibernate: ERROR
+  org.springframework.security: INFO
+      
+pallette:
+  default-password: ${DEFAULT_PASSWORD}
+  solr:
+    baseUrl: http://127.0.0.1:8983/solr

@@ -1,0 +1,83 @@
+version: '3.3'
+services:
+    solr:
+      container_name: "solr"
+      image: solr
+      ports:
+        - "8983:8983"
+      volumes:
+        - data:/opt/solr/server/solr/mycores
+      entrypoint: 
+        - docker-entrypoint.sh
+        - solr-precreate
+        - mycore
+      depends_on:
+        - mongodb
+      networks:
+          - my_net
+    mongodb:
+        image: mongo:3.6
+        container_name: mongodb
+        environment:
+          - MONGO_DATA_DIR=/data/db
+          - MONGO_LOG_DIR=/dev/null
+          - MONGO_INITDB_ROOT_USERNAME=user
+          - MONGO_INITDB_ROOT_PASSWORD=pass
+          - MONGO_INITDB_DATABASE=shop
+          - AUTH=yes
+          - MONGO_REPLICA_SET_NAME=shopreplica1
+        volumes:
+          - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+          - ./mongo-volume:/data/db
+        ports:
+          - 27017:27017
+        networks:
+          - my_net
+        command: mongod --smallfiles --logpath=/dev/null # --quiet
+        #command: mongod --smallfiles --replSet=shopreplica1 --bind_ip=mongodb,127.0.0.1,localhost --logpath=/dev/null # --quiet
+    app:
+      environment:
+        - PAYU_SALT=testsalt
+        - PAYU_BASE_URL=https://test.payu.in
+        - PAYU_SUCCESS_URL=http://www.palletteapart.com/boot/success
+        - PAYU_FAILURE_URL=http://www.palletteapart.com/boot/failure
+        - PAYU_SERVICE_PROVIDER=payu_paisa
+        - MONGO_SERVER=mongodb
+        - MONGO_PORT=27017
+        - MONGO_INITDB_ROOT_USERNAME=user
+        - MONGO_INITDB_ROOT_PASSWORD=pass
+        - MONGO_INITDB_DATABASE=shop
+        - MONGO_AUTHENTICATION_DATABASE=admin
+        - SECURITY_OAUTH2_CLIENT_ID=gOJlLIuZRtFXDo360ex7qTEY1xEi7A149aDieG6VoH
+        - SECURITY_OAUTH2_CLIENT_SECRET=MUOXudbPCfm6NsWamj5AEHnlwseDHu6rQMxo2V8Ap9
+        - SECURITY_OAUTH2_CLIENT_GRANT_TYPE=client_credentials
+        - SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI=https://api.molt.in/oauth/access_token
+        - DEFAULT_PASSWORD=pass
+      restart: always
+      build: ./app
+      working_dir: /app
+      volumes:
+        - ./app:/app
+        - ~/.m2:/root/.m2
+      ports:
+        - "8080:8080"
+        - "5005:5005"
+      expose:
+        - "8080"
+        - "5005"
+#      command: mvn clean spring-boot:run
+      command: mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+      links:
+        - mongodb
+        - solr
+      depends_on:
+        - mongodb
+        - solr
+      networks:
+        - my_net
+      tty: true
+volumes:
+  data:
+networks:
+  my_net:
+    driver: bridge
