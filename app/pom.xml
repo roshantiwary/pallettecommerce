@@ -151,18 +151,10 @@
 			<version>${spring.version}</version>
 		</dependency>
 
-		<!-- Swagger Dependency. 
-		 <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.2.15</version>
-        </dependency>
-         <dependency>
-              <groupId>org.springdoc</groupId>
-              <artifactId>springdoc-openapi-webmvc-core</artifactId>
-              <version>1.2.15</version>
-        </dependency>
-		-->
+		<!-- Swagger Dependency. <dependency> <groupId>org.springdoc</groupId> 
+			<artifactId>springdoc-openapi-ui</artifactId> <version>1.2.15</version> </dependency> 
+			<dependency> <groupId>org.springdoc</groupId> <artifactId>springdoc-openapi-webmvc-core</artifactId> 
+			<version>1.2.15</version> </dependency> -->
 	</dependencies>
 
 	<build>
