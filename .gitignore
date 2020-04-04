@@ -1,5 +1,5 @@
 target/
-/.settings/
+app/.settings/
 /.metadata/
 /RemoteSystemsTempFiles/
 mongo-volume/
