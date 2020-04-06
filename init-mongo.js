@@ -1,25 +1,15 @@
 db.createUser(
- { 
- 	user: "superAdmin", 
- 	pwd: "admin123", 
- 	roles: [
- 	 	{ 
- 	 		role: "root",
- 	 		db: "admin"
- 	 	} 
- 	]
- }
-);
+  {
+    user: "superAdmin",
+    pwd: "admin123",
+    roles: [ { role: "root", db: "admin" } ]
+  }
+)
 
 db.createUser(
- { 
- 	user: "shopUser",
+  {
+    user: "shopUser",
     pwd: "shop123",
-    roles: [
-    	{
-    		role : "readWrite",
-    		db : "shop"
-    	}
-    ]
- }
-);
+    roles: [ { role: "readWrite", db: "shop" } ]
+  }
+)

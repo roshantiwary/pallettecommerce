@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author amall3
  *
  */
-@Transactional
+//@Transactional
 public interface PasswordResetTokenRepository extends MongoRepository<PasswordResetToken, Long> {
 
 	/**

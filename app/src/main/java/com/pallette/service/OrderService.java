@@ -62,7 +62,7 @@ import com.pallette.response.OrderItemResponse;
  *
  */
 @Service
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class OrderService {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderService.class);
@@ -133,7 +133,7 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CartResponse addItemToOrder(Long skuId, Long productId, Long quantity , Long orderId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.addItemToOrder()");
 		
@@ -179,7 +179,7 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CartResponse removeItemFromOrder(Long orderId, Long productId, Long skuId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.removeItemFromOrder()");
 		
@@ -223,7 +223,7 @@ public class OrderService {
 	 * @return 
 	 * @throws NoRecordsFoundException 
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CartResponse updateItemQuantity(Long orderId, Long productId, Long skuId, long newQuantity) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderService.updateItemQuantity()");
@@ -273,7 +273,7 @@ public class OrderService {
 	 * @param profileId
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Order createDefaultOrder(Long profileId) {
 
 		log.debug("Inside OrderServices.createDefaultOrder()");
@@ -307,7 +307,7 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CartResponse createAndAddItemToOrder(Long skuId, Long productId , long quantity , Long profileId) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderServices.createAndAddItemToOrder()");

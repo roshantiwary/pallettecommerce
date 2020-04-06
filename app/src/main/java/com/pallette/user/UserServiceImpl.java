@@ -83,7 +83,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public ApiUser createUser(CreateUserRequest createUserRequest) {
 		logger.info("Validating user request.");
 		validate(createUserRequest);
@@ -111,7 +111,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public ApiUser saveUser(Long userId, UpdateUserRequest request) {
 		validate(request);
         Optional<User> user = userRepository.findById(userId);
@@ -135,7 +135,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 	
 	@Override
-	@Transactional
+//	@Transactional
 	public ApiUser getUser(Long userId) {
 		Assert.notNull(userId);
         Optional<User> user = userRepository.findById(userId);
@@ -172,7 +172,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
     }
     
     @Override
-	@Transactional
+//	@Transactional
 	public AddEditAddressRequest addNewAddress(AddEditAddressRequest request) {
 		logger.info("Validating Address request.");
 		validate(request);
@@ -192,7 +192,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public AddEditAddressRequest editAddress(AddEditAddressRequest request) {
 		logger.info("Validating Address request.");
 		validate(request);

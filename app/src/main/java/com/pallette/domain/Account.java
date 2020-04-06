@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pallette.config.CascadeSave;
+import com.pallette.persistence.BaseEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document

@@ -15,7 +15,7 @@ import com.pallette.domain.Order;
  *
  */
 
-@Transactional
+//@Transactional
 public interface OrderRepository extends MongoRepository<Order, Long> {
 
 	/**

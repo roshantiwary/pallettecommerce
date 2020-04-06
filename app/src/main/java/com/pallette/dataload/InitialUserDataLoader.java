@@ -3,6 +3,7 @@ package com.pallette.dataload;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
 	private MongoOperations mongoOperation;
 	
 	@Override
-	@Transactional
+//	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if(alreadySetup) return;
 		
@@ -94,7 +95,7 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
 		return account;
 	}
 	
-	@Transactional
+//	@Transactional
     private Role createRoleIfNotFound(
       String id, String name) {
   
@@ -108,13 +109,14 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
         return role;
     }
 	
-	@Transactional
+//	@Transactional
     private Account createUserIfNotFound(
       String username, String firstName, String lastName, String phonenumber, List<Role> roles) {
   
         Account account = acctRepository.findByUsername(username);
         if (account == null) {
         	account = new Account();
+        	account.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
         	account.setUsername(username);
         	account.setFirstName(firstName);
         	account.setLastName(lastName);
