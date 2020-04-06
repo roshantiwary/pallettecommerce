@@ -1,16 +1,25 @@
 package com.pallette.oauth2;
 
+import java.io.Serializable;
+
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import com.pallette.persistence.BaseEntity;
+import java.util.Date;
+import java.util.UUID;
+import org.springframework.data.annotation.Id;
+import org.springframework.util.Assert;
 
 /**
  * @version 1.0
  * @author: Roshan
  */
 
-public class OAuth2AuthenticationAccessToken extends BaseEntity{
+public class OAuth2AuthenticationAccessToken implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6034700905994879044L;
 	private String tokenId;
 	private OAuth2AccessToken oAuth2AccessToken;
     private String authenticationId;
@@ -27,6 +36,7 @@ public class OAuth2AuthenticationAccessToken extends BaseEntity{
         this.clientId = authentication.getOAuth2Request().getClientId();
         this.authentication = authentication;
         this.refreshToken = oAuth2AccessToken.getRefreshToken().getValue();
+        this.id = authenticationId;
     }
     
     public String getTokenId() {
@@ -56,7 +66,39 @@ public class OAuth2AuthenticationAccessToken extends BaseEntity{
 	public String getRefreshToken() {
 		return refreshToken;
 	}
+    
+    private int version;
 
-    public OAuth2AuthenticationAccessToken() {
+    @Id
+    private String id;
+
+    private Date timeCreated;
+
+    public String getId() {
+        return id;
+    }
+
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OAuth2AuthenticationAccessToken that = (OAuth2AuthenticationAccessToken) o;
+
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public Date getTimeCreated() {
+        return timeCreated;
     }
 }
