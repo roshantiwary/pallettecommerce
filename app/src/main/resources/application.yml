@@ -38,13 +38,13 @@ server:
     whitelabel:
       enabled: true 
       
-security:
-  oauth2:
-    client:
-      client-id: ${SECURITY_OAUTH2_CLIENT_ID}
-      client-secret: ${SECURITY_OAUTH2_CLIENT_SECRET}
-      grant-type: ${SECURITY_OAUTH2_CLIENT_GRANT_TYPE}
-      access-token-uri: ${SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI}
+#security:
+ # oauth2:
+  #  client:
+   #   client-id: ${SECURITY_OAUTH2_CLIENT_ID}
+    #  client-secret: ${SECURITY_OAUTH2_CLIENT_SECRET}
+     # grant-type: ${SECURITY_OAUTH2_CLIENT_GRANT_TYPE}
+      #access-token-uri: ${SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI}
       
 logging.level:
   org.springframework.web: DEBUG

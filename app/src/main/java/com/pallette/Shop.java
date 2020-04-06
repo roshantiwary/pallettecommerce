@@ -61,51 +61,51 @@ public class Shop extends SpringBootServletInitializer {
 		SpringApplication.run(Shop.class, args);
 	}
 
-	@Value("${security.oauth2.client.access-token-uri}")
-	private String accessTokenUri;
+//	@Value("${security.oauth2.client.access-token-uri}")
+//	private String accessTokenUri;
+//
+//	@Value("${security.oauth2.client.grant-type}")
+//	private String grantType;
+//
+//	@Value("${security.oauth2.client.client-id}")
+//	private String clientID;
+//
+//	@Value("${security.oauth2.client.client-secret}")
+//	private String clientSecret;
 
-	@Value("${security.oauth2.client.grant-type}")
-	private String grantType;
-
-	@Value("${security.oauth2.client.client-id}")
-	private String clientID;
-
-	@Value("${security.oauth2.client.client-secret}")
-	private String clientSecret;
-
-	/**
-	 * The heart of our interaction with the resource; handles redirection for
-	 * authentication, access tokens, etc.
-	 * 
-	 * @param oauth2ClientContext
-	 * @return
-	 */
-	@Bean
-	public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
-		return new OAuth2RestTemplate(resource(), oauth2ClientContext);
-	}
+//	/**
+//	 * The heart of our interaction with the resource; handles redirection for
+//	 * authentication, access tokens, etc.
+//	 * 
+//	 * @param oauth2ClientContext
+//	 * @return
+//	 */
+//	@Bean
+//	public OAuth2RestOperations restTemplate(OAuth2ClientContext oauth2ClientContext) {
+//		return new OAuth2RestTemplate(resource(), oauth2ClientContext);
+//	}
 
 	@Bean
 	public CascadingMongoEventListener cascadingMongoEventListener() {
 		return new CascadingMongoEventListener();
 	}
 
-	@Bean
-	protected OAuth2ProtectedResourceDetails resource() {
-		List scopes = new ArrayList<String>(2);
-		scopes.add("write");
-		scopes.add("read");
-		ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
-		resource.setClientId(clientID);
-		resource.setClientSecret(clientSecret);
-		resource.setAccessTokenUri(accessTokenUri);
-		resource.setGrantType(grantType);
-		resource.setClientAuthenticationScheme(AuthenticationScheme.header);
-		resource.setTokenName("access_token");
-		resource.setScope(scopes);
-		resource.setClientAuthenticationScheme(AuthenticationScheme.form);
-		return resource;
-	}
+//	@Bean
+//	protected OAuth2ProtectedResourceDetails resource() {
+//		List scopes = new ArrayList<String>(2);
+//		scopes.add("write");
+//		scopes.add("read");
+//		ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
+//		resource.setClientId(clientID);
+//		resource.setClientSecret(clientSecret);
+//		resource.setAccessTokenUri(accessTokenUri);
+//		resource.setGrantType(grantType);
+//		resource.setClientAuthenticationScheme(AuthenticationScheme.header);
+//		resource.setTokenName("access_token");
+//		resource.setScope(scopes);
+//		resource.setClientAuthenticationScheme(AuthenticationScheme.form);
+//		return resource;
+//	}
 
 	@Bean
 	public CustomConversions customMongoConversions() {

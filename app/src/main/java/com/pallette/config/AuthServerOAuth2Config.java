@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -19,6 +20,9 @@ import com.pallette.web.security.mongodb.OAuth2RepositoryTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter{
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Lazy
 	@Autowired
@@ -45,7 +49,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 		
 		clients.inMemory()
         .withClient("acme")
-        .secret("acmesecret")
+        .secret(passwordEncoder.encode("acmesecret"))
         .authorizedGrantTypes("authorization_code", "refresh_token",
             "password", "client_credentials").scopes("read","write")
         .accessTokenValiditySeconds(1800);
