@@ -1,0 +1,15 @@
+id,productTitle,productSlug,productDescription,productStatus,categoryDocument,skuDocument,productBrand,imagesDocument
+prd001,Kaju Katli,Kaju Katli,Cashewnuts Sugar Milk Silver Leaf,true,cat001,sku001;sku002,store001,prd001
+prd002,Mava Gulkand Roll,Mava Gulkand Roll,Milk Sugar Dry Fruits Rose Petal Jam ( Gulkand) Saffron,true,cat001,sku003;sku004,store002,prd002
+prd003,Motipak,Motipak,Gram Flour Clarified Butter Sugar,true,cat001,sku005;sku006,store003,prd003
+prd004,Badam Ginni,Badam Ginni,Milk Sugar Dry Fruits,true,cat001,sku007;sku008,store004,prd004
+prd005,Ajmeri Kalakand,Ajmeri Kalakand,Milk Sugar,true,cat001,sku009;sku010,store001,prd005
+prd006,Soan Halwa,Soan Halwa,Refined Wheat Flour Cashewnuts  Almonds Clarified Butter and Sugar,true,cat001,sku011;sku012,store002,prd006
+prd007,Special Mysore Pak,Special Mysore Pak,Gram Flour Clarified Butter Sugar and Milk Solids,true,cat001,sku013;sku014,store003,prd007
+prd008,Achari Matri,Achari Matri,Refined Wheat Flour Edible Vegetable Oil Edible Common Salt and Spices,true,cat002,sku015;sku016,store004,prd008
+prd009,Bhakarwadi,Bhakarwadi,Refined Wheat Flour Edible Vegetable Oil Edible Common Salt and Spices,true,cat002,sku017;sku018,store001,prd009
+prd010,Dry Fruit Samosa,Dry Fruit Samosa,Refined Wheat Flour Edible Vegetable Oil Edible Common Salt and Spices,true,cat002,sku019;sku020,store002,prd010
+prd011,Gol Matri,Gol Matri,Refined Wheat Flour Edible Vegetable Oil Edible Common Salt and Spices,true,cat002,sku021;sku022,store003,prd011
+prd012,Apricots,Apricots,Apricots,true,cat003,sku023;sku024,store004,prd012
+prd013,Cashew Nuts,Cashew Nuts,Cashew Nuts,true,cat003,sku025;sku026,store001,prd013
+prd014,Figs Anjeer,Figs Anjeer,Figs Anjeer,true,cat003,sku027;sku028,store002,prd014

@@ -16,6 +16,11 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "category")
 public class CategoryDocument extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 221281493789901130L;
+
 	private String categoryTitle;
 
 	private String categorySlug;
@@ -30,11 +35,15 @@ public class CategoryDocument extends BaseEntity {
 	@DBRef
 	private ImagesDocument imagesDocument;
 
-	@DBRef
-	private CategoryDocument parentCategoryDocument;
-	
+//	@DBRef
+//	private CategoryDocument parentCategoryDocument;
+//	
 	public CategoryDocument() {
 		super();
+	}
+	
+	public CategoryDocument(String id) {
+		super(id);
 	}
 
 	/**
@@ -112,21 +121,21 @@ public class CategoryDocument extends BaseEntity {
 		this.imagesDocument = imagesDocument;
 	}
 
-	/**
-	 * @return the parentCategoryDocument
-	 */
-	public CategoryDocument getParentCategoryDocument() {
-		return parentCategoryDocument;
-	}
-
-	/**
-	 * @param parentCategoryDocument
-	 *            the parentCategoryDocument to set
-	 */
-	public void setParentCategoryDocument(
-			CategoryDocument parentCategoryDocument) {
-		this.parentCategoryDocument = parentCategoryDocument;
-	}
+//	/**
+//	 * @return the parentCategoryDocument
+//	 */
+//	public CategoryDocument getParentCategoryDocument() {
+//		return parentCategoryDocument;
+//	}
+//
+//	/**
+//	 * @param parentCategoryDocument
+//	 *            the parentCategoryDocument to set
+//	 */
+//	public void setParentCategoryDocument(
+//			CategoryDocument parentCategoryDocument) {
+//		this.parentCategoryDocument = parentCategoryDocument;
+//	}
 
 	/**
 	 * @return the categoryBrand

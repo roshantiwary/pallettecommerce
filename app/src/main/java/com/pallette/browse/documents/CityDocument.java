@@ -16,6 +16,11 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "region")
 public class CityDocument extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6025512202047656527L;
+
 	private String name;
 
 	@DBRef

@@ -16,6 +16,11 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "sku")
 public class SkuDocument extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2136432328341539477L;
+
 	@Field(value = "name")
 	private String name;
 
@@ -39,6 +44,10 @@ public class SkuDocument extends BaseEntity {
 
 	public SkuDocument() {
 		super();
+	}
+	
+	public SkuDocument(String id) {
+		super(id);
 	}
 
 	public String getName() {

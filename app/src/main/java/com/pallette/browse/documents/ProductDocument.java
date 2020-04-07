@@ -19,7 +19,10 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "product")
 public class ProductDocument extends BaseEntity {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7223467210181177835L;
 
 	@Field(value = "product_title")
 	private String productTitle;
@@ -47,6 +50,10 @@ public class ProductDocument extends BaseEntity {
 
 	public ProductDocument(){
 		super();
+	}
+	
+	public ProductDocument(String id){
+		super(id);
 	}
 	
 	/**

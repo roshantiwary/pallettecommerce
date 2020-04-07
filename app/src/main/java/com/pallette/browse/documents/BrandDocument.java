@@ -15,6 +15,11 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "brand")
 public class BrandDocument extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7986847367670547652L;
+
 	private String storeName;
 
 	private String address1;
@@ -33,6 +38,10 @@ public class BrandDocument extends BaseEntity {
 
 	public BrandDocument() {
 		super();
+	}
+	
+	public BrandDocument(String id) {
+		super(id);
 	}
 
 	/**

@@ -51,7 +51,7 @@ public class MerchandiseService {
 	        CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
 	        CsvMapper mapper = new CsvMapper();
 	        MappingIterator<T> readValues = 
-	          mapper.reader(type).with(bootstrapSchema).readValues(inputStream);
+	        mapper.readerFor(type).with(bootstrapSchema).readValues(inputStream);
 	        return readValues.readAll();
 	    } catch (Exception e) {
 	        logger.error("Error occurred while loading object list from file ", e);

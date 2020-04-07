@@ -1,0 +1,29 @@
+id,name,defaultDisplayName,active,unitOfMeasure,returnable,priceDocument,inventoryDocument
+sku001,Kaju Pista Roll,Kaju Pista Roll,true,250gms,false,price001,inv001
+sku002,Paan kaju Katli,Paan kaju Katli,true,500gms,false,price002,inv002
+sku003,Mava Gulkand Roll1,Mava Gulkand Roll1,true,500gms,false,price003,inv003
+sku004,Mava Gulkand Roll2,Mava Gulkand Roll2,true,1KG,false,price004,inv004
+sku005,Motichoor,Motichoor,true,250gms,false,price005,inv005
+sku006,Motichoor Barfi,Motichoor Barfi,true,500gms,false,price006,inv006
+sku007,Badam Ginni 1,Badam Ginni 1,true,1KG,false,price007,inv007
+sku008,Badam Ginni 2,Badam Ginni 2,true,250gms,false,price008,inv008
+sku009,Ajmeri kalakand 1,Ajmeri kalakand 1,true,500gms,false,price009,inv009
+sku010,Ajmeri kalakand 2,Ajmeri kalakand 2,true,1KG,false,price010,inv010
+sku011,Soan Halwa 1,Soan Halwa 1,true,250gms,false,price011,inv011
+sku012,Soan Halwa 2,Soan Halwa 2,true,500gms,false,price012,inv012
+sku013,Special Mysore Pak 1,Special Mysore Pak 1,true,1KG,false,price013,inv013
+sku014,Special Mysore Pak 2,Special Mysore Pak 2,true,250gms,false,price014,inv014
+sku015,Achari Matri 1,Achari Matri 1,true,500gms,false,price015,inv015
+sku016,Achari Matri 2,Achari Matri 2,true,1KG,false,price016,inv016
+sku017,Bhakarwadi 1,Bhakarwadi 1,true,250gms,false,price017,inv017
+sku018,Bhakarwadi 2,Bhakarwadi 2,true,500gms,false,price018,inv018
+sku019,Dry Fruit Samosa 1,Dry Fruit Samosa 1,true,1KG,false,price019,inv019
+sku020,Dry Fruit Samosa 2,Dry Fruit Samosa 2,true,250gms,false,price020,inv020
+sku021,Gol Matri 1,Gol Matri 1,true,500gms,false,price021,inv021
+sku022,Gol Matri 2,Gol Matri 2,true,1KG,false,price022,inv022
+sku023,Apricots 1,Apricots 1,true,250gms,false,price023,inv023
+sku024,Apricots 2,Apricots 2,true,500gms,false,price024,inv024
+sku025,Cashew Nuts 1,Cashew Nuts 1,true,1KG,false,price025,inv025
+sku026,Cashew Nuts 2,Cashew Nuts 2,true,250gms,false,price026,inv026
+sku027,Figs Anjeer 1,Figs Anjeer 1,true,500gms,false,price027,inv027
+sku28,Figs Anjeer 2,Figs Anjeer 2,true,1KG,false,price028,inv028

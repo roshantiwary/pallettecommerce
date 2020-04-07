@@ -16,6 +16,11 @@ import com.pallette.persistence.BaseEntity;
 @Document(collection = "inventory")
 public class InventoryDocument extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5899682384953964244L;
+
 	@Field(value = "available_stock_level")
 	private long availableStockLevel;
 
@@ -29,6 +34,10 @@ public class InventoryDocument extends BaseEntity {
 		super();
 	}
 
+	public InventoryDocument(String id) {
+		super(id);
+	}
+	
 	/**
 	 * @return the availableStockLevel
 	 */

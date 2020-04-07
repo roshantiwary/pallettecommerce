@@ -9,7 +9,12 @@ import java.util.UUID;
 
 public abstract class BaseEntity implements Serializable {
 
-    private int version;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2193455554091551527L;
+
+	private int version;
 
     @Id
     private String id;

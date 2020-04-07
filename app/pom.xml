@@ -11,6 +11,7 @@
 
 	<properties>
 		<spring.version>2.2.6.RELEASE</spring.version>
+		<jackson.version>2.9.6</jackson.version>
 	</properties>
 
 	<parent>
@@ -144,6 +145,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-csv</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

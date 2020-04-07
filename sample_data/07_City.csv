@@ -1,0 +1,5 @@
+id,name,imagesDocument,brandDocuments
+BLR,Bangalore,BLR,store001;store002
+HYD,Hyderabad,HYD,store003;store004
+DEL,Delhi,DEL,store004;store001
+CHE,Chennai,CHE,store002;store003

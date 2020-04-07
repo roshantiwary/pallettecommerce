@@ -86,7 +86,7 @@ public class MerchandiseDaoImpl implements MerchandiseDao{
 			update.set("categoryBrand", categoryDocument.getCategoryBrand());
 			update.set("categoryStatus", categoryDocument.getCategoryStatus());
 			update.set("imagesDocument", categoryDocument.getImagesDocument());
-			update.set("parentCategoryDocument", categoryDocument.getParentCategoryDocument());
+//			update.set("parentCategoryDocument", categoryDocument.getParentCategoryDocument());
 			mongoTemplate.upsert(query, update, CategoryDocument.class);
 		}
 	}

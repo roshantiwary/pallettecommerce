@@ -1,0 +1,4 @@
+id,categoryTitle,categorySlug,categoryDescription,categoryBrand,categoryStatus,imagesDocument
+cat001,Sweets,Sweets,Sweets,store001,true,cat001
+cat002,Namkeens,Namkeens,Namkeens,store001,true,cat002
+cat003,DryFruits,DryFruits,DryFruits,store001,true,cat003

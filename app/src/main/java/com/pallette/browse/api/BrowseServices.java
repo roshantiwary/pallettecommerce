@@ -196,7 +196,7 @@ public class BrowseServices {
 				CategoryResponse response = new CategoryResponse();
 				BeanUtils.copyProperties(response , category);
 				populateImageDetails(response, category.getImagesDocument());
-				populateCategoryDetails(response, category.getParentCategoryDocument());
+//				populateCategoryDetails(response, category.getParentCategoryDocument());
 				responseList.add(response);
 			}
 		}
