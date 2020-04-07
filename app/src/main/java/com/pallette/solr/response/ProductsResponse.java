@@ -6,22 +6,22 @@ import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.core.query.result.SolrResultPage;
 
 import com.pallette.response.Response;
-import com.pallette.solr.products.entities.Product;
+import com.pallette.solr.document.ProductSolrDocument;
 
 public class ProductsResponse extends Response {
 
-	private SolrResultPage<Product> products;
+	private SolrResultPage<ProductSolrDocument> products;
 
-	private Page<Product> productsPage;
+	private Page<ProductSolrDocument> productsPage;
 
-	private FacetPage<Product> productsFacetPage;
+	private FacetPage<ProductSolrDocument> productsFacetPage;
 
-	private HighlightPage<Product> productsHighlightPage;
+	private HighlightPage<ProductSolrDocument> productsHighlightPage;
 
 	/**
 	 * @return the productsFacetPage
 	 */
-	public FacetPage<Product> getProductsFacetPage() {
+	public FacetPage<ProductSolrDocument> getProductsFacetPage() {
 		return productsFacetPage;
 	}
 
@@ -29,22 +29,22 @@ public class ProductsResponse extends Response {
 	 * @param productsFacetPage
 	 *            the productsFacetPage to set
 	 */
-	public void setProductsFacetPage(FacetPage<Product> productsFacetPage) {
+	public void setProductsFacetPage(FacetPage<ProductSolrDocument> productsFacetPage) {
 		this.productsFacetPage = productsFacetPage;
 	}
 
-	public SolrResultPage<Product> getProducts() {
+	public SolrResultPage<ProductSolrDocument> getProducts() {
 		return products;
 	}
 
-	public void setProducts(SolrResultPage<Product> products) {
+	public void setProducts(SolrResultPage<ProductSolrDocument> products) {
 		this.products = products;
 	}
 
 	/**
 	 * @return the productsPage
 	 */
-	public Page<Product> getProductsPage() {
+	public Page<ProductSolrDocument> getProductsPage() {
 		return productsPage;
 	}
 
@@ -52,14 +52,14 @@ public class ProductsResponse extends Response {
 	 * @param productsPage
 	 *            the productsPage to set
 	 */
-	public void setProductsPage(Page<Product> productsPage) {
+	public void setProductsPage(Page<ProductSolrDocument> productsPage) {
 		this.productsPage = productsPage;
 	}
 
 	/**
 	 * @return the productsHighlightPage
 	 */
-	public HighlightPage<Product> getProductsHighlightPage() {
+	public HighlightPage<ProductSolrDocument> getProductsHighlightPage() {
 		return productsHighlightPage;
 	}
 
@@ -68,7 +68,7 @@ public class ProductsResponse extends Response {
 	 *            the productsHighlightPage to set
 	 */
 	public void setProductsHighlightPage(
-			HighlightPage<Product> productsHighlightPage) {
+			HighlightPage<ProductSolrDocument> productsHighlightPage) {
 		this.productsHighlightPage = productsHighlightPage;
 	}
 

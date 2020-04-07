@@ -1,94 +1,96 @@
 package com.pallette.solr.products.entities;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 /**
  * Created by Roshan.
  */
+public class Property {
 
-@Document(collection = "solr_properties_index")
-public class Property implements Serializable{
+	private String id;
+	
+	public boolean isSelected() {
+		return selected;
+	}
 
-	@Id
-    private Long id;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 
-    private String name;
+	private boolean selected;
 
-    public Long getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setName(final String name) {
-        this.name = name;
-    }
-//    @OneToMany(mappedBy = "property", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    
-    @DBRef
-    private Set<PropertyValue> values = new HashSet<>();
+	private String name;
 
-    @Transient
-    private Map<Long, PropertyValue> searchableValues;
+	public String getName() {
+		return name;
+	}
 
-    public Set<PropertyValue> getValues() {
-        return values;
-    }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-    public PropertyValue getValue(Long id) {
-        if (null == searchableValues) {
-            searchableValues = new HashMap<>();
+	@Override
+	public String toString() {
+		return String.format("%s{id=%d, name=%s}", getClass(), getId(), getName());
+	}
 
-            getValues().forEach(value -> searchableValues.put(value.getId(), value));
-        }
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
 
-        return searchableValues.get(id);
-    }
+	@Override
+	public boolean equals(final Object that) {
+		if (that == null || getClass() != that.getClass()) {
+			return false;
+		}
 
-    public void setValues(final Set<PropertyValue> values) {
-        values.forEach(value -> value.setProperty(this));
-        this.values = values;
-    }
+		PropertyValue obj = (PropertyValue) that;
 
-    public void addValue(final PropertyValue value) {
-        value.setProperty(this);
-        values.add(value);
-    }
+		return this == that || id.equals(obj.getId());
+	}
 
-    public void removeValue(final PropertyValue value) {
-        value.setProperty(null);
-        values.remove(value);
-    }
-    
-    @Override
-    public String toString() {
-        return String.format("%s{id=%d, name=%s}", getClass(), getId(), getName());
-    }
+	private Set<PropertyValue> values = new HashSet<>();
 
-    @Override
-    public int hashCode() {
-        return Long.hashCode(id);
-    }
+	private Map<String, PropertyValue> searchableValues;
 
-    @Override
-    public boolean equals(final Object that) {
-        if (that == null || getClass() != that.getClass()) {
-            return false;
-        }
+	public Set<PropertyValue> getValues() {
+		return values;
+	}
 
-        Product obj = (Product) that;
+	public PropertyValue getValue(String id) {
+		if (null == searchableValues) {
+			searchableValues = new HashMap<>();
 
-        return this == that || id.equals(obj.getId());
-    }
+			getValues().forEach(value -> searchableValues.put(value.getId(), value));
+		}
+
+		return searchableValues.get(id);
+	}
+
+	public void setValues(final Set<PropertyValue> values) {
+		values.forEach(value -> value.setProperty(this));
+		this.values = values;
+	}
+
+	public void addValue(final PropertyValue value) {
+		value.setProperty(this);
+		values.add(value);
+	}
+
+	public void removeValue(final PropertyValue value) {
+		value.setProperty(null);
+		values.remove(value);
+	}
 }

@@ -2,8 +2,13 @@ package com.pallette.solr.products.search.products;
 
 import org.springframework.data.domain.Pageable;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +24,7 @@ public class QueryOptions {
     private Long minPrice;
     private Long maxPrice;
 
-    private final Map<Long, Set<Long>> filterValues = new HashMap<>();
+    private final Map<String, Set<String>> filterValues = new HashMap<>();
 
     public QueryOptions() {
 
@@ -37,8 +42,8 @@ public class QueryOptions {
         return this.searchService;
     }
 
-    public Result search(final Pageable pageable) {
-        return searchService.search(this, pageable);
+    public Result search(final Pageable pageable, List<String> currentRefinementURL) throws JsonParseException, JsonMappingException, IOException {
+        return searchService.search(this, pageable, currentRefinementURL);
     }
 
     public String getQuery() {
@@ -71,11 +76,11 @@ public class QueryOptions {
         return this;
     }
 
-    public Map<Long, Set<Long>> getFilterValues() {
+    public Map<String, Set<String>> getFilterValues() {
         return filterValues;
     }
 
-    public QueryOptions addFilterValue(final Long propertyId, final Long valueId) {
+    public QueryOptions addFilterValue(final String propertyId, final String valueId) {
         if (!filterValues.containsKey(propertyId)) {
             filterValues.put(propertyId, new HashSet<>());
         }

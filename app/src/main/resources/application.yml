@@ -14,7 +14,7 @@ spring:
 #        enabled: true
     solr:
       host: 8983
-      zk-host: 127.0.0.1:9983
+      zk-host: solr:9983
       repositories:
         enabled: false
   mail:
@@ -54,4 +54,13 @@ logging.level:
 pallette:
   default-password: ${DEFAULT_PASSWORD}
   solr:
-    baseUrl: http://127.0.0.1:8983/solr
+    baseUrl: http://solr:8983/solr
+    
+search:
+  facets:
+    - id: facet001
+      value: product_category
+    - id: facet002
+      value: product_brand
+    - id: facet003
+      value: product_sku

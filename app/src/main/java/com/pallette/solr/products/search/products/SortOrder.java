@@ -3,6 +3,7 @@ package com.pallette.solr.products.search.products;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+
 /**
  * 
  * @author Roshan

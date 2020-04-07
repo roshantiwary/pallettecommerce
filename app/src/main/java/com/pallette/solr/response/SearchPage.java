@@ -5,9 +5,8 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
-import com.pallette.browse.documents.ProductDocument;
 import com.pallette.response.Response;
-import com.pallette.solr.products.entities.Product;
+import com.pallette.solr.document.ProductSolrDocument;
 import com.pallette.solr.products.search.products.PropertyFacetResult;
 import com.pallette.solr.products.search.products.SortOrder;
 
@@ -19,16 +18,8 @@ public class SearchPage extends Response {
 	private String orderString;
 	private SortOrder[] orders;
 	private Set<PropertyFacetResult> facets;
-	private List<Long> filters;
-	private Page<Product> products;
-
-	public Page<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(Page<Product> products) {
-		this.products = products;
-	}
+	private List<String> filters;
+	private Page<ProductSolrDocument> products;
 
 	public SortOrder[] getOrders() {
 		return orders;
@@ -78,12 +69,19 @@ public class SearchPage extends Response {
 		this.facets = facets;
 	}
 
-	public List<Long> getFilters() {
+	public List<String> getFilters() {
 		return filters;
 	}
 
-	public void setFilters(List<Long> filters) {
+	public void setFilters(List<String> filters) {
 		this.filters = filters;
 	}
 
+	public Page<ProductSolrDocument> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Page<ProductSolrDocument> products) {
+		this.products = products;
+	}
 }

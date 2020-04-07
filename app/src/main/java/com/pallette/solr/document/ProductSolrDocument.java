@@ -1,4 +1,4 @@
-package com.pallette.solr.products.document;
+package com.pallette.solr.document;
 
 import java.util.Date;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 import org.apache.solr.client.solrj.beans.Field;
 
-@SolrDocument(solrCoreName="products")
+@SolrDocument(solrCoreName="mycore")
 public class ProductSolrDocument {
 
 	@Id

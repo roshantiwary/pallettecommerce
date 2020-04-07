@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.result.FacetEntry;
 import org.springframework.data.solr.core.query.result.FacetPage;
@@ -32,9 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.repository.ProductRepository;
-import com.pallette.solr.products.document.ProductSolrDocument;
+import com.pallette.solr.document.ProductSolrDocument;
 import com.pallette.solr.domain.ProductSearchRequest;
-import com.pallette.solr.products.repositories.SolrProductRepository;
 import com.pallette.solr.response.ProductsResponse;
 
 @RestController
@@ -47,9 +47,9 @@ public class SolrController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SolrController.class);
 
-	@Autowired
-	SolrProductRepository solrProductRepository;
-	
+//	@Autowired
+//	SolrProductRepository solrProductRepository;
+//	
 	/**
 	 * The Product repository.
 	 */
@@ -97,7 +97,7 @@ public class SolrController {
 		}
 		return new ResponseEntity("Successfully uploaded", new HttpHeaders(), HttpStatus.OK);
 	}
-//
+
 //	/**
 //	 * 
 //	 * @return
@@ -121,7 +121,7 @@ public class SolrController {
 //	public ProductsResponse handleSearchUsingCustomQuery(@PathVariable("searchTerm") String searchTerm) {
 //
 //		logger.debug("Inside SolrController.handleSearchUsingCustomQuery()");
-//		Page<ProductSolrDocument> products = solrProductRepository.findByCustomQuery(searchTerm, new PageRequest(0, 10));
+//		Page<ProductSolrDocument> products = solrProductRepository.findByCustomQuery(searchTerm, PageRequest.of(0, 10, Sort.unsorted()));
 //		ProductsResponse response = new ProductsResponse();
 //		response.setProductsPage(products);
 //		return response;
@@ -137,7 +137,7 @@ public class SolrController {
 //
 //		logger.debug("Inside SolrController.handleSearchProductsBasedOnTitleAndDescription()");
 //		Page<ProductSolrDocument> productsPage = solrProductRepository.findByProductTitleContainsOrProductDescriptionContains(
-//				productSearchRequest.getProductTitle(), productSearchRequest.getProductDescription(), new PageRequest(productSearchRequest.getStartPage(), productSearchRequest.getEndPage()));
+//				productSearchRequest.getProductTitle(), productSearchRequest.getProductDescription(), PageRequest.of(productSearchRequest.getStartPage(), productSearchRequest.getEndPage(), Sort.unsorted()));
 //
 //		logger.debug("Content" + productsPage.getContent()); // get a list of  (max) 10 books.
 //		logger.debug("Total Elements" + productsPage.getTotalElements()); // total number of elements (can be  >10).
@@ -160,7 +160,7 @@ public class SolrController {
 //	public ProductsResponse handleFindByTitleAndFacetOnStatus(@PathVariable(PRODUCT_TITLE) String productTitle) {
 //
 //		logger.debug("Inside SolrController.handleFindByTitleAndFacetOnStatus()");
-//		FacetPage<ProductSolrDocument> productsFacetPage = solrProductRepository.findByProductTitleAndFacetOnProductStatus(productTitle, new PageRequest(0, 10));
+//		FacetPage<ProductSolrDocument> productsFacetPage = solrProductRepository.findByProductTitleAndFacetOnProductStatus(productTitle, PageRequest.of(0, 10, Sort.unsorted()));
 //
 //		logger.debug("Content" + productsFacetPage.getContent()); // the first 10 books
 //		/*
@@ -190,7 +190,7 @@ public class SolrController {
 //	public ProductsResponse handleHighlightSearch(@PathVariable(PRODUCT_DESCRIPTION) String productDescription) {
 //
 //		logger.debug("Inside SolrController.handleHighlightSearch()");
-//		HighlightPage<ProductSolrDocument> productsHighlightPage = solrProductRepository.findByProductDescription(productDescription, new PageRequest(0, 10));
+//		HighlightPage<ProductSolrDocument> productsHighlightPage = solrProductRepository.findByProductDescription(productDescription, PageRequest.of(0, 10, Sort.unsorted()));
 //
 //		logger.debug("Content" + productsHighlightPage.getContent()); // the  first 10 books
 //		
