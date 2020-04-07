@@ -12,7 +12,7 @@ import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 
 @Configuration
-@EnableSolrRepositories(basePackages = { "com.pallette.solr.products.repositories"})
+@EnableSolrRepositories(basePackages = { "com.pallette.solr.repositories"})
 public class SolrContext {
 
 	@Value("${pallette.solr.baseUrl}")

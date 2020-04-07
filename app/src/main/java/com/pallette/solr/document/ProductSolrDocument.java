@@ -1,5 +1,6 @@
 package com.pallette.solr.document;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -7,8 +8,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 import org.apache.solr.client.solrj.beans.Field;
 
-@SolrDocument(solrCoreName="mycore")
-public class ProductSolrDocument {
+@SolrDocument
+public class ProductSolrDocument implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8576369317461910182L;
 
 	@Id
 	@Field
@@ -28,7 +34,8 @@ public class ProductSolrDocument {
 	@Field(value = "product_status")
 	private String productStatus;
 
-	@Field(child=true, value = "product_category")
+//	@Field(child=true, value = "product_category")
+	@Field(value = "product_category")
 	private String categoryDocument;
 	
 	public String getCategoryDocument() {
@@ -56,10 +63,12 @@ public class ProductSolrDocument {
 	}
 
 
-	@Field(child=true, value = "product_brand")
+//	@Field(child=true, value = "product_brand")
+	@Field(value = "product_brand")
 	private String brandDocument;
-	
-	@Field(child=true, value = "product_sku")
+
+//	@Field(child=true, value = "product_sku")
+	@Field(value = "product_sku")
 	private List<String> skuDocument;
 
 	public ProductSolrDocument() {
