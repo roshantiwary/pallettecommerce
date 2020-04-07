@@ -6,6 +6,7 @@ package com.pallette.browse.api;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ import com.pallette.browse.documents.CategoryDocument;
 import com.pallette.browse.documents.ImagesDocument;
 import com.pallette.browse.documents.ProductDocument;
 import com.pallette.browse.documents.SkuDocument;
+import com.pallette.browse.repository.ProductRepository;
+import com.pallette.browse.repository.SkuRepository;
 import com.pallette.browse.response.BrandBean;
 import com.pallette.browse.response.BrandResponseBean;
 import com.pallette.browse.response.CategoryResponse;
@@ -45,9 +48,14 @@ public class BrowseServices {
 	/**
 	 * Injecting Mongo Operations for Mongo related processing.
 	 */
-	@Autowired
-	private MongoOperations mongoOperation;
+//	@Autowired
+//	private MongoOperations mongoOperation;
 
+	/**
+	 * The Product repository.
+	 */
+	@Autowired
+	private SkuRepository skuRepository;
 	
 	/**
 	 * Method To construct product response.
@@ -151,18 +159,19 @@ public class BrowseServices {
 			for (SkuDocument sku : skuDocument) {
 				Query query = new Query();
 				query.addCriteria(Criteria.where("_id").is(sku.getId()));
-				SkuDocument skuItem = mongoOperation.findById(query, SkuDocument.class);
-				if (null == skuItem)
-					continue;
-
-				SkuResponse skuResponse = new SkuResponse();
-				skuResponse.setId(skuItem.getId());
-				skuResponse.setName(skuItem.getName());
-				skuResponse.setUnitOfMeasure(skuItem.getUnitOfMeasure());
-				skuResponse.setAvailableStockLevel(skuItem.getInventoryDocument().getAvailableStockLevel());
-				skuResponse.setListPrice(skuItem.getPriceDocument().getListPrice());
-				skuResponse.setSalePrice(skuItem.getPriceDocument().getSalePrice());
-				skuResponseList.add(skuResponse);
+				Optional<SkuDocument> skuItemRepo = skuRepository.findById(sku.getId());
+			
+				if(skuItemRepo.isPresent()) {
+				SkuDocument skuItem = skuItemRepo.get();
+					SkuResponse skuResponse = new SkuResponse();
+					skuResponse.setId(skuItem.getId());
+					skuResponse.setName(skuItem.getName());
+					skuResponse.setUnitOfMeasure(skuItem.getUnitOfMeasure());
+					skuResponse.setAvailableStockLevel(skuItem.getInventoryDocument().getAvailableStockLevel());
+					skuResponse.setListPrice(skuItem.getPriceDocument().getListPrice());
+					skuResponse.setSalePrice(skuItem.getPriceDocument().getSalePrice());
+					skuResponseList.add(skuResponse);
+				}
 			}
 		}
 		response.setSkuResponse(skuResponseList);
