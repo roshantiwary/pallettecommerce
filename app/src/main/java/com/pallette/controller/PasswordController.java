@@ -189,7 +189,7 @@ public class PasswordController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Long profileId = setNewPasswordRequest.getProfileId();
+		String profileId = setNewPasswordRequest.getProfileId();
 		logger.debug("Changing Password For :: {}", profileId);
 		
 		ApiUser user = userService.setNewPassword(profileId, setNewPasswordRequest.getNewPassword(), setNewPasswordRequest.getConfirmPassword());

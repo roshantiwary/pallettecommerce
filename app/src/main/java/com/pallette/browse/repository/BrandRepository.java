@@ -14,7 +14,7 @@ import com.pallette.domain.Address;
  * @author amall3
  *
  */
-public interface BrandRepository extends PagingAndSortingRepository<BrandDocument, Long> {
+public interface BrandRepository extends PagingAndSortingRepository<BrandDocument, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular brandId.

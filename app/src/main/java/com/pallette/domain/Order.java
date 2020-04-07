@@ -32,7 +32,7 @@ public class Order implements Serializable {
 	private String orderType;
 
 	@Field(value = "profile_id")
-	private Long profileId;
+	private String profileId;
 
 	private String description;
 
@@ -129,7 +129,7 @@ public class Order implements Serializable {
 	/**
 	 * @return the profileId
 	 */
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
@@ -137,7 +137,7 @@ public class Order implements Serializable {
 	 * @param profileId
 	 *            the profileId to set
 	 */
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 

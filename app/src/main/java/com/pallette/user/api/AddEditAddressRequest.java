@@ -33,9 +33,9 @@ public class AddEditAddressRequest {
 	
 	private String phoneNumber;
 	
-	private Long profileId;
+	private String profileId;
 	
-	private Long id;
+	private String id;
 
 
 	public AddEditAddressRequest(com.pallette.domain.Address address) {
@@ -135,19 +135,19 @@ public class AddEditAddressRequest {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		notNull(id, "Mandatory argument 'Id missing.'");
 		this.id = id;
 	}

@@ -61,7 +61,7 @@ public class OAuth2AuthenticationReadConverter implements Converter<Document, OA
 		user.setLastName((String) userMap.get("lastName"));
 		user.setAge((int) userMap.get("age"));
 		ApiUser apiUser = new ApiUser(user);
-		apiUser.setId((Long) userMap.get("_id"));
+		apiUser.setId((String) userMap.get("_id"));
 		return apiUser;
 	}
 

@@ -34,7 +34,7 @@ public class ValidateOrderProfile extends ValidateOrderForSubmitOrder {
 		log.debug("Inside ValidateOrderProfile.validate()");
 		boolean isValidationSuccess = Boolean.FALSE;
 
-		Long profileId = order.getProfileId();
+		String profileId = order.getProfileId();
 		if (StringUtils.isEmpty(profileId)) {
 			log.debug("No Profile is set in Order");
 			return isValidationSuccess;

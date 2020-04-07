@@ -6,7 +6,7 @@ package com.pallette.beans;
  */
 public class SkuResponse {
 
-	private Long id;
+	private String id;
 	
 	private String name;
 	
@@ -21,7 +21,7 @@ public class SkuResponse {
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -29,7 +29,7 @@ public class SkuResponse {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

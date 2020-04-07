@@ -74,7 +74,7 @@ public class AccountService {
 	 *            The profile id of the account.
 	 * @return The account object if found or throws a NoRecordsFoundException.
 	 */
-	public Account findAccountById(Long profileId) {
+	public Account findAccountById(String profileId) {
 
 		logger.debug("AccountService.findAccount: id=" + profileId);
 
@@ -282,7 +282,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public AccountResponse updateProfile(AccountBean accountBean, Long profileId) throws Exception {
+	public AccountResponse updateProfile(AccountBean accountBean, String profileId) throws Exception {
 		logger.debug("AccountService.updateProfile: updating profile with id : " + profileId);
 		if(StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("Please provide Profile Id for update");
@@ -327,7 +327,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse addNewAddress(ProfileAddressBean profileAddressBean, Long profileId) throws Exception {
+	public ProfileAddressResponse addNewAddress(ProfileAddressBean profileAddressBean, String profileId) throws Exception {
 		
 		logger.debug("AccountService.addNewAddress: Adding New Address to the profile : ");
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
@@ -362,7 +362,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */	
-	public ProfileAddressResponse getAddress(Long addressKey, Long profileId) throws Exception {
+	public ProfileAddressResponse getAddress(String addressKey, String profileId) throws Exception {
 		logger.debug("AccountService.getAddress: Get Address" + addressKey + "from profile " + profileId);
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		Optional<Address> addressItem = addressRepository.findById(addressKey);
@@ -400,7 +400,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse editAddress(Long addressKey, ProfileAddressBean address, Long profileId) throws Exception {
+	public ProfileAddressResponse editAddress(String addressKey, ProfileAddressBean address, String profileId) throws Exception {
 		logger.debug("AccountService.editAddress: Editing Address");
 		
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
@@ -432,7 +432,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Response removeAddress(Long addressKey) throws Exception {
+	public Response removeAddress(String addressKey) throws Exception {
 		logger.debug("AccountService.removeAddress: Removing Address : "+addressKey);
 		
 		Response genericResponse = new Response();
@@ -467,7 +467,7 @@ public class AccountService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Response changePassword(PasswordBean password, Long profileId) throws Exception {
+	public Response changePassword(PasswordBean password, String profileId) throws Exception {
 		Optional<Account> account = accounts.findById(profileId);
 		Response genericResponse = new Response();
 		if(!passwordEncoder.matches(password.getOldPassword(), account.get().getPassword())){
@@ -498,7 +498,7 @@ public class AccountService {
 	 * @param profileId
 	 * @return
 	 */
-	public ProfileAddressResponseBean getAllProfileAddress(Long profileId) {
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
 		ProfileAddressResponseBean addressResponse = new ProfileAddressResponseBean();
 
 		Optional<Account> account = accounts.findById(profileId);

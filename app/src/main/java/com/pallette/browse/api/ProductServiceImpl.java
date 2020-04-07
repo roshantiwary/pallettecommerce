@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public ProductResponseBean getProductById(Long productId) throws IllegalAccessException, InvocationTargetException {
+	public ProductResponseBean getProductById(String productId) throws IllegalAccessException, InvocationTargetException {
 
 		logger.debug("ProductServiceImpl.getProductById() , parameter passed is: " + productId);
 		ProductResponseBean response = null;

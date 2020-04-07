@@ -53,7 +53,7 @@ public class ValidateInventoryDetails extends ValidateOrderForCheckout {
 			
 		for (CommerceItem commerceItem : commerceItemList) {
 			
-			Long skuId = commerceItem.getCatalogRefId();
+			String skuId = commerceItem.getCatalogRefId();
 			Query findSkuQuery = new Query();
 			findSkuQuery.addCriteria(Criteria.where(CommerceConstants._ID).is(skuId));
 			log.debug("Find Sku Query : ", findSkuQuery);

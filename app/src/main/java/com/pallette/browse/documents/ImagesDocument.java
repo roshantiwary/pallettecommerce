@@ -3,10 +3,15 @@
  */
 package com.pallette.browse.documents;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.util.Assert;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.UUID;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.pallette.persistence.BaseEntity;
 
 /**
  * @author amall3
@@ -14,8 +19,60 @@ import com.pallette.persistence.BaseEntity;
  */
 
 @Document(collection = "image")
-public class ImagesDocument extends BaseEntity {
+public class ImagesDocument implements Serializable {
+	
+	
+	private int version;
 
+    @Id
+    private String id;
+
+    private Date timeCreated;
+
+    public ImagesDocument() {
+        this(UUID.randomUUID());
+    }
+
+    public ImagesDocument(UUID guid) {
+        Assert.notNull(guid, "UUID is required");
+        id = guid.toString();
+        this.timeCreated = new Date();
+    }
+
+    public ImagesDocument(String guid) {
+        Assert.notNull(guid, "UUID is required");
+        id = guid;
+        this.timeCreated = new Date();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ImagesDocument that = (ImagesDocument) o;
+
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public Date getTimeCreated() {
+        return timeCreated;
+    }
+    
 	@Field(value = "thumbnail_image_url")
 	private String thumbnailImageUrl;
 
@@ -28,10 +85,6 @@ public class ImagesDocument extends BaseEntity {
 
 	@Field(value = "image_availablity")
 	private boolean imageAvailablity;
-
-	public ImagesDocument() {
-		super();
-	}
 
 	/**
 	 * @return the thumbnailImageUrl

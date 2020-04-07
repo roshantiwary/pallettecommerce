@@ -112,7 +112,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 //	@Transactional
-	public ApiUser saveUser(Long userId, UpdateUserRequest request) {
+	public ApiUser saveUser(String userId, UpdateUserRequest request) {
 		validate(request);
         Optional<User> user = userRepository.findById(userId);
         if(user == null) {
@@ -136,7 +136,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	
 	@Override
 //	@Transactional
-	public ApiUser getUser(Long userId) {
+	public ApiUser getUser(String userId) {
 		Assert.notNull(userId);
         Optional<User> user = userRepository.findById(userId);
         if(user == null) {
@@ -165,7 +165,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
     private User insertNewUser(final CreateUserRequest createUserRequest) {
         String hashedPassword = passwordEncoder.encode(createUserRequest.getPassword().getPassword());
         ApiUser user = createUserRequest.getUser();
-        Long profileId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        String profileId = UUID.randomUUID().toString();
         user.setId(profileId);
         User newUser = new User(user, hashedPassword, Role.USER);
         return userRepository.save(newUser);
@@ -185,7 +185,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	private com.pallette.domain.Address insertNewAddress(final AddEditAddressRequest request) {
-		Long addressId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+		String addressId = UUID.randomUUID().toString();
 		request.setId(addressId);
 		com.pallette.domain.Address newAddress = new com.pallette.domain.Address(request);
 		return addressRepository.save(newAddress);
@@ -210,7 +210,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return new AddEditAddressRequest(addressRepository.save(address.get()));
 	}
 
-	private void locateAddress(Long addressKey) {
+	private void locateAddress(String addressKey) {
 		notNull(addressKey, "Mandatory argument 'addressKey' missing.");
 		Optional<Address> address = addressRepository.findById(addressKey);
 		if(null == address){
@@ -220,7 +220,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public Response removeAddress(Long addressKey) {
+	public Response removeAddress(String addressKey) {
 		logger.debug("UserService.removeAddress: Removing Address : "+addressKey);
 		
 		Response genericResponse = new Response();
@@ -245,7 +245,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public ProfileAddressResponseBean getAllProfileAddress(Long profileId) {
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
 		ProfileAddressResponseBean addressResponse = new ProfileAddressResponseBean();
 
 		Optional<User> account = userRepository.findById(profileId);
@@ -282,7 +282,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public com.pallette.domain.Address getAddress(Long addressKey, Long profileId) {
+	public com.pallette.domain.Address getAddress(String addressKey, String profileId) {
 		com.pallette.domain.Address address = addressRepository.findByProfileIdAndId(profileId, addressKey);
 		if(null == address){
 			logger.debug("Address not found for the key [{}]", addressKey);
@@ -292,7 +292,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public ApiUser updateProfile(UpdateUserRequest request, Long profileId) {
+	public ApiUser updateProfile(UpdateUserRequest request, String profileId) {
 		logger.info("Validating Address request.");
 		validate(request);
 		final String emailAddress = request.getEmailAddress().toLowerCase();
@@ -305,7 +305,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public ApiUser changePassword(PasswordBean password, Long profileId) {
+	public ApiUser changePassword(PasswordBean password, String profileId) {
 		validate(password);
 		Optional<User> user = userRepository.findById(profileId);
 		
@@ -370,7 +370,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	public ApiUser setNewPassword(Long profileId, String newPassword, String confirmPassword) {
+	public ApiUser setNewPassword(String profileId, String newPassword, String confirmPassword) {
 
 		logger.info("Inside UserServiceImpl.setNewPassword()");
 		logger.debug("Updating Password For {}", profileId);

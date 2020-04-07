@@ -49,12 +49,12 @@ public class ValidateCartItems extends ValidateOrderForCheckout {
 			if (quantity < 1) 
 				return isValidationSuccess;
 			
-			Long skuId = commerceItem.getCatalogRefId();
+			String skuId = commerceItem.getCatalogRefId();
 			if (StringUtils.isEmpty(skuId)) {
 				return isValidationSuccess;
 			}
 			
-			Long productId = commerceItem.getProductId();
+			String productId = commerceItem.getProductId();
 			if (StringUtils.isEmpty(productId)) {
 				return isValidationSuccess;
 			}

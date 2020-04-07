@@ -74,7 +74,7 @@ public class CategoryServiceImpl implements CategoryService{
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public CategoryResponseBean getCategoryById(Long categoryId) throws IllegalAccessException, InvocationTargetException {
+	public CategoryResponseBean getCategoryById(String categoryId) throws IllegalAccessException, InvocationTargetException {
 
 		logger.debug("CategoryServiceImpl.getCategoryById() , parameter passed is: " + categoryId);
 		CategoryResponseBean response = null;

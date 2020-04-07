@@ -273,7 +273,7 @@ public class PaymentIntegrator {
 		if (null != commerceItemList && !commerceItemList.isEmpty()) {
 
 			for (CommerceItem item : commerceItemList) {
-				Long productId = item.getCatalogRefId();
+				String productId = item.getCatalogRefId();
 				if (StringUtils.isEmpty(productId)) {
 					Optional<ProductDocument> prodItem = productRepository.findById(productId);
 					if (prodItem.isPresent()) {

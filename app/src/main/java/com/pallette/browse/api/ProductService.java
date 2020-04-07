@@ -31,7 +31,7 @@ public interface ProductService {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public ProductResponseBean getProductById(Long productId) throws IllegalAccessException, InvocationTargetException;
+	public ProductResponseBean getProductById(String productId) throws IllegalAccessException, InvocationTargetException;
 
 	/**
 	 * Method responsible for invoking the product repository to fetch products

@@ -16,10 +16,10 @@ import org.hibernate.validator.constraints.NotBlank;
 public class UpdateCartBean {
 
 	@NotBlank(message = "Order Id is mandatory.")
-	private Long orderId;
+	private String orderId;
 
 	@NotBlank(message = "Product Id is mandatory.")
-	private Long productId;
+	private String productId;
 
 	@NotNull(message = "Quantity Id is mandatory.")
 	@Min(1)
@@ -27,12 +27,12 @@ public class UpdateCartBean {
 	private long quantity;
 	
 	@NotBlank(message = "Sku Id is mandatory")
-	private Long skuId;
+	private String skuId;
 
 	/**
 	 * @return the orderId
 	 */
-	public Long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
@@ -40,14 +40,14 @@ public class UpdateCartBean {
 	 * @param orderId
 	 *            the orderId to set
 	 */
-	public void setOrderId(Long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
 	/**
 	 * @return the productId
 	 */
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
@@ -55,7 +55,7 @@ public class UpdateCartBean {
 	 * @param productId
 	 *            the productId to set
 	 */
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
@@ -77,7 +77,7 @@ public class UpdateCartBean {
 	/**
 	 * @return the skuId
 	 */
-	public Long getSkuId() {
+	public String getSkuId() {
 		return skuId;
 	}
 
@@ -85,7 +85,7 @@ public class UpdateCartBean {
 	 * @param skuId
 	 *            the skuId to set
 	 */
-	public void setSkuId(Long skuId) {
+	public void setSkuId(String skuId) {
 		this.skuId = skuId;
 	}
 

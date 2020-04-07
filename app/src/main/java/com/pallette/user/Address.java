@@ -26,7 +26,7 @@ public class Address extends BaseEntity{
 	
 	private String phoneNumber;
 	
-	private Long profileId;
+	private String profileId;
 
 	public Address() {
 		super();
@@ -55,7 +55,7 @@ public class Address extends BaseEntity{
 		this.state = (String) document.get("state");
 		this.zipcode = (String) document.get("zipcode");
 		this.phoneNumber = (String) document.get("phoneNumber");
-		this.profileId = (Long) document.get("profileId");
+		this.profileId = (String) document.get("profileId");
 	}
 	public String getEmailAddress() {
 		return emailAddress;
@@ -129,11 +129,11 @@ public class Address extends BaseEntity{
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 	

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 //@Transactional
-public interface PasswordResetTokenRepository extends MongoRepository<PasswordResetToken, Long> {
+public interface PasswordResetTokenRepository extends MongoRepository<PasswordResetToken, String> {
 
 	/**
 	 * Method that returns PasswordReset document based on the passed in token.
@@ -27,7 +27,7 @@ public interface PasswordResetTokenRepository extends MongoRepository<PasswordRe
 	 * @param userId
 	 * @return
 	 */
-	public PasswordResetToken findByUserId(Long userId);
+	public PasswordResetToken findByUserId(String userId);
 	
 	/**
 	 * Method that returns PasswordReset document based on the passed in profile

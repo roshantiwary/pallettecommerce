@@ -61,7 +61,7 @@ public class CartController {
 		CartResponse cartResponse = new CartResponse();
 		
 		ApiUser user = getProfileId(authentication);
-		Long profileId = user != null ? user.getId() : null;
+		String profileId = user != null ? user.getId() : null;
 		
 		//If error, just return a 400 bad request, along with the error message.
 		if (errors.hasErrors()) {
@@ -70,11 +70,11 @@ public class CartController {
 			return ResponseEntity.badRequest().body(cartResponse);
 		}
             
-		Long orderId = addToCartRequest.getOrderId();
+		String orderId = addToCartRequest.getOrderId();
 		if (StringUtils.isEmpty(orderId)) {
 			
 			if(StringUtils.isEmpty(profileId))
-				profileId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+				profileId = UUID.randomUUID().toString();
 				
 			log.debug("The Passed In Product Id :" + addToCartRequest.getProductId() + "Quantity :" + addToCartRequest.getQuantity());
 			//Creating a new Order and adding the item to the Order.
@@ -182,7 +182,7 @@ public class CartController {
 	
 	
 	@RequestMapping(value = RestURLConstants.CART_DETAILS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> handleGetCartDetails(@PathVariable(CommerceConstants.ORDER_ID) Long orderId) throws IllegalArgumentException, NoRecordsFoundException {
+	public ResponseEntity<CartResponse> handleGetCartDetails(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
 
 		log.debug("Inside CheckoutController.handleGetCartDetails()");
 		CartResponse cartResponse = new CartResponse();
@@ -199,7 +199,7 @@ public class CartController {
 		}
 	
 	@RequestMapping(value = RestURLConstants.MOVE_TO_CHECKOUT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CartResponse> handleMoveToCheckout(@PathVariable(CommerceConstants.ORDER_ID) Long orderId) throws IllegalArgumentException, NoRecordsFoundException {
+	public ResponseEntity<CartResponse> handleMoveToCheckout(@PathVariable(CommerceConstants.ORDER_ID) String orderId) throws IllegalArgumentException, NoRecordsFoundException {
 
 		log.debug("Inside CheckoutController.handleMoveToCheckout()");
 		CartResponse cartResponse = new CartResponse();

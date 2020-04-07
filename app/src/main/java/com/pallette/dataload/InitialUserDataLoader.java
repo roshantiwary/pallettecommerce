@@ -116,7 +116,7 @@ public class InitialUserDataLoader implements ApplicationListener<ContextRefresh
         Account account = acctRepository.findByUsername(username);
         if (account == null) {
         	account = new Account();
-        	account.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
+        	account.setId(UUID.randomUUID().toString());
         	account.setUsername(username);
         	account.setFirstName(firstName);
         	account.setLastName(lastName);

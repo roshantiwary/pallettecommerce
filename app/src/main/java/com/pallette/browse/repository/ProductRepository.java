@@ -12,7 +12,7 @@ import com.pallette.browse.documents.ProductDocument;
  * @author amall3
  *
  */
-public interface ProductRepository extends PagingAndSortingRepository<ProductDocument, Long> {
+public interface ProductRepository extends PagingAndSortingRepository<ProductDocument, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular productId.

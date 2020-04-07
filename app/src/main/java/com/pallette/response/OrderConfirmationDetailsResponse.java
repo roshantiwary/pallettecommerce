@@ -20,7 +20,7 @@ public class OrderConfirmationDetailsResponse extends Response {
 
 	private Date submittedDate;
 	
-	private Long profileId;
+	private String profileId;
 
 	private List<CartItemResponse> orderItems;
 
@@ -91,14 +91,14 @@ public class OrderConfirmationDetailsResponse extends Response {
 	/**
 	 * @return the profileId
 	 */
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
 	/**
 	 * @param profileId the profileId to set
 	 */
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 

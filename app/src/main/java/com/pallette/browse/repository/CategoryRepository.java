@@ -12,7 +12,7 @@ import com.pallette.browse.documents.CategoryDocument;
  * @author amall3
  *
  */
-public interface CategoryRepository extends PagingAndSortingRepository<CategoryDocument, Long> {
+public interface CategoryRepository extends PagingAndSortingRepository<CategoryDocument, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular categoryId.

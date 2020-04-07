@@ -57,7 +57,7 @@ public class PaymentController {
 	private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
 	
 	@RequestMapping(value = "{orderId}/paynow", method = RequestMethod.POST)
-	public String makePayment(HttpServletRequest request, HttpServletResponse response, Model model , @PathVariable(CommerceConstants.ORDER_ID) Long orderId) throws ServletException, IOException, JSONException{
+	public String makePayment(HttpServletRequest request, HttpServletResponse response, Model model , @PathVariable(CommerceConstants.ORDER_ID) String orderId) throws ServletException, IOException, JSONException{
 		
 		log.debug("Inside PaymentController.makePayment()");
 		log.debug("The Passed In Order id : " + orderId);

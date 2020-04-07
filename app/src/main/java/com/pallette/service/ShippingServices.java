@@ -264,9 +264,9 @@ public class ShippingServices {
 		if (null == orderItem)
 			return savedAddress;
 		
-		Long profileId = orderItem.getProfileId();
+		String profileId = orderItem.getProfileId();
 		
-		if(user != null && user.getId() != profileId) {
+		if(user != null && ! user.getId().equalsIgnoreCase(profileId)) {
 			profileId = user.getId();
 			updateOrderWithProfileId(orderId, profileId);
 		}
@@ -299,7 +299,7 @@ public class ShippingServices {
 	}
 
 
-	private void updateOrderWithProfileId(Long orderId, Long profileId) {
+	private void updateOrderWithProfileId(Long orderId, String profileId) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("id").is(orderId));
 		Update update = new Update();
@@ -353,7 +353,7 @@ public class ShippingServices {
 				BeanUtils.copyProperties(newAddress, addressItem);
 				
 				//Code to set email address in address Obj from profile Starts.
-				Long profileId = orderItem.getProfileId();
+				String profileId = orderItem.getProfileId();
 				log.debug("Profile Id from Order is" , profileId);
 				
 				Query findProfileQuery = new Query(Criteria.where(CommerceConstants._ID).is(profileId));
@@ -388,7 +388,7 @@ public class ShippingServices {
 		boolean isValid = Boolean.FALSE;
 
 		// Check if this address belongs to this profile.
-		Long profileId = orderItem.getProfileId();
+		String profileId = orderItem.getProfileId();
 		if (StringUtils.isEmpty(profileId))
 			return isValid;
 

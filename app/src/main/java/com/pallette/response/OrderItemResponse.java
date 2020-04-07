@@ -2,13 +2,13 @@ package com.pallette.response;
 
 public class OrderItemResponse {
 
-	private Long catalogRefId;
+	private String catalogRefId;
 
 	private long quantity;
 
 	private String description;
 
-	private Long productId;
+	private String productId;
 
 	private String productTitle;
 
@@ -22,11 +22,11 @@ public class OrderItemResponse {
 	
 	private double itemAmount;
 
-	public Long getCatalogRefId() {
+	public String getCatalogRefId() {
 		return catalogRefId;
 	}
 
-	public void setCatalogRefId(Long catalogRefId) {
+	public void setCatalogRefId(String catalogRefId) {
 		this.catalogRefId = catalogRefId;
 	}
 
@@ -46,11 +46,11 @@ public class OrderItemResponse {
 		this.description = description;
 	}
 
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 

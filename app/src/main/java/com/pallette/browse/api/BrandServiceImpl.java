@@ -74,7 +74,7 @@ public class BrandServiceImpl implements BrandService{
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public BrandResponseBean getBrandById(long brandId) throws IllegalAccessException, InvocationTargetException {
+	public BrandResponseBean getBrandById(String brandId) throws IllegalAccessException, InvocationTargetException {
 
 		logger.debug("BrandServiceImpl.getBrandById() , parameter passed is: " + brandId);
 		BrandResponseBean response = null;

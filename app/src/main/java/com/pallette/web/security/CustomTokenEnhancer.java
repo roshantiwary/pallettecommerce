@@ -28,7 +28,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 		
 		Map<String, Object> additionalInfo = new HashMap<>();
 
-		Long profileId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+		String profileId = UUID.randomUUID().toString();
 		additionalInfo.put("profileId", profileId);
 		Order order = orderService.createDefaultOrder(profileId);
 		additionalInfo.put("orderId", order.getId());

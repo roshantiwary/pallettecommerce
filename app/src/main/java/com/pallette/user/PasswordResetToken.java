@@ -28,7 +28,7 @@ public class PasswordResetToken extends BaseEntity {
 
 	private String token;
 
-	private Long userId;
+	private String userId;
 
 	private Date expiryDate;
 
@@ -54,7 +54,7 @@ public class PasswordResetToken extends BaseEntity {
 	/**
 	 * @return the userId
 	 */
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
@@ -62,7 +62,7 @@ public class PasswordResetToken extends BaseEntity {
 	 * @param userId
 	 *            the userId to set
 	 */
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

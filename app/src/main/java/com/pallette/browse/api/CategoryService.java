@@ -31,7 +31,7 @@ public interface CategoryService {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public CategoryResponseBean getCategoryById(Long categoryId) throws IllegalAccessException, InvocationTargetException;
+	public CategoryResponseBean getCategoryById(String categoryId) throws IllegalAccessException, InvocationTargetException;
 
 	/**
 	 * Method responsible for invoking the Category repository to fetch

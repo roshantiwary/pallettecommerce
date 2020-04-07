@@ -31,7 +31,7 @@ public interface BrandService {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public BrandResponseBean getBrandById(long brandId) throws IllegalAccessException, InvocationTargetException;
+	public BrandResponseBean getBrandById(String brandId) throws IllegalAccessException, InvocationTargetException;
 
 	/**
 	 * Method responsible for invoking the Brand repository to fetch brands

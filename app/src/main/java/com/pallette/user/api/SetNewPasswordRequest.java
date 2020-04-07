@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class SetNewPasswordRequest {
 
 	@NotEmpty(message = "Please enter User Id")
-	private Long profileId;
+	private String profileId;
 
 	@NotEmpty(message = "Please enter Password")
 	private String newPassword;
@@ -19,7 +19,7 @@ public class SetNewPasswordRequest {
 	/**
 	 * @return the profileId
 	 */
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
@@ -27,7 +27,7 @@ public class SetNewPasswordRequest {
 	 * @param profileId
 	 *            the profileId to set
 	 */
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 

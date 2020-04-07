@@ -140,7 +140,7 @@ public class LoginController extends BaseResource {
 		return new ResponseEntity(createUserResponse, new HttpHeaders(), HttpStatus.OK);
 	}
 
-	private OAuth2AccessToken createTokenForNewUser(Long userId, String password, String clientId, ApiUser user) {
+	private OAuth2AccessToken createTokenForNewUser(String userId, String password, String clientId, ApiUser user) {
 		String hashedPassword = passwordEncoder.encode(password);
 		UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(userId,
 				hashedPassword, Collections.singleton(new SimpleGrantedAuthority(Role.USER.toString())));

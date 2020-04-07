@@ -23,7 +23,7 @@ import com.pallette.persistence.BaseEntity;
 public class Account implements Principal{
 
 	@Id
-	private Long id;
+	private String id;
 
 	@Email
 	private String username;
@@ -50,11 +50,11 @@ public class Account implements Principal{
     @CascadeSave
     private List<Address> addresses;
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

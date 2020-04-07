@@ -12,7 +12,7 @@ import com.pallette.response.Response;
  */
 public class AccountResponse extends Response{
 
-	private Long id;
+	private String id;
 	
 	private String firstName;
 	
@@ -24,11 +24,11 @@ public class AccountResponse extends Response{
 	
 	private String phoneNumber;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

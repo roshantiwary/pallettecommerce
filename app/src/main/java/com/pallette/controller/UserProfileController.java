@@ -67,9 +67,9 @@ public class UserProfileController {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 
-		if (profileId > 0) {
+		if (!profileId.isEmpty()) {
 			logger.debug("Logged-in User" + authentication.getName());
 		} else {
 			logger.debug("Anonymous user");
@@ -89,9 +89,9 @@ public class UserProfileController {
 	public ResponseEntity<GenericResponse> getAdministrator(OAuth2Authentication oAuth2Authentication) {
 		logger.debug("UserProfileController.getAdministrator()");
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		
-		if (profileId > 0) {
+		if (!profileId.isEmpty()) {
 			logger.debug("Logged-in User" + user.getName());
 		} else {
 			logger.debug("Anonymous user");
@@ -112,9 +112,9 @@ public class UserProfileController {
 		logger.debug("UserProfileController.getAnonymous()");
 
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 
-		if (profileId > 0) {
+		if (!profileId.isEmpty()) {
 			logger.debug("Logged-in User" + user.getName());
 		} else {
 			logger.debug("Anonymous user");
@@ -138,10 +138,10 @@ public class UserProfileController {
 		logger.debug("UserProfileController.getProfile()");
 
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 
 		ApiUser latestAPIUser = userService.getUser(profileId);
-		if (latestAPIUser.getId() > 0) {
+		if (!latestAPIUser.getId().isEmpty()) {
 			return new ResponseEntity<>(latestAPIUser, new HttpHeaders(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(latestAPIUser, new HttpHeaders(), HttpStatus.NOT_FOUND);
@@ -174,7 +174,7 @@ public class UserProfileController {
 			OAuth2Authentication oAuth2Authentication){
 		logger.debug("Adding New Address in Profile : " + request.toString());
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		request.setProfileId(profileId);
 		request.setEmailAddress(user.getEmailAddress());
 		AddEditAddressRequest address = userService.addNewAddress(request);
@@ -215,12 +215,12 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.PROFILE_GET_ADDRESS_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AddressResponse> getAddress(@PathVariable("id") Long addressKey,
+	public ResponseEntity<AddressResponse> getAddress(@PathVariable("id") String addressKey,
 			OAuth2Authentication oAuth2Authentication) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		ProfileAddressResponse genericResponse = new ProfileAddressResponse();
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 	
 		com.pallette.domain.Address address = userService.getAddress(addressKey, profileId);
 		BeanUtils.copyProperties(genericResponse , address);
@@ -238,7 +238,7 @@ public class UserProfileController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = RestURLConstants.POFILE_REMOVE_ADDRESS_URL, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> removeAddress(@PathVariable("id") Long addressKey) {
+	public ResponseEntity<Response> removeAddress(@PathVariable("id") String addressKey) {
 		logger.debug("Editing Existing Address for Address Key : " + addressKey);
 		Response genericResponse = new Response();
 		genericResponse = userService.removeAddress(addressKey);
@@ -258,7 +258,7 @@ public class UserProfileController {
 	@RequestMapping(value = RestURLConstants.EDIT_PROFILE_URL, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UpdateUserResponse> updateProfile(@Valid @RequestBody UpdateUserRequest account,OAuth2Authentication oAuth2Authentication){
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		logger.debug("Profile update for id : " + profileId);
 		user = userService.updateProfile(account,profileId);
 		UpdateUserResponse response = new UpdateUserResponse(account);
@@ -279,7 +279,7 @@ public class UserProfileController {
 	public ResponseEntity<Response> changePassword(@Valid @RequestBody PasswordBean password,
 			OAuth2Authentication oAuth2Authentication) {
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		logger.debug("Password update for id : " + profileId);
 		Response genericResponse = new Response();
 		user = userService.changePassword(password, profileId);
@@ -311,7 +311,7 @@ public class UserProfileController {
 	 * @throws IllegalAccessException
 	 */
 	@RequestMapping(value = RestURLConstants.ORDER_DETAIL_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable(CommerceConstants.ORDER_ID) Long orderId)
+	public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable(CommerceConstants.ORDER_ID) String orderId)
 			throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 
 		logger.debug("Inside UserProfileController.getOrderDetail()");
@@ -340,7 +340,7 @@ public class UserProfileController {
 
 		logger.debug("Inside UserProfileController.getOrderDetail()");
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		OrderResponse response = new OrderResponse();
 		if (StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("No Profile Id was Passed");
@@ -364,7 +364,7 @@ public class UserProfileController {
 
 		logger.debug("Inside UserProfileController.getOrderDetail()");
 		ApiUser user = getProfileId(oAuth2Authentication);
-		Long profileId = user.getId();
+		String profileId = user.getId();
 		ProfileAddressResponseBean response = new ProfileAddressResponseBean();
 		if (StringUtils.isEmpty(profileId))
 			throw new IllegalArgumentException("No Profile Id was Passed");

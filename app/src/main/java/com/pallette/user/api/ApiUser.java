@@ -19,7 +19,7 @@ public class ApiUser implements Principal{
 	private String firstName;
     private String lastName;
     private Integer age;
-    private Long id;
+    private String id;
     
     public ApiUser() {
 	}
@@ -32,11 +32,11 @@ public class ApiUser implements Principal{
         this.age = user.getAge();
     }
     
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		notNull(id, "Mandatory argument 'id missing.'");
 		this.id = id;
 	}

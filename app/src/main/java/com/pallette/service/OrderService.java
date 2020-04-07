@@ -110,7 +110,7 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException
 	 */
-	public boolean validateForCheckout(Long orderId) throws NoRecordsFoundException {
+	public boolean validateForCheckout(String orderId) throws NoRecordsFoundException {
 
 		log.debug("Inside OrderService.validateForCheckout() and Order Id passed is :" , orderId);
 		Optional<Order> order = orderRepository.findById(orderId);
@@ -134,7 +134,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 //	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse addItemToOrder(Long skuId, Long productId, Long quantity , Long orderId) throws NoRecordsFoundException {
+	public CartResponse addItemToOrder(String skuId, String productId, Long quantity , String orderId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.addItemToOrder()");
 		
 		Optional<Order> order = orderRepository.findById(orderId);
@@ -180,7 +180,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 //	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse removeItemFromOrder(Long orderId, Long productId, Long skuId) throws NoRecordsFoundException {
+	public CartResponse removeItemFromOrder(String orderId, String productId, String skuId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.removeItemFromOrder()");
 		
 		Optional<Order> order = orderRepository.findById(orderId);
@@ -224,7 +224,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 //	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse updateItemQuantity(Long orderId, Long productId, Long skuId, long newQuantity) throws NoRecordsFoundException {
+	public CartResponse updateItemQuantity(String orderId, String productId, String skuId, long newQuantity) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderService.updateItemQuantity()");
 		log.debug("The Passed In Order id : " + orderId + " Product Id :" + productId + "Quantity :" + productId);
@@ -256,7 +256,7 @@ public class OrderService {
 	 * @param order
 	 * @return
 	 */
-	private CommerceItem getItemFromOrder(Long skuId, Order order) {
+	private CommerceItem getItemFromOrder(String skuId, Order order) {
 		List<CommerceItem> items = order.getCommerceItems();
 		for (CommerceItem item : items) {
 			if (skuId.equals(item.getCatalogRefId())) {
@@ -274,7 +274,7 @@ public class OrderService {
 	 * @return
 	 */
 //	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Order createDefaultOrder(Long profileId) {
+	public Order createDefaultOrder(String profileId) {
 
 		log.debug("Inside OrderServices.createDefaultOrder()");
 		log.debug("The profile passed is " + profileId);
@@ -308,7 +308,7 @@ public class OrderService {
 	 * @throws NoRecordsFoundException 
 	 */
 //	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public CartResponse createAndAddItemToOrder(Long skuId, Long productId , long quantity , Long profileId) throws NoRecordsFoundException {
+	public CartResponse createAndAddItemToOrder(String skuId, String productId , long quantity , String profileId) throws NoRecordsFoundException {
 		
 		log.debug("Inside OrderServices.createAndAddItemToOrder()");
 		Optional<ProductDocument> prodItem = productRepository.findById(productId);
@@ -386,7 +386,7 @@ public class OrderService {
 	 * @return
 	 * @throws NoRecordsFoundException 
 	 */
-	public CartResponse getCartDetails(Long orderId) throws NoRecordsFoundException {
+	public CartResponse getCartDetails(String orderId) throws NoRecordsFoundException {
 		log.debug("Inside OrderService.getCartDetails()");
 		log.debug("The Passed In Order id : " + orderId);
 
@@ -405,7 +405,7 @@ public class OrderService {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public OrderDetailResponse getOrderDetails(Long orderId) 
+	public OrderDetailResponse getOrderDetails(String orderId) 
 			throws NoRecordsFoundException, IllegalAccessException, InvocationTargetException {
 		log.debug("Inside OrderService.getCartDetails()");
 		log.debug("The Passed In Order id : " + orderId);
@@ -603,7 +603,7 @@ public class OrderService {
 	 * @param prodDoc
 	 * @return
 	 */
-	private CommerceItem createAndPopulateCommerceItem(Long quantity, ProductDocument prodDoc, Long skuId) {
+	private CommerceItem createAndPopulateCommerceItem(Long quantity, ProductDocument prodDoc, String skuId) {
 		
 		CommerceItem commerceItem = new CommerceItem();
 		commerceItem.setCatalogId(CommerceConstants.DEFAULT_CATALOG);
@@ -631,7 +631,7 @@ public class OrderService {
 		this.productRepository = productRepository;
 	}
 
-	public OrderResponse getOrderHistory(Long profileId) throws NoRecordsFoundException{
+	public OrderResponse getOrderHistory(String profileId) throws NoRecordsFoundException{
 		log.debug("Inside OrderService.getOrderHistory()");
 		log.debug("The Passed In Order id : " + profileId);
 

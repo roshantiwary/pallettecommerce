@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public abstract class BaseEntity implements Serializable {
 
-	private int version;
+    private int version;
 
     @Id
-    private Long id;
+    private String id;
 
     private Date timeCreated;
 
@@ -22,11 +22,17 @@ public abstract class BaseEntity implements Serializable {
 
     public BaseEntity(UUID guid) {
         Assert.notNull(guid, "UUID is required");
-        id = guid.getMostSignificantBits() & Long.MAX_VALUE;
+        id = guid.toString();
         this.timeCreated = new Date();
     }
 
-    public Long getId() {
+    public BaseEntity(String guid) {
+        Assert.notNull(guid, "UUID is required");
+        id = guid;
+        this.timeCreated = new Date();
+    }
+
+    public String getId() {
         return id;
     }
 

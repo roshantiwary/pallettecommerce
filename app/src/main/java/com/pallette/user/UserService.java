@@ -17,7 +17,7 @@ public interface UserService {
 
 	public ApiUser authenticate(String username, String password);
 
-	public ApiUser getUser(Long userId);
+	public ApiUser getUser(String userId);
 
 	/**
 	 * Save User
@@ -25,21 +25,21 @@ public interface UserService {
 	 * @param userId
 	 * @param request
 	 */
-	public ApiUser saveUser(Long userId, UpdateUserRequest request);
+	public ApiUser saveUser(String userId, UpdateUserRequest request);
 	
 	public AddEditAddressRequest addNewAddress(AddEditAddressRequest request);
 	
 	public AddEditAddressRequest editAddress(AddEditAddressRequest request);
 
-	public Response removeAddress(Long addressKey);
+	public Response removeAddress(String addressKey);
 
-	public ProfileAddressResponseBean getAllProfileAddress(Long profileId);
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId);
 	
-	public Address getAddress(Long addressKey, Long profileId);
+	public Address getAddress(String addressKey, String profileId);
 
-	public ApiUser updateProfile(UpdateUserRequest account, Long profileId);
+	public ApiUser updateProfile(UpdateUserRequest account, String profileId);
 
-	public ApiUser changePassword(PasswordBean password, Long profileId);
+	public ApiUser changePassword(PasswordBean password, String profileId);
 
 	/**
 	 * Method that create and saves a new token document for Forgot Password
@@ -65,5 +65,5 @@ public interface UserService {
 	 * @param oldPassword
 	 * @return
 	 */
-	public ApiUser setNewPassword(Long profileId , String newPassword , String confirmPassword);
+	public ApiUser setNewPassword(String profileId , String newPassword , String confirmPassword);
 }

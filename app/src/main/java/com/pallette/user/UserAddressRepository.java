@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.pallette.domain.Address;
 
-public interface UserAddressRepository extends MongoRepository<Address, Long>{
+public interface UserAddressRepository extends MongoRepository<Address, String>{
 
-	public List<Address> findByProfileId(final Long profileId);
+	public List<Address> findByProfileId(final String profileId);
 
-    public Optional<Address> findById(final Long id);
+    public Optional<Address> findById(final String id);
     
-    public Address findByProfileIdAndId(final Long profileId, Long id);
+    public Address findByProfileIdAndId(final String profileId, String id);
 }

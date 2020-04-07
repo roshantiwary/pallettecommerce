@@ -46,7 +46,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public AccountResponse updateProfile(AccountBean account, Long profileId) throws Exception {
+	public AccountResponse updateProfile(AccountBean account, String profileId) throws Exception {
 		AccountResponse genericResponse = null;
 		genericResponse = accountService.updateProfile(account,profileId);
 		return genericResponse;
@@ -68,7 +68,7 @@ public class UserService {
 		return account;
 	}
 	
-	public Account getAccountByProfileId(Long profileId) {
+	public Account getAccountByProfileId(String profileId) {
 		logger.debug("Looking for account with profile id: " + profileId);
 
 		Account account = accountService.findAccountById(profileId);
@@ -91,7 +91,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse getAddress(Long addressKey, Long profileId) throws Exception {
+	public ProfileAddressResponse getAddress(String addressKey, String profileId) throws Exception {
 		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.getAddress(addressKey,profileId);
 		return genericResponse;
@@ -105,7 +105,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse addNewAddress(ProfileAddressBean address, Long profileId) throws Exception {
+	public ProfileAddressResponse addNewAddress(ProfileAddressBean address, String profileId) throws Exception {
 		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.addNewAddress(address,profileId);
 		return genericResponse;
@@ -121,7 +121,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ProfileAddressResponse editAddress(Long addressKey,ProfileAddressBean address, Long profileId) throws Exception {
+	public ProfileAddressResponse editAddress(String addressKey,ProfileAddressBean address, String profileId) throws Exception {
 		ProfileAddressResponse genericResponse = null;
 		genericResponse = accountService.editAddress(addressKey,address,profileId);
 		return genericResponse;
@@ -135,7 +135,7 @@ public class UserService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Response removeAddress(Long addressKey) throws Exception {
+	public Response removeAddress(String addressKey) throws Exception {
 		Response genericResponse = null;
 		genericResponse = accountService.removeAddress(addressKey);
 		return genericResponse;
@@ -149,13 +149,13 @@ public class UserService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Response changePassword(PasswordBean password, Long profileId) throws Exception {
+	public Response changePassword(PasswordBean password, String profileId) throws Exception {
 		Response genericResponse = null;
 		genericResponse = accountService.changePassword(password,profileId);
 		return genericResponse;
 	}
 
-	public ProfileAddressResponseBean getAllProfileAddress(Long profileId) {
+	public ProfileAddressResponseBean getAllProfileAddress(String profileId) {
 		ProfileAddressResponseBean genericResponse = null;
 		genericResponse = accountService.getAllProfileAddress(profileId);
 		return genericResponse;

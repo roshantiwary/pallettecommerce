@@ -12,18 +12,18 @@ import org.hibernate.validator.constraints.NotBlank;
 public class RemoveItemBean {
 
 	@NotBlank(message = "Order Id is mandatory.")
-	private Long orderId;
+	private String orderId;
 
 	@NotBlank(message = "Product Id is mandatory.")
-	private Long productId;
+	private String productId;
 	
 	@NotBlank(message = "Sku Id is mandatory.")
-	private Long skuId;
+	private String skuId;
 
 	/**
 	 * @return the orderId
 	 */
-	public Long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
@@ -31,14 +31,14 @@ public class RemoveItemBean {
 	 * @param orderId
 	 *            the orderId to set
 	 */
-	public void setOrderId(Long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
 	/**
 	 * @return the productId
 	 */
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
@@ -46,14 +46,14 @@ public class RemoveItemBean {
 	 * @param productId
 	 *            the productId to set
 	 */
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
 	/**
 	 * @return the skuId
 	 */
-	public Long getSkuId() {
+	public String getSkuId() {
 		return skuId;
 	}
 
@@ -61,7 +61,7 @@ public class RemoveItemBean {
 	 * @param skuId
 	 *            the skuId to set
 	 */
-	public void setSkuId(Long skuId) {
+	public void setSkuId(String skuId) {
 		this.skuId = skuId;
 	}
 

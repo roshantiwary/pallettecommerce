@@ -16,7 +16,7 @@ import com.pallette.domain.Order;
  */
 
 //@Transactional
-public interface OrderRepository extends MongoRepository<Order, Long> {
+public interface OrderRepository extends MongoRepository<Order, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular Order Id.
@@ -35,6 +35,6 @@ public interface OrderRepository extends MongoRepository<Order, Long> {
 	 */
 	public Order save(Order order);
 	
-	public List<Order> findOrderByStateAndProfileId(String state, Long profileId);
+	public List<Order> findOrderByStateAndProfileId(String state, String profileId);
 	
 }

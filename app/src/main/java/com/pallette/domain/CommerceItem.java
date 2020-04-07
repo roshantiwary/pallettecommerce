@@ -22,7 +22,7 @@ import com.pallette.config.CascadeSave;
 public class CommerceItem implements Serializable {
 
 	@Id
-	private Long id;
+	private String id;
 
 	@Field(value = "commerce_item_type")
 	private String commerceItemType;
@@ -31,7 +31,7 @@ public class CommerceItem implements Serializable {
 	private String catalogId;
 
 	@Field(value = "catalog_ref_id")
-	private Long catalogRefId;
+	private String catalogRefId;
 
 	private long quantity;
 
@@ -40,7 +40,7 @@ public class CommerceItem implements Serializable {
 	private String state;
 	
 	@Field(value= "product_id")
-	private Long productId;
+	private String productId;
 
 	@DBRef
 	@CascadeSave
@@ -50,7 +50,7 @@ public class CommerceItem implements Serializable {
 		super();
 	}
 
-	public CommerceItem(Long id) {
+	public CommerceItem(String id) {
 		this.id = id;
 	}
 
@@ -69,7 +69,7 @@ public class CommerceItem implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -77,7 +77,7 @@ public class CommerceItem implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -144,7 +144,7 @@ public class CommerceItem implements Serializable {
 	/**
 	 * @return the catalogRefId
 	 */
-	public Long getCatalogRefId() {
+	public String getCatalogRefId() {
 		return catalogRefId;
 	}
 
@@ -152,7 +152,7 @@ public class CommerceItem implements Serializable {
 	 * @param catalogRefId
 	 *            the catalogRefId to set
 	 */
-	public void setCatalogRefId(Long catalogRefId) {
+	public void setCatalogRefId(String catalogRefId) {
 		this.catalogRefId = catalogRefId;
 	}
 
@@ -179,11 +179,11 @@ public class CommerceItem implements Serializable {
 		this.itemPriceInfo = itemPriceInfo;
 	}
 
-	public Long getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Long productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 }

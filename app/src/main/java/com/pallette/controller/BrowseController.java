@@ -88,7 +88,7 @@ public class BrowseController {
 	 * @throws InvocationTargetException
 	 */
 	@RequestMapping(value = RestURLConstants.SELECTED_PRODUCT_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ProductResponseBean> getProduct(@PathVariable(BrowseConstants.PRODUCT_ID) Long productId) 
+	public ResponseEntity<ProductResponseBean> getProduct(@PathVariable(BrowseConstants.PRODUCT_ID) String productId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 		
 		logger.info("BrowseController.getProduct()");
@@ -198,7 +198,7 @@ public class BrowseController {
 	 * @throws InvocationTargetException
 	 */
 	@RequestMapping(value = RestURLConstants.SELECTED_CATEGORY_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<CategoryResponseBean> getCategory(@PathVariable(BrowseConstants.CATEGORY_ID) Long categoryId) 
+	public ResponseEntity<CategoryResponseBean> getCategory(@PathVariable(BrowseConstants.CATEGORY_ID) String categoryId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException{
 
 		logger.info("BrowseController.getCategory()");
@@ -281,7 +281,7 @@ public class BrowseController {
 	 * @throws InvocationTargetException
 	 */
 	@RequestMapping(value = RestURLConstants.SELECTED_BRAND_URL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BrandResponseBean> getBrand(@PathVariable(BrowseConstants.BRAND_ID) long brandId) 
+	public ResponseEntity<BrandResponseBean> getBrand(@PathVariable(BrowseConstants.BRAND_ID) String brandId) 
 			throws NoRecordsFoundException , IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
 		logger.info("BrowseController.getBrand()");

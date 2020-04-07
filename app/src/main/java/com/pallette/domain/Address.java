@@ -21,7 +21,7 @@ import com.pallette.user.api.AddEditAddressRequest;
 public class Address implements Serializable {
 
 	@Id
-	private Long id;
+	private String id;
 
 	@Field(value = "shipping_group_type")
 	private String shippingGroupType;
@@ -52,7 +52,7 @@ public class Address implements Serializable {
 
 	private String country;
 
-	private Long profileId;
+	private String profileId;
 	
 	private String phoneNumber;
 	
@@ -62,7 +62,7 @@ public class Address implements Serializable {
 		super();
 	}
 
-	public Address(Long id) {
+	public Address(String id) {
 		this.id = id;
 	}
 
@@ -148,8 +148,8 @@ public class Address implements Serializable {
 		String aCountry = getCountry();
 		String bCountry = address.getCountry();
 
-		Long aOwnerId = getProfileId();
-		Long bOwnerId = address.getProfileId();
+		String aOwnerId = getProfileId();
+		String bOwnerId = address.getProfileId();
 
 		if ((aPrefix == null) && (bPrefix != null)) {
 			return false;
@@ -216,7 +216,7 @@ public class Address implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -224,7 +224,7 @@ public class Address implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -432,11 +432,11 @@ public class Address implements Serializable {
 	}
 
 
-	public Long getProfileId() {
+	public String getProfileId() {
 		return profileId;
 	}
 
-	public void setProfileId(Long profileId) {
+	public void setProfileId(String profileId) {
 		this.profileId = profileId;
 	}
 

@@ -38,7 +38,7 @@ public class BaseResource {
         if(principal instanceof User) {
         	returnUser = (User)principal;
         } else {
-        	user = userRepository.findById((Long)principal);
+        	user = userRepository.findById((String)principal);
         	returnUser = user.get();
         }
         return returnUser;

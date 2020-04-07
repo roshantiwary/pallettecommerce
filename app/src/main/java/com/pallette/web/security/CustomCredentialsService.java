@@ -90,7 +90,7 @@ public class CustomCredentialsService implements UserDetailsService{
 			return account.getAuthtoken();
 		}
 		
-		public Long getProfileId() {
+		public String getProfileId() {
 			return account.getId();
 		}
 		
