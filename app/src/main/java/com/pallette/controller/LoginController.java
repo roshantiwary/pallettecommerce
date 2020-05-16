@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,7 @@ import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.CreateUserRequest;
 import com.pallette.user.api.CreateUserResponse;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/api/v1")
 public class LoginController extends BaseResource {

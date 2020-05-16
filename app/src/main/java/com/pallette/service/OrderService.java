@@ -259,7 +259,7 @@ public class OrderService {
 	private CommerceItem getItemFromOrder(String skuId, Order order) {
 		List<CommerceItem> items = order.getCommerceItems();
 		for (CommerceItem item : items) {
-			if (skuId.equals(item.getCatalogRefId())) {
+			if (item != null && skuId.equals(item.getCatalogRefId())) {
 				return item;
 			}
 		}
@@ -473,7 +473,7 @@ public class OrderService {
 		List<CommerceItem> items = order.getCommerceItems();
 		if (null != items && !items.isEmpty()) {
 			for (CommerceItem itm : items) {
-				
+				if(itm != null) {
 				CartItemResponse cartItemResponse = new CartItemResponse();
 				cartItemResponse.setQuantity(itm.getQuantity());
 				cartItemResponse.setProductId(itm.getProductId());
@@ -502,6 +502,7 @@ public class OrderService {
 					}
 				}
 				responseItemList.add(cartItemResponse);
+			}
 			}
 		}
 		
@@ -584,7 +585,7 @@ public class OrderService {
 		ShippingGroup shipGrp = new ShippingGroup();
 		shipGrp.setShippingGroupType(CommerceConstants.HARD_GOOD_SHIPPING_GROUP);
 		shipGrp.setState(CommerceConstants.INITIAL);
-		
+		shipGrp.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		order.addShippingGroup(shipGrp);
 	}
 
@@ -593,7 +594,7 @@ public class OrderService {
 		payGrp.setState(CommerceConstants.INITIAL);
 		payGrp.setPaymentGroupType(CommerceConstants.CREDIT_CARD);
 		payGrp.setPaymentMethod(CommerceConstants.CREDIT_CARD);
-		
+		payGrp.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		order.addPaymentGroup(payGrp);
 	}
 
@@ -609,6 +610,7 @@ public class OrderService {
 		commerceItem.setCatalogId(CommerceConstants.DEFAULT_CATALOG);
 		commerceItem.setProductId(prodDoc.getId());
 		commerceItem.setCatalogRefId(skuId);
+		commerceItem.setId(skuId);
 		commerceItem.setCommerceItemType(CommerceConstants.DEFAULT_COMMERCE_ITEM);
 		commerceItem.setQuantity(quantity);
 		commerceItem.setState(CommerceConstants.INITIAL);

@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import com.pallette.response.GetDeliveryMethodResponse;
 import com.pallette.service.ShippingServices;
 import com.pallette.user.api.ApiUser;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/api/v1")
 public class ShippingController {

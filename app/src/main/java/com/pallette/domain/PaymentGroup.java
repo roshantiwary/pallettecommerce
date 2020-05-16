@@ -25,7 +25,7 @@ import com.pallette.config.CascadeSave;
 public class PaymentGroup implements Serializable {
 
 	@Id
-	private ObjectId id;
+	private String id;
 
 	@Field(value = "payment_group_type")
 	private String paymentGroupType;
@@ -88,14 +88,14 @@ public class PaymentGroup implements Serializable {
 		super();
 	}
 
-	public PaymentGroup(ObjectId id) {
+	public PaymentGroup(String id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -103,7 +103,7 @@ public class PaymentGroup implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(ObjectId id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

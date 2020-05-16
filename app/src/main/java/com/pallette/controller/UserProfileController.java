@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,7 @@ import com.pallette.user.api.ApiUser;
 import com.pallette.user.api.UpdateUserRequest;
 import com.pallette.user.api.UpdateUserResponse;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/private/rest/api/v1/userprofile")
 public class UserProfileController {

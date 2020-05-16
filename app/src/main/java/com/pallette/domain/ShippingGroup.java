@@ -23,7 +23,7 @@ import com.pallette.config.CascadeSave;
 public class ShippingGroup implements Serializable {
 
 	@Id
-	private ObjectId id;
+	private String id;
 
 	@Field(value = "shipping_group_type")
 	private String shippingGroupType;
@@ -59,7 +59,7 @@ public class ShippingGroup implements Serializable {
 		super();
 	}
 
-	public ShippingGroup(ObjectId id) {
+	public ShippingGroup(String id) {
 		this.id = id;
 	}
 
@@ -77,7 +77,7 @@ public class ShippingGroup implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -85,7 +85,7 @@ public class ShippingGroup implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(ObjectId id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

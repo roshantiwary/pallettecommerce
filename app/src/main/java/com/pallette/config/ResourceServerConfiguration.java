@@ -1,12 +1,16 @@
 package com.pallette.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.pallette.web.security.CustomAuthenticationEntryPoint;
 import com.pallette.web.security.CustomLogoutSuccessHandler;
@@ -38,6 +42,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .headers()
                 .frameOptions().disable()
                 .and()
+                .cors()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -50,5 +56,21 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/private/rest/api/v1/userprofile/account/**").hasAnyAuthority("USER");
 
     }
+	
+	@Bean
+	public CorsFilter corsFilter() {
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    CorsConfiguration config = new CorsConfiguration();
+	    config.setAllowCredentials(true); 
+	    config.addAllowedOrigin("http://localhost:4200");
+	    config.addAllowedHeader("*");
+	    config.addAllowedMethod("GET");
+	    config.addAllowedMethod("PUT");
+	    config.addAllowedMethod("POST");
+	    config.addAllowedMethod("DELETE");
+	    config.addAllowedMethod("PATCH");
+	    source.registerCorsConfiguration("/**", config);
+	    return new CorsFilter(source);
+	}
 
 }

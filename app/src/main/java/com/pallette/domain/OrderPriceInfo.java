@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class OrderPriceInfo extends AmountInfo {
 
 	@Id
-	private ObjectId id;
+	private String id;
 
 	@Field(value = "raw_sub_total")
 	private double rawSubTotal;
@@ -42,14 +42,14 @@ public class OrderPriceInfo extends AmountInfo {
 		super();
 	}
 
-	public OrderPriceInfo(ObjectId id) {
+	public OrderPriceInfo(String id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -57,7 +57,7 @@ public class OrderPriceInfo extends AmountInfo {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(ObjectId id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -6,8 +6,10 @@ package com.pallette.repository;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pallette.browse.documents.ProductDocument;
 import com.pallette.domain.Order;
 
 /**
@@ -16,7 +18,7 @@ import com.pallette.domain.Order;
  */
 
 //@Transactional
-public interface OrderRepository extends MongoRepository<Order, String> {
+public interface OrderRepository extends PagingAndSortingRepository<Order, String> {
 
 	/**
 	 * Method that queries the Mongo DB for a particular Order Id.
@@ -33,7 +35,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 	 * The Order save(Order order) method saves a new Order entry to the
 	 * database and returns the the saved Order entry.
 	 */
-	public Order save(Order order);
 	
 	public List<Order> findOrderByStateAndProfileId(String state, String profileId);
 	

@@ -21,11 +21,13 @@ import org.springframework.util.StringUtils;
 import com.pallette.beans.AddEditAddressBean;
 import com.pallette.commerce.contants.CommerceConstants;
 import com.pallette.commerce.order.purchase.OrderRepriceChain;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.Address;
 import com.pallette.domain.DeliveryMethod;
 import com.pallette.domain.Order;
 import com.pallette.domain.ShippingGroup;
 import com.pallette.repository.OrderRepository;
+import com.pallette.repository.SequenceDao;
 import com.pallette.response.AddressResponse;
 import com.pallette.response.CartResponse;
 import com.pallette.response.DeliveryMethodResponse;
@@ -49,6 +51,9 @@ public class ShippingServices {
 
 	@Autowired
 	private MongoOperations mongoOperation;
+	
+	@Autowired
+	private SequenceDao sequenceDao;
 	
 	/**
 	 * New Pipeline Chain for Pricing.
@@ -115,6 +120,7 @@ public class ShippingServices {
 		
 		// Bean Utils copyProperties method is responsible for copying properties across two beans.
 		addressResponse = new AddressResponse();
+		addressItem.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		BeanUtils.copyProperties(addressResponse, addressItem);
 		addressResponse.setAddressId(addressItem.getId().toString());
 		

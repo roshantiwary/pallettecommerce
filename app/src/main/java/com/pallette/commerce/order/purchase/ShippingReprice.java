@@ -36,8 +36,9 @@ public class ShippingReprice implements RepriceChain, Ordered{
 	public void reprice(Order order) {
 		//calculate shipping price
 		List<ShippingGroup> shippingGroups = order.getShippingGroups();
+		if(shippingGroups != null) {
 		for (ShippingGroup shippingGroup : shippingGroups) {
-			if(shippingGroup.getShippingGroupType().equalsIgnoreCase("HardGoodShippingGroup")) {
+			if(shippingGroup != null && shippingGroup.getShippingGroupType().equalsIgnoreCase("HardGoodShippingGroup")) {
 				
 				ShippingPriceInfo shipPriceInfo = new ShippingPriceInfo();
 				
@@ -58,7 +59,7 @@ public class ShippingReprice implements RepriceChain, Ordered{
 				shippingGroup.setShippingPriceInfo(shipPriceInfo);
 			}
 		}
-		
+	}
 		//invoke next chain
 		//this.repriceChain.reprice(order);
 	}

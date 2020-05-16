@@ -2,18 +2,27 @@ package com.pallette.commerce.order.purchase;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import com.pallette.commerce.contants.CommerceConstants;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.Order;
 import com.pallette.domain.OrderPriceInfo;
+import com.pallette.repository.SequenceDao;
 
 @Component
 public class OrderReprice implements RepriceChain, Ordered{
 	
 	private RepriceChain repriceChain;
+	
+	/**
+	 * SequenceDAO for generating sequential order id.
+	 */
+	@Autowired
+	private SequenceDao sequenceDao;
 	
 	@Override
 	public void setNextChain(RepriceChain nextChain) {
@@ -33,12 +42,14 @@ public class OrderReprice implements RepriceChain, Ordered{
 		List<CommerceItem> items = order.getCommerceItems();
 		if (null != items && !items.isEmpty()) {
 			for (CommerceItem item : order.getCommerceItems()) {
+				if(item != null) {
 				orderTotal = orderTotal + item.getItemPriceInfo().getAmount();
+				}
 			}
 		} else {
 			orderTotal = 0.0;
 		}
-	
+		orderPriceInfo.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 		orderPriceInfo.setAmount(orderTotal);
 		orderPriceInfo.setRawSubTotal(orderTotal);
 		orderPriceInfo.setShipping(0.0);

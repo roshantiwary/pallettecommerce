@@ -35,6 +35,8 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.client.ClientSession;
@@ -61,6 +63,19 @@ public class Shop extends SpringBootServletInitializer {
 		SpringApplication.run(Shop.class, args);
 	}
 
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//				.allowedOrigins("http://localhost:4200","http://localhost")
+//				.allowedMethods("PUT", "DELETE", "GET", "POST")
+//				.allowCredentials(false).maxAge(3600);
+//			}
+//		};
+//	}
+	
 //	@Value("${security.oauth2.client.access-token-uri}")
 //	private String accessTokenUri;
 //

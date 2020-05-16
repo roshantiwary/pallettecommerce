@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import com.pallette.browse.documents.SkuDocument;
 import com.pallette.browse.repository.ProductRepository;
 import com.pallette.commerce.contants.CommerceConstants;
+import com.pallette.constants.SequenceConstants;
 import com.pallette.domain.CommerceItem;
 import com.pallette.domain.ItemPriceInfo;
 import com.pallette.domain.Order;
+import com.pallette.repository.SequenceDao;
 
 @Component
 public class ItemReprice implements RepriceChain, Ordered{
@@ -26,6 +28,12 @@ public class ItemReprice implements RepriceChain, Ordered{
 	 */
 	@Autowired
 	private ProductRepository productRepository;
+	
+	/**
+	 * SequenceDAO for generating sequential order id.
+	 */
+	@Autowired
+	private SequenceDao sequenceDao;
 	
 	@Autowired
 	private MongoOperations mongoOperation;
@@ -44,13 +52,16 @@ public class ItemReprice implements RepriceChain, Ordered{
 			return;
 		
 		for (CommerceItem commerceItem : items) {
-			Query query = new Query();
-			query.addCriteria(Criteria.where("_id").is(commerceItem.getCatalogRefId()));
-			SkuDocument skuItem = mongoOperation.findById(query, SkuDocument.class);
+//			Query query = new Query();
+//			query.addCriteria(Criteria.where("_id").is(commerceItem.getCatalogRefId()));
+			if(null != commerceItem) {
+			SkuDocument skuItem = mongoOperation.findById(commerceItem.getCatalogRefId(), SkuDocument.class);
+			
 			ItemPriceInfo itemPriceInfo = new ItemPriceInfo();
 			itemPriceInfo.setOnSale(Boolean.FALSE);
 			itemPriceInfo.setDiscounted(Boolean.FALSE);
 			itemPriceInfo.setCurrencyCode(CommerceConstants.INR);
+			itemPriceInfo.setId(sequenceDao.getNextOrderSequenceId(SequenceConstants.SEQ_KEY));
 			long quantity = commerceItem.getQuantity();
 			
 			itemPriceInfo.setListPrice(skuItem.getPriceDocument().getListPrice());
@@ -61,6 +72,7 @@ public class ItemReprice implements RepriceChain, Ordered{
 			itemPriceInfo.setRawTotalPrice(amount);
 			
 			commerceItem.setItemPriceInfo(itemPriceInfo);
+			}
 		}
 		
 		//invoke next chain
