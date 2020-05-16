@@ -123,9 +123,9 @@ public class PaymentConstants {
 
 	public static final String ORDER_DOCUMENT = "Order";
 
-	public static final String FAILED = "https://shielded-dawn-79806.herokuapp.com/checkout/shipping?error=true";
+	public static final String FAILED = "http://localhost:4200/checkout/shipping?error=true";
 
-	public static final String CONFIRMATION = "https://shielded-dawn-79806.herokuapp.com/checkout/confirmation";
+	public static final String CONFIRMATION = "http://localhost:4200/checkout/confirmation";
 
 	public static final String FAILURE = "failure";
 }

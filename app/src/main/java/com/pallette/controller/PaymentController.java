@@ -65,6 +65,9 @@ public class PaymentController {
 		log.debug("The Passed In Order id : " + orderId);
 
 		Optional<Order> order = orderRepository.findById(orderId);
+		
+		String referrer = request.getHeader("referer");
+		
 		if (null == order)
 			return null;
 		
@@ -72,7 +75,7 @@ public class PaymentController {
 		
 		isValidationSuccess = validateChain.validateForSubmitOrder(order.get());
 		if(!isValidationSuccess)
-			return "redirect:" + PaymentConstants.FAILED;
+			return "redirect:" + referrer + "?error=true";
 		
 		Map<String, String> values = new HashMap<String, String>();
 		values = paymentIntegrator.hashCalMethod(order.get());
@@ -146,6 +149,7 @@ public class PaymentController {
 	public String paymentFailure(HttpServletRequest request, HttpServletResponse response , Model model) {
 		 
 		log.debug("Inside PaymentController.paymentFailure()");
+		String referrer = request.getHeader("referer");
 		Map<String, String> parameterNames = new HashMap<String, String>();
 		Enumeration<String> enumeration = request.getParameterNames();
 		
@@ -157,13 +161,15 @@ public class PaymentController {
 		paymentService.processPaymentErrorResponse(parameterNames, model);
 		
 		log.debug("Payment Failure");
-		return "redirect:" + PaymentConstants.FAILED;
+//		return "redirect:" + PaymentConstants.FAILED;
+		return "redirect:" + referrer + "?error=true";
 	}
 
 	@RequestMapping(value = "/success", method = RequestMethod.POST)
 	public String paymentSuccess(HttpServletRequest request, HttpServletResponse response , Model model) {
 		 
 		log.debug("Inside PaymentController.paymentSuccess()");
+		String referrer = request.getHeader("referer");
 		request.getParameter(PaymentConstants.HASH);
 		Map<String, String> parameterNames = new HashMap<String, String>();
 		Enumeration<String> enumeration = request.getParameterNames();
@@ -176,7 +182,7 @@ public class PaymentController {
 		paymentService.processPaymentResponse(parameterNames);
 		
 		log.debug("Payment Successfull");
-		return "redirect:" + "https://shielded-dawn-79806.herokuapp.com/checkout/" + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
+		return "redirect:" + referrer + parameterNames.get(PaymentConstants.UDF1)  +"/confirmation";
 	}
 	
 	
