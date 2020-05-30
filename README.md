@@ -94,9 +94,7 @@ curl --location --request POST 'http://localhost:8080/oauth/token' \
 
 ### Data Setup : List of Services to create Merchandise Catalog from [sample_data](https://github.com/roshantiwary/pallettecommerce/tree/master/sample_data) directory
 
-- [Product Images](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)
-
-<details><summary>- [Upload Product Images](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)</summary>
+<details><summary>Upload Product Media (https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)</summary>
 <p>
 	
 ```python
@@ -107,52 +105,90 @@ curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' 
 </p>	
 </details>
 
-<details><summary>- [Upload Brand Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)</summary>
+<details><summary>Upload Brands(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)</summary>
 <p>
 	
 ```python
-curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' \
+curl --location --request POST 'http://localhost:8080/rest/api/v1/brand/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'
 ```
 </p>	
 </details>
 
-- [Brand or Store Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/brand/upload' \
+<details><summary>Upload Inventory(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/03_Inventory.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/inventory/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [Inventory Data for products](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/03_Inventory.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/inventory/upload' \
+<details><summary>Upload Category(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/04_Category_New.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/category/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [Category Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/04_Category_New.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/category/upload' \
+<details><summary>Upload Pricing(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/05_Price.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/price/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [Pricing Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/05_Price.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/price/upload' \
+<details><summary>Upload Products(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/06_Product.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [Product Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/06_Product.csvv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
+<details><summary>Upload City(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/07_City.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [City Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/07_City.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
+<details><summary>Upload SKU Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/08_Sku.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/sku/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
-- [SKU Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/08_Sku.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/sku/upload' \
---header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
 
-- Index product records to Solr server for search service
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/index/solr/products' \
---header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43'```
+<details><summary>Index Product records to Solr Search Engine </summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/index/solr/products' \
+--header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43'
+```
+</p>	
+</details>
