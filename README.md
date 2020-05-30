@@ -49,11 +49,13 @@ There are 2 types of Grant Types
 	- password - Required to acess MyAccount services and all other Browse/Checkout Services as registered customer
 
 <details><summary>Client Credentials Grant Type to access Browse and Checkout services as guest customer</summary>
-```curl --location --request POST 'http://localhost:8080/oauth/token' \
+<p>
+python```curl --location --request POST 'http://localhost:8080/oauth/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'client_id=acme' \
 --data-urlencode 'client_secret=acmesecret' \
 --data-urlencode 'grant_type=client_credentials'```
+</p>	
 </details>
 
 ### Password Grant Type to access API as administrator
