@@ -61,6 +61,20 @@ curl --location --request POST 'http://localhost:8080/oauth/token' \
 </p>	
 </details>
 
+## collapsible markdown?
+
+<details><summary>CLICK ME</summary>
+<p>
+
+#### yes, even hidden code blocks!
+
+```python
+print("hello world!")
+```
+
+</p>
+</details>
+
 ### Password Grant Type to access API as administrator
 ```curl --location --request POST 'http://localhost:8080/oauth/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
