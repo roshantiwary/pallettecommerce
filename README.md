@@ -11,8 +11,8 @@
 - [Maven](https://maven.apache.org)
 
 ### Pre-Requisite
--[Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
--[Install docker](https://docs.docker.com/get-docker/)
+- [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Install docker](https://docs.docker.com/get-docker/)
 
 ### How to run Pallette commerce?
 - Download code from Git repository(https://github.com/roshantiwary/pallettecommerce)
@@ -73,44 +73,44 @@ There are 2 types of Grant Types
 --data-urlencode 'username=<user-id used during registration>' \
 --data-urlencode 'password=<password used during registration>'```
 
-### Data Setup : List of Services to create Merchandise Catalog from sample_data(https://github.com/roshantiwary/pallettecommerce/tree/master/sample_data) directory
+### Data Setup : List of Services to create Merchandise Catalog from [sample_data](https://github.com/roshantiwary/pallettecommerce/tree/master/sample_data) directory
 
-- Product Images(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)
+- [Product Images](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- Brand or Store Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)
+- [Brand or Store Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/brand/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- Inventory Data for products(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/03_Inventory.csv)
+- [Inventory Data for products](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/03_Inventory.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/inventory/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- Category Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/04_Category_New.csv)
+- [Category Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/04_Category_New.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/category/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- Pricing Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/05_Price.csv)
+- [Pricing Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/05_Price.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/price/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- Product Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/06_Product.csvv)
+- [Product Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/06_Product.csvv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- City Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/07_City.csv)
+- [City Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/07_City.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/product/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
 
-- SKU Data(https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/08_Sku.csv)
+- [SKU Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/08_Sku.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/sku/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
 --form 'file=@/path/to/file'```
