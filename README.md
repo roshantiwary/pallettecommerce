@@ -61,37 +61,36 @@ curl --location --request POST 'http://localhost:8080/oauth/token' \
 </p>	
 </details>
 
-## collapsible markdown?
-
-<details><summary>CLICK ME</summary>
+<details><summary>Password Grant Type to access API as administrator</summary>
 <p>
-
-#### yes, even hidden code blocks!
-
+	
 ```python
-print("hello world!")
-```
-
-</p>
-</details>
-
-### Password Grant Type to access API as administrator
-```curl --location --request POST 'http://localhost:8080/oauth/token' \
+curl --location --request POST 'http://localhost:8080/oauth/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'client_id=acme' \
 --data-urlencode 'client_secret=acmesecret' \
 --data-urlencode 'grant_type=administrator' \
 --data-urlencode 'username=administrator' \
---data-urlencode 'password=pass'```
+--data-urlencode 'password=pass'
+```
+</p>	
+</details>
 
-### Password Grant Type to access Account, Browse and Checkout services as registered customer
-```curl --location --request POST 'http://localhost:8080/oauth/token' \
+<details><summary>Password Grant Type to access Account, Browse and Checkout services as registered customer</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/oauth/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'client_id=acme' \
 --data-urlencode 'client_secret=acmesecret' \
 --data-urlencode 'grant_type=administrator' \
 --data-urlencode 'username=<user-id used during registration>' \
---data-urlencode 'password=<password used during registration>'```
+--data-urlencode 'password=<password used during registration>'
+```
+</p>	
+</details>
+
 
 ### Data Setup : List of Services to create Merchandise Catalog from [sample_data](https://github.com/roshantiwary/pallettecommerce/tree/master/sample_data) directory
 
