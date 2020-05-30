@@ -95,9 +95,28 @@ curl --location --request POST 'http://localhost:8080/oauth/token' \
 ### Data Setup : List of Services to create Merchandise Catalog from [sample_data](https://github.com/roshantiwary/pallettecommerce/tree/master/sample_data) directory
 
 - [Product Images](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)
-```curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' \
+
+<details><summary>- [Upload Product Images](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/01_Images.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' \
 --header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
---form 'file=@/path/to/file'```
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
+
+<details><summary>- [Upload Brand Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)</summary>
+<p>
+	
+```python
+curl --location --request POST 'http://localhost:8080/rest/api/v1/media/upload' \
+--header 'Authorization: Bearer 4df73d06-efec-415a-bfd3-2e9873b34d43' \
+--form 'file=@/path/to/file'
+```
+</p>	
+</details>
 
 - [Brand or Store Data](https://github.com/roshantiwary/pallettecommerce/blob/master/sample_data/02_Brand.csv)
 ```curl --location --request POST 'http://localhost:8080/rest/api/v1/brand/upload' \
