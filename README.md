@@ -50,14 +50,11 @@ There are 2 types of Grant Types
 
 <details><summary>### Client Credentials Grant Type to access Browse and Checkout services as guest customer</summary>
 <p>
-```python
-print("```curl --location --request POST 'http://localhost:8080/oauth/token' \
+```curl --location --request POST 'http://localhost:8080/oauth/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'client_id=acme' \
 --data-urlencode 'client_secret=acmesecret' \
---data-urlencode 'grant_type=client_credentials'```")
-```
-
+--data-urlencode 'grant_type=client_credentials'```
 </p>
 </details>
 
