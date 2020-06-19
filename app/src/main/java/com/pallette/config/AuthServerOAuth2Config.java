@@ -1,6 +1,8 @@
 package com.pallette.config;
 
+import com.pallette.web.security.CustomTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -12,18 +14,21 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import com.pallette.web.security.mongodb.OAuth2AccessTokenRepository;
 import com.pallette.web.security.mongodb.OAuth2RefreshTokenRepository;
 import com.pallette.web.security.mongodb.OAuth2RepositoryTokenStore;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter{
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
+	@Qualifier("authenticationManagerBean")
 	@Lazy
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -33,7 +38,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
 	
 	@Autowired
 	private OAuth2RefreshTokenRepository oAuth2RefreshTokenRepository;
-	
+
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// TODO Auto-generated method stub
@@ -69,14 +74,14 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     	
     	endpoints.authenticationManager(authenticationManager)
     	.tokenStore(tokenStore())
-//    	.tokenEnhancer(tokenEnhancer())
+    	.tokenEnhancer(tokenEnhancer())
     	.allowedTokenEndpointRequestMethods(HttpMethod.GET);
     	
     }
     
-//    @Bean
-//    public TokenEnhancer tokenEnhancer() {
-//        return new CustomTokenEnhancer();
-//    }
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new CustomTokenEnhancer();
+    }
  
 }
