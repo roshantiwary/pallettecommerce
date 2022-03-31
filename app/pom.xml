@@ -10,7 +10,7 @@
 	<name>Pallete Commerce with SpringBoot on JBoss</name>
 
 	<properties>
-		<spring.version>2.2.6.RELEASE</spring.version>
+		<spring.version>2.5.12</spring.version>
 		<jackson.version>2.9.6</jackson.version>
 	</properties>
 
